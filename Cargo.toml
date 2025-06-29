@@ -1,10 +1,5 @@
 [workspace]
-resolver = "2"
-members = ["examples"]
+resolver = "3"
 
-[package]
-name = "wipi"
-version = "0.0.1"
-edition = "2024"
-
-[dependencies]
+members = ["wipi_archiver"] # We can't specify wipi, examples here because cargo doesn't support mixed target
+exclude = ["examples", "wipi"]
