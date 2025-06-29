@@ -20,7 +20,7 @@ after_data:
     pop {{R3}}
     bx R3
 
-.section .text, "ax"
+.section .rodata, "a"
 
 str_wipi_exe:
 .string "WIPI_exe"
