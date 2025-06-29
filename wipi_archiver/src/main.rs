@@ -1,20 +1,25 @@
-#![cfg(not(target_os = "none"))]
-use std::io::{Write, stdout};
+#![cfg_attr(target_os = "none", no_std)]
 
-use clap::Parser;
+#[cfg(target_os = "none")]
+pub fn main() {}
 
-use wipi_archiver::create_ktf_archive;
-
-#[derive(Parser)]
-struct Args {
-    executable_path: String,
-    main_class_name: String,
-    aid: String,
-    pid: String,
-    resource_path: Option<String>,
-}
-
+#[cfg(not(target_os = "none"))]
 pub fn main() -> anyhow::Result<()> {
+    use std::io::{Write, stdout};
+
+    use clap::Parser;
+
+    use wipi_archiver::create_ktf_archive;
+
+    #[derive(Parser)]
+    struct Args {
+        executable_path: String,
+        main_class_name: String,
+        aid: String,
+        pid: String,
+        resource_path: Option<String>,
+    }
+
     let args = Args::parse();
 
     let archive = create_ktf_archive(

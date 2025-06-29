@@ -1,12 +1,5 @@
+#![cfg_attr(target_os = "none", no_std)]
 #![cfg(not(target_os = "none"))]
-
-use std::{
-    fs::{self},
-    io::{Cursor, Write},
-};
-
-use zip::{ZipWriter, write::SimpleFileOptions};
-
 pub fn create_ktf_archive(
     executable_path: &str,
     main_class_name: &str,
@@ -14,6 +7,13 @@ pub fn create_ktf_archive(
     pid: &str,
     resource_path: Option<&str>,
 ) -> anyhow::Result<Vec<u8>> {
+    use std::{
+        fs::{self},
+        io::{Cursor, Write},
+    };
+
+    use zip::{ZipWriter, write::SimpleFileOptions};
+
     let mut jar = Vec::new();
     {
         let mut jar_zip = ZipWriter::new(Cursor::new(&mut jar));
