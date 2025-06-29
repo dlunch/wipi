@@ -1,0 +1,11 @@
+[package]
+name = "examples"
+version = "0.0.1"
+edition = "2024"
+
+[dependencies]
+wipi = { path = ".." }
+
+[[example]]
+name = "helloworld"
+path = "helloworld.rs"

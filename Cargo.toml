@@ -1,0 +1,10 @@
+[workspace]
+resolver = "2"
+members = ["examples"]
+
+[package]
+name = "wipi"
+version = "0.0.1"
+edition = "2024"
+
+[dependencies]
