@@ -8,4 +8,4 @@ wipi = { path = "../wipi" }
 
 [[example]]
 name = "helloworld"
-path = "helloworld.rs"
+path = "src/helloworld.rs"

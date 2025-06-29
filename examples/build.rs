@@ -1,3 +1,3 @@
 fn main() {
-    println!("cargo::rerun-if-changed=../wipi/src/ktf.ld");
+    println!("cargo::rustc-link-arg=../wipi/src/ktf.ld");
 }
