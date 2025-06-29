@@ -1,5 +1,6 @@
 #![no_std]
 
+#[cfg(target_arch = "arm")]
 mod ktf;
 // TODO
 
@@ -8,6 +9,7 @@ pub fn print(s: &str) {
     todo!()
 }
 
+#[cfg(target_arch = "arm")]
 #[panic_handler]
 #[allow(unused_variables)]
 fn panic_handler(info: &core::panic::PanicInfo) -> ! {

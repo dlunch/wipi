@@ -1,5 +1,4 @@
 [workspace]
 resolver = "3"
 
-members = ["wipi_archiver"] # We can't specify wipi, examples here because cargo doesn't support mixed target
-exclude = ["examples", "wipi"]
+members = ["examples", "wipi", "wipi_archiver"]
