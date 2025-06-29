@@ -1,3 +1,4 @@
+#![cfg(not(target_os = "none"))]
 use std::io::{Write, stdout};
 
 use clap::Parser;
