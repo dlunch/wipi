@@ -1,5 +1,5 @@
 OUTPUT_FORMAT(binary)
-ENTRY(__start)
+ENTRY(__entrypoint)
 
 MEMORY {
     ram (rwx) : ORIGIN = 0x100000, LENGTH = 64M

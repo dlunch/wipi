@@ -13,7 +13,11 @@ pub fn print(s: &str) {
 #[panic_handler]
 #[allow(unused_variables)]
 fn panic_handler(info: &core::panic::PanicInfo) -> ! {
-    // TODO
+    // force crash the program
+    #[cfg(target_arch = "arm")]
+    unsafe {
+        core::arch::asm!("bkpt");
+    }
     loop {}
 }
 
