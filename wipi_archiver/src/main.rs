@@ -3,6 +3,12 @@
 #[cfg(target_os = "none")]
 pub fn main() {}
 
+#[cfg(target_os = "none")]
+#[panic_handler]
+fn panic_handler(_info: &core::panic::PanicInfo) -> ! {
+    loop {}
+}
+
 #[cfg(not(target_os = "none"))]
 pub fn main() -> anyhow::Result<()> {
     use std::io::{Write, stdout};

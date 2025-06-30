@@ -1,5 +1,6 @@
 #![cfg_attr(target_os = "none", no_std)]
 #![cfg(not(target_os = "none"))]
+
 pub fn create_ktf_archive(
     executable_path: &str,
     main_class_name: &str,

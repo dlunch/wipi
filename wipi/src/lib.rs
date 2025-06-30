@@ -1,30 +1,24 @@
-#![no_std]
+#![cfg_attr(target_os = "none", no_std)]
 
 #[cfg(target_os = "none")]
 #[cfg(feature = "ktf")]
 mod ktf;
 // TODO
 
-#[allow(unused_variables)]
-pub fn print(s: &str) {
+pub fn print(_s: &str) {
     todo!()
 }
 
+#[cfg(target_os = "none")]
 #[panic_handler]
-#[allow(unused_variables)]
-fn panic_handler(info: &core::panic::PanicInfo) -> ! {
+fn panic_handler(_info: &core::panic::PanicInfo) -> ! {
     // force crash the program
-    #[cfg(target_arch = "arm")]
     unsafe {
         core::arch::asm!("bkpt");
     }
     loop {}
 }
 
-#[cfg(not(target_os = "none"))]
+#[cfg(not(test))]
 #[unsafe(no_mangle)]
-pub extern "C" fn rust_eh_personality() {}
-
-#[cfg(target_os = "linux")]
-#[unsafe(export_name = "__libc_start_main")]
-pub fn main() {}
+pub extern "C" fn main() {} // we need main to link on the host side
