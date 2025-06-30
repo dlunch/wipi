@@ -1,3 +1,5 @@
+// defines ktf wipi binary entrypoint
+
 .section .text.ktf_wipi_header, "ax"
 .global __entrypoint
 __entrypoint:
