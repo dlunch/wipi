@@ -1,6 +1,7 @@
 #![no_std]
 
 #[cfg(target_os = "none")]
+#[cfg(feature = "ktf")]
 mod ktf;
 // TODO
 
