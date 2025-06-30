@@ -2,6 +2,3 @@
 resolver = "3"
 
 members = ["examples", "wipi", "wipi_archiver"]
-
-[profile.dev]
-panic = "abort"
