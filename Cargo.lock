@@ -755,7 +755,7 @@ name = "wipi"
 version = "0.0.1"
 
 [[package]]
-name = "wipi-archiver"
+name = "wipi_archiver"
 version = "0.0.1"
 dependencies = [
  "anyhow",
