@@ -1,48 +1,4 @@
-use core::ffi::c_char;
-
-// TODO copied from wie.. should have a common crate for this?
-#[repr(C)]
-pub struct ExeInterfaceFunctions {
-    unk1: u32,
-    unk2: u32,
-    fn_init: unsafe extern "C" fn(u32, u32, u32, u32, u32) -> u32,
-    fn_get_default_dll: u32,
-    fn_get_class: u32,
-    fn_unk2: u32,
-    fn_unk3: u32,
-}
-
-unsafe impl Sync for ExeInterfaceFunctions {}
-
-#[repr(C)]
-struct ExeInterface {
-    ptr_functions: *const ExeInterfaceFunctions,
-    ptr_name: *const c_char,
-    unk1: u32,
-    unk2: u32,
-    unk3: u32,
-    unk4: u32,
-    unk5: u32,
-    unk6: u32,
-}
-
-unsafe impl Sync for ExeInterface {}
-
-#[repr(C)]
-pub struct WipiExe {
-    ptr_exe_interface: *const ExeInterface,
-    ptr_name: *const c_char,
-    unk1: u32,
-    unk2: u32,
-    fn_unk1: u32,
-    fn_init: unsafe extern "C" fn() -> u32,
-    unk3: u32,
-    unk4: u32,
-    fn_unk3: u32,
-    unk5: u32,
-}
-
-unsafe impl Sync for WipiExe {}
+use wipi_types::ktf::{ExeInterface, ExeInterfaceFunctions, WipiExe};
 
 static EXE_INTERFACE_FUNCTIONS: ExeInterfaceFunctions = ExeInterfaceFunctions {
     unk1: 0,
