@@ -1,3 +1,5 @@
+#[cfg(not(target_os = "none"))]
+use bytemuck::{Pod, Zeroable};
 #[cfg(target_os = "none")]
 use core::ffi::c_char;
 
@@ -8,6 +10,7 @@ type ExeInterfaceInitPtr = u32;
 
 #[repr(C)]
 #[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct ExeInterfaceFunctions {
     pub unk1: u32,
     pub unk2: u32,
@@ -32,6 +35,7 @@ type ExeInterfaceNamePtr = u32;
 
 #[repr(C)]
 #[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct ExeInterface {
     pub ptr_functions: ExeInterfaceFunctionsPtr,
     pub ptr_name: ExeInterfaceNamePtr,
@@ -62,6 +66,7 @@ type WipiExeInitPtr = u32;
 
 #[repr(C)]
 #[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct WipiExe {
     pub ptr_exe_interface: ExeInterfacePtr,
     pub ptr_name: WipiExeNamePtr,

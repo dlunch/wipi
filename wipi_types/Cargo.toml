@@ -7,3 +7,4 @@ edition = "2024"
 ktf = []
 
 [dependencies]
+bytemuck = { version = "^1.23", default-features = false, features = ["derive"] }
