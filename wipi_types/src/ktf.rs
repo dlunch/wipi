@@ -1,15 +1,16 @@
+use bytemuck::{Pod, Zeroable};
+
 cfg_if::cfg_if! {
     if #[cfg(target_os = "none")] {
         use core::ffi::c_char;
 
-        type ExeInterfaceInitPtr = unsafe extern "C" fn(u32, u32, u32, u32, u32) -> u32;
+        type ExeInterfaceInitPtr = unsafe extern "C" fn(*const InitParam0, *const InitParam1, *const InitParam2, *const InitParam3, *const InitParam4) -> u32;
         type ExeInterfaceFunctionsPtr = *const ExeInterfaceFunctions;
         type ExeInterfaceNamePtr = *const c_char;
         type ExeInterfacePtr = *const ExeInterface;
         type WipiExeNamePtr = *const c_char;
         type WipiExeInitPtr = unsafe extern "C" fn() -> u32;
     } else {
-        use bytemuck::{Pod, Zeroable};
 
         type ExeInterfaceInitPtr = u32;
         type ExeInterfaceFunctionsPtr = u32;
@@ -18,6 +19,62 @@ cfg_if::cfg_if! {
         type WipiExeNamePtr = u32;
         type WipiExeInitPtr = u32;
     }
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Pod, Zeroable)]
+pub struct InitParam0 {
+    pub unk: u32,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Pod, Zeroable)]
+pub struct InitParam1 {
+    pub ptr_jvm_exception_context: u32,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Pod, Zeroable)]
+pub struct InitParam2 {
+    pub unk1: u32,
+    pub unk2: u32,
+    pub unk3: u32,
+    pub ptr_java_vtables: [u32; 128],
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Pod, Zeroable)]
+pub struct InitParam3 {
+    pub unk1: u32,
+    pub unk2: u32,
+    pub unk3: u32,
+    pub unk4: u32,
+    // java array allocation pool for primitive type
+    pub boolean: u32,
+    pub char: u32,
+    pub float: u32,
+    pub double: u32,
+    pub byte: u32,
+    pub short: u32,
+    pub int: u32,
+    pub long: u32,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Pod, Zeroable)]
+pub struct InitParam4 {
+    pub fn_get_interface: u32,
+    pub fn_java_throw: u32,
+    pub unk1: u32,
+    pub unk2: u32,
+    pub fn_java_check_type: u32,
+    pub fn_java_new: u32,
+    pub fn_java_array_new: u32,
+    pub unk6: u32,
+    pub fn_java_class_load: u32,
+    pub unk7: u32,
+    pub unk8: u32,
+    pub fn_alloc: u32,
 }
 
 #[repr(C)]

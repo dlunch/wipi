@@ -1,4 +1,7 @@
-use wipi_types::ktf::{ExeInterface, ExeInterfaceFunctions, WipiExe};
+use wipi_types::ktf::{
+    ExeInterface, ExeInterfaceFunctions, InitParam0, InitParam1, InitParam2, InitParam3,
+    InitParam4, WipiExe,
+};
 
 static EXE_INTERFACE_FUNCTIONS: ExeInterfaceFunctions = ExeInterfaceFunctions {
     unk1: 0,
@@ -63,11 +66,11 @@ extern "C" fn wipi_start() -> u32 {
 }
 
 extern "C" fn exe_start(
-    _param0: u32,
-    _param1: u32,
-    _param2: u32,
-    _param3: u32,
-    _param4: u32,
+    _param0: *const InitParam0,
+    _param1: *const InitParam1,
+    _param2: *const InitParam2,
+    _param3: *const InitParam3,
+    _param4: *const InitParam4,
 ) -> u32 {
     0
 }
