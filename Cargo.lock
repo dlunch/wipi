@@ -791,6 +791,7 @@ name = "wipi_types"
 version = "0.0.1"
 dependencies = [
  "bytemuck",
+ "cfg-if",
 ]
 
 [[package]]

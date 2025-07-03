@@ -1,12 +1,24 @@
-#[cfg(not(target_os = "none"))]
-use bytemuck::{Pod, Zeroable};
-#[cfg(target_os = "none")]
-use core::ffi::c_char;
+cfg_if::cfg_if! {
+    if #[cfg(target_os = "none")] {
+        use core::ffi::c_char;
 
-#[cfg(target_os = "none")]
-type ExeInterfaceInitPtr = unsafe extern "C" fn(u32, u32, u32, u32, u32) -> u32;
-#[cfg(not(target_os = "none"))]
-type ExeInterfaceInitPtr = u32;
+        type ExeInterfaceInitPtr = unsafe extern "C" fn(u32, u32, u32, u32, u32) -> u32;
+        type ExeInterfaceFunctionsPtr = *const ExeInterfaceFunctions;
+        type ExeInterfaceNamePtr = *const c_char;
+        type ExeInterfacePtr = *const ExeInterface;
+        type WipiExeNamePtr = *const c_char;
+        type WipiExeInitPtr = unsafe extern "C" fn() -> u32;
+    } else {
+        use bytemuck::{Pod, Zeroable};
+
+        type ExeInterfaceInitPtr = u32;
+        type ExeInterfaceFunctionsPtr = u32;
+        type ExeInterfaceNamePtr = u32;
+        type ExeInterfacePtr = u32;
+        type WipiExeNamePtr = u32;
+        type WipiExeInitPtr = u32;
+    }
+}
 
 #[repr(C)]
 #[derive(Clone, Copy)]
@@ -23,16 +35,6 @@ pub struct ExeInterfaceFunctions {
 
 unsafe impl Sync for ExeInterfaceFunctions {}
 
-#[cfg(target_os = "none")]
-type ExeInterfaceFunctionsPtr = *const ExeInterfaceFunctions;
-#[cfg(not(target_os = "none"))]
-type ExeInterfaceFunctionsPtr = u32;
-
-#[cfg(target_os = "none")]
-type ExeInterfaceNamePtr = *const c_char;
-#[cfg(not(target_os = "none"))]
-type ExeInterfaceNamePtr = u32;
-
 #[repr(C)]
 #[derive(Clone, Copy)]
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
@@ -48,21 +50,6 @@ pub struct ExeInterface {
 }
 
 unsafe impl Sync for ExeInterface {}
-
-#[cfg(target_os = "none")]
-type ExeInterfacePtr = *const ExeInterface;
-#[cfg(not(target_os = "none"))]
-type ExeInterfacePtr = u32;
-
-#[cfg(target_os = "none")]
-type WipiExeNamePtr = *const c_char;
-#[cfg(not(target_os = "none"))]
-type WipiExeNamePtr = u32;
-
-#[cfg(target_os = "none")]
-type WipiExeInitPtr = unsafe extern "C" fn() -> u32;
-#[cfg(not(target_os = "none"))]
-type WipiExeInitPtr = u32;
 
 #[repr(C)]
 #[derive(Clone, Copy)]

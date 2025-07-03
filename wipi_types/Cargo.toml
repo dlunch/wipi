@@ -8,3 +8,4 @@ ktf = []
 
 [dependencies]
 bytemuck = { version = "^1.23", default-features = false, features = ["derive"] }
+cfg-if = { version = "^1.0", default-features = false }
