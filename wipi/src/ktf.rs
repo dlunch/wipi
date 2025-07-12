@@ -1,4 +1,4 @@
-mod start;
 mod clet;
+mod start;
 
 core::arch::global_asm!(include_str!("ktf/entry.s"));
