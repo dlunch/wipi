@@ -1,9 +1,11 @@
-use core::ffi::c_char;
+use core::ffi::{CStr, c_char};
 
 use wipi_types::ktf::{
     ExeInterface, ExeInterfaceFunctions, InitParam0, InitParam1, InitParam2, InitParam3,
-    InitParam4, WipiExe,
+    InitParam4, WipiExe, java::JavaClass,
 };
+
+use super::clet::CLET_CLASS;
 
 static EXE_INTERFACE_FUNCTIONS: ExeInterfaceFunctions = ExeInterfaceFunctions {
     unk1: 0,
@@ -51,8 +53,12 @@ unsafe extern "C" fn start() -> *const WipiExe {
     &WIPI_EXE
 }
 
-extern "C" fn get_class(_name: *const c_char) -> u32 {
-    // TODO
+extern "C" fn get_class(name: *const c_char) -> u32 {
+    // TODO Clet only for now
+
+    if unsafe { CStr::from_ptr(name) } == c"Clet" {
+        return &CLET_CLASS as *const JavaClass as u32;
+    }
 
     0
 }

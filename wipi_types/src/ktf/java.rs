@@ -1,20 +1,39 @@
 use bytemuck::{Pod, Zeroable};
 
+cfg_if::cfg_if! {
+    if #[cfg(target_os = "none")] {
+        use core::ffi::c_char;
+
+        type JavaClassPtrNext = *const u32;
+        type JavaClassDescriptorPtr = *const JavaClassDescriptor;
+        type JavaClassDescriptorNamePtr = *const c_char;
+    } else {
+        type JavaClassPtrNext = u32;
+        type JavaClassDescriptorPtr = u32;
+        type JavaClassDescriptorNamePtr = u32;
+    }
+}
+
 #[repr(C)]
-#[derive(Clone, Copy, Pod, Zeroable)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct JavaClass {
-    pub ptr_next: u32,
+    pub ptr_next: JavaClassPtrNext,
     pub unk1: u32,
-    pub ptr_descriptor: u32,
+    pub ptr_descriptor: JavaClassDescriptorPtr,
     pub ptr_vtable: u32,
     pub vtable_count: u16,
     pub unk_flag: u16,
 }
 
+unsafe impl Sync for JavaClass {}
+unsafe impl Send for JavaClass {}
+
 #[repr(C)]
-#[derive(Clone, Copy, Pod, Zeroable)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct JavaClassDescriptor {
-    pub ptr_name: u32,
+    pub ptr_name: JavaClassDescriptorNamePtr,
     pub unk1: u32,
     pub ptr_parent_class: u32,
     pub ptr_methods: u32,
@@ -27,6 +46,9 @@ pub struct JavaClassDescriptor {
     pub unk7: u16,
     pub unk8: u16,
 }
+
+unsafe impl Sync for JavaClassDescriptor {}
+unsafe impl Send for JavaClassDescriptor {}
 
 #[repr(C)]
 #[derive(Clone, Copy, Pod, Zeroable)]
