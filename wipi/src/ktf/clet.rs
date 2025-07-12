@@ -41,20 +41,20 @@ static CLET_CLASS_DESCRIPTOR: JavaClassDescriptor = JavaClassDescriptor {
     unk8: 0,
 };
 
-static CLET_CLASS_METHODS: JavaMethodArray<2> =
-    JavaMethodArray([&CLET_INIT_METHOD, core::ptr::null()]);
-
-static CLET_INIT_METHOD: JavaMethodDefinition = JavaMethodDefinition {
-    fn_body: 0,
-    ptr_class: &CLET_CLASS,
-    fn_body_native_or_exception_table: clet_init,
-    ptr_name: c".()V+<init>".as_ptr(),
-    exception_table_count: 0,
-    unk3: 0,
-    index_in_vtable: 0,
-    access_flags: 0x100, // ACC_NATIVE // TODO use enum
-    unk6: 0,
-};
+static CLET_CLASS_METHODS: JavaMethodArray<2> = JavaMethodArray([
+    &JavaMethodDefinition {
+        fn_body: 0,
+        ptr_class: &CLET_CLASS,
+        fn_body_native_or_exception_table: clet_init,
+        ptr_name: c".()V+<init>".as_ptr(),
+        exception_table_count: 0,
+        unk3: 0,
+        index_in_vtable: 0,
+        access_flags: 0x100, // ACC_NATIVE // TODO use enum
+        unk6: 0,
+    },
+    core::ptr::null(),
+]);
 
 extern "C" fn clet_init(_args: u32) -> u32 {
     // TODO call superclass <init>
