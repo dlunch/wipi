@@ -124,3 +124,21 @@ pub struct JavaExceptionHandler {
     pub ptr_functions: u32, // function table to restore context
     pub context: [u32; 11], // r4-lr
 }
+
+#[repr(C)]
+#[derive(Clone, Copy, Pod, Zeroable)]
+struct WIPIJBInterface {
+    unk1: u32,
+    fn_java_jump_1: u32,
+    fn_java_jump_2: u32,
+    fn_java_jump_3: u32,
+    fn_get_java_method: u32,
+    fn_get_field: u32,
+    fn_unk4: u32,
+    fn_unk5: u32,
+    fn_unk7: u32,
+    fn_unk8: u32,
+    fn_register_class: u32,
+    fn_register_java_string: u32,
+    fn_call_native: u32,
+}
