@@ -1,5 +1,7 @@
 use bytemuck::{Pod, Zeroable};
 
+use super::TargetPtr;
+
 cfg_if::cfg_if! {
     if #[cfg(target_os = "none")] {
         use core::ffi::c_char;
@@ -124,19 +126,20 @@ pub struct JavaExceptionHandler {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy, Pod, Zeroable)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct WIPIJBInterface {
     unk1: u32,
-    fn_java_jump_1: u32,
-    fn_java_jump_2: u32,
-    fn_java_jump_3: u32,
-    fn_get_java_method: u32,
-    fn_get_field: u32,
+    fn_java_jump_1: TargetPtr,
+    fn_java_jump_2: TargetPtr,
+    fn_java_jump_3: TargetPtr,
+    fn_get_java_method: TargetPtr,
+    fn_get_field: TargetPtr,
     fn_unk4: u32,
     fn_unk5: u32,
     fn_unk7: u32,
     fn_unk8: u32,
-    fn_register_class: u32,
-    fn_register_java_string: u32,
-    fn_call_native: u32,
+    fn_register_class: TargetPtr,
+    fn_register_java_string: TargetPtr,
+    fn_call_native: TargetPtr,
 }

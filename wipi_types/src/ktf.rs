@@ -1,4 +1,5 @@
 pub mod java;
+pub mod kernel;
 
 use bytemuck::{Pod, Zeroable};
 
@@ -13,6 +14,7 @@ cfg_if::cfg_if! {
         type ExeInterfacePtr = *const ExeInterface;
         type WipiExeInitPtr = extern "C" fn() -> u32;
         type GetInterfacePtr = extern "C" fn(*const c_char) -> *const ();
+        type TargetPtr = *const ();
     } else {
         type ExeInterfaceInitPtr = u32;
         type ExeInterfaceGetClassPtr = u32;
@@ -21,6 +23,7 @@ cfg_if::cfg_if! {
         type ExeInterfacePtr = u32;
         type WipiExeInitPtr = u32;
         type GetInterfacePtr = u32;
+        type TargetPtr = u32;
     }
 }
 
