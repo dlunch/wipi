@@ -6,15 +6,13 @@ cfg_if::cfg_if! {
 
         type JavaClassPtrNext = *const u32;
         type JavaClassDescriptorPtr = *const JavaClassDescriptor;
-        type JavaClassDescriptorNamePtr = *const c_char;
         type JavaClassPtr = *const JavaClass;
         type StringPtr = *const c_char;
-        type JavaMethodBody = unsafe extern "C" fn (u32) -> u32;
+        type JavaMethodBody = extern "C" fn (u32) -> u32;
         type JavaMethodArrayPtr = *const JavaMethodDefinition;
     } else {
         type JavaClassPtrNext = u32;
         type JavaClassDescriptorPtr = u32;
-        type JavaClassDescriptorNamePtr = u32;
         type JavaClassPtr = u32;
         type StringPtr = u32;
         type JavaMethodBody = u32;
@@ -41,7 +39,7 @@ unsafe impl Send for JavaClass {}
 #[derive(Clone, Copy)]
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct JavaClassDescriptor {
-    pub ptr_name: JavaClassDescriptorNamePtr,
+    pub ptr_name: StringPtr,
     pub unk1: u32,
     pub ptr_parent_class: u32,
     pub ptr_methods: JavaMethodArrayPtr,
