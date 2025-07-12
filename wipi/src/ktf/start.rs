@@ -5,7 +5,7 @@ use wipi_types::ktf::{
     InitParam4, WipiExe, java::JavaClass,
 };
 
-use super::clet::CLET_CLASS;
+use super::{clet::CLET_CLASS, globals};
 
 static EXE_INTERFACE_FUNCTIONS: ExeInterfaceFunctions = ExeInterfaceFunctions {
     unk1: 0,
@@ -41,12 +41,6 @@ static WIPI_EXE: WipiExe = WipiExe {
     unk5: 0,
 };
 
-pub(super) static mut INIT_PARAM_0: *const InitParam0 = core::ptr::null_mut();
-pub(super) static mut INIT_PARAM_1: *const InitParam1 = core::ptr::null_mut();
-pub(super) static mut INIT_PARAM_2: *const InitParam2 = core::ptr::null_mut();
-pub(super) static mut INIT_PARAM_3: *const InitParam3 = core::ptr::null_mut();
-pub(super) static mut INIT_PARAM_4: *const InitParam4 = core::ptr::null_mut();
-
 #[unsafe(no_mangle)]
 unsafe extern "C" fn start() -> *const WipiExe {
     // TODO should perform relocations
@@ -76,11 +70,11 @@ extern "C" fn exe_start(
     param4: *const InitParam4,
 ) -> u32 {
     unsafe {
-        INIT_PARAM_0 = param0;
-        INIT_PARAM_1 = param1;
-        INIT_PARAM_2 = param2;
-        INIT_PARAM_3 = param3;
-        INIT_PARAM_4 = param4;
+        globals::INIT_PARAM_0 = param0;
+        globals::INIT_PARAM_1 = param1;
+        globals::INIT_PARAM_2 = param2;
+        globals::INIT_PARAM_3 = param3;
+        globals::INIT_PARAM_4 = param4;
     }
 
     0

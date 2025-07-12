@@ -19,3 +19,7 @@ pub const fn java_native_method_definition(
         unk6: 0,
     }
 }
+
+pub fn java_invoke_special(_class: &str, _name: &str, _descriptor: &str) -> u32 {
+    0
+}

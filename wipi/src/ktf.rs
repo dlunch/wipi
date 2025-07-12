@@ -1,4 +1,5 @@
 mod clet;
+mod globals;
 mod java;
 mod start;
 

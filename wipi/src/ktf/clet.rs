@@ -1,6 +1,8 @@
+use core::ptr::null;
+
 use wipi_types::ktf::java::{JavaClass, JavaClassDescriptor, JavaMethodArray};
 
-use crate::ktf::java::java_native_method_definition;
+use crate::ktf::java::{java_invoke_special, java_native_method_definition};
 
 #[allow(dead_code)]
 unsafe extern "C" {
@@ -43,10 +45,11 @@ static CLET_CLASS_DESCRIPTOR: JavaClassDescriptor = JavaClassDescriptor {
 
 static CLET_CLASS_METHODS: JavaMethodArray<2> = JavaMethodArray([
     &java_native_method_definition(clet_init, &CLET_CLASS, c".()V+<init>".as_ptr()),
-    core::ptr::null(),
+    null(),
 ]);
 
 extern "C" fn clet_init(_args: u32) -> u32 {
-    // TODO call superclass <init>
+    java_invoke_special("org/kwis/msp/lcdui/Jlet", "<init>", "()V");
+
     0
 }
