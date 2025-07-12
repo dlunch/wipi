@@ -1,6 +1,6 @@
-use wipi_types::ktf::java::{
-    JavaClass, JavaClassDescriptor, JavaMethodArray, JavaMethodDefinition,
-};
+use wipi_types::ktf::java::{JavaClass, JavaClassDescriptor, JavaMethodArray};
+
+use crate::ktf::java::java_native_method_definition;
 
 #[allow(dead_code)]
 unsafe extern "C" {
@@ -42,17 +42,7 @@ static CLET_CLASS_DESCRIPTOR: JavaClassDescriptor = JavaClassDescriptor {
 };
 
 static CLET_CLASS_METHODS: JavaMethodArray<2> = JavaMethodArray([
-    &JavaMethodDefinition {
-        fn_body: 0,
-        ptr_class: &CLET_CLASS,
-        fn_body_native_or_exception_table: clet_init,
-        ptr_name: c".()V+<init>".as_ptr(),
-        exception_table_count: 0,
-        unk3: 0,
-        index_in_vtable: 0,
-        access_flags: 0x100, // ACC_NATIVE // TODO use enum
-        unk6: 0,
-    },
+    &java_native_method_definition(clet_init, &CLET_CLASS, c".()V+<init>".as_ptr()),
     core::ptr::null(),
 ]);
 
