@@ -75,6 +75,10 @@ extern "C" fn exe_start(
         globals::INIT_PARAM_2 = param2;
         globals::INIT_PARAM_3 = param3;
         globals::INIT_PARAM_4 = param4;
+
+        globals::WIPIC_KNLINTERFACE =
+            ((*param4).fn_get_interface)(c"WIPIC_knlInterface".as_ptr()) as _;
+        globals::WIPI_JBINTERFACE = ((*param4).fn_get_interface)(c"WIPI_JBInterface".as_ptr()) as _;
     }
 
     0

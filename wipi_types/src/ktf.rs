@@ -6,12 +6,13 @@ cfg_if::cfg_if! {
     if #[cfg(target_os = "none")] {
         use core::ffi::c_char;
 
-        type ExeInterfaceInitPtr = unsafe extern "C" fn(*const InitParam0, *const InitParam1, *const InitParam2, *const InitParam3, *const InitParam4) -> u32;
-        type ExeInterfaceGetClassPtr = unsafe extern "C" fn(*const c_char) -> u32;
+        type ExeInterfaceInitPtr = extern "C" fn(*const InitParam0, *const InitParam1, *const InitParam2, *const InitParam3, *const InitParam4) -> u32;
+        type ExeInterfaceGetClassPtr = extern "C" fn(*const c_char) -> u32;
         type ExeInterfaceFunctionsPtr = *const ExeInterfaceFunctions;
         type StringPtr = *const c_char;
         type ExeInterfacePtr = *const ExeInterface;
-        type WipiExeInitPtr = unsafe extern "C" fn() -> u32;
+        type WipiExeInitPtr = extern "C" fn() -> u32;
+        type GetInterfacePtr = extern "C" fn(*const c_char) -> *const ();
     } else {
         type ExeInterfaceInitPtr = u32;
         type ExeInterfaceGetClassPtr = u32;
@@ -19,6 +20,7 @@ cfg_if::cfg_if! {
         type StringPtr = u32;
         type ExeInterfacePtr = u32;
         type WipiExeInitPtr = u32;
+        type GetInterfacePtr = u32;
     }
 }
 
@@ -62,9 +64,10 @@ pub struct InitParam3 {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy, Pod, Zeroable)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct InitParam4 {
-    pub fn_get_interface: u32,
+    pub fn_get_interface: GetInterfacePtr,
     pub fn_java_throw: u32,
     pub unk1: u32,
     pub unk2: u32,

@@ -127,7 +127,7 @@ pub struct JavaExceptionHandler {
 
 #[repr(C)]
 #[derive(Clone, Copy, Pod, Zeroable)]
-struct WIPIJBInterface {
+pub struct WIPIJBInterface {
     unk1: u32,
     fn_java_jump_1: u32,
     fn_java_jump_2: u32,
