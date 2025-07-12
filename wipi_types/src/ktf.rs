@@ -16,6 +16,7 @@ cfg_if::cfg_if! {
         type ExeInterfaceInitPtr = u32;
         type ExeInterfaceGetClassPtr = u32;
         type ExeInterfaceFunctionsPtr = u32;
+        type StringPtr = u32;
         type ExeInterfacePtr = u32;
         type WipiExeInitPtr = u32;
     }

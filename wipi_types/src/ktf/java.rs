@@ -16,6 +16,7 @@ cfg_if::cfg_if! {
         type JavaClassDescriptorPtr = u32;
         type JavaClassDescriptorNamePtr = u32;
         type JavaClassPtr = u32;
+        type StringPtr = u32;
         type JavaMethodBody = u32;
         type JavaMethodArrayPtr = u32;
     }
