@@ -7,10 +7,17 @@ cfg_if::cfg_if! {
         type JavaClassPtrNext = *const u32;
         type JavaClassDescriptorPtr = *const JavaClassDescriptor;
         type JavaClassDescriptorNamePtr = *const c_char;
+        type JavaClassPtr = *const JavaClass;
+        type StringPtr = *const c_char;
+        type JavaMethodBody = unsafe extern "C" fn (u32) -> u32;
+        type JavaMethodArrayPtr = *const JavaMethodDefinition;
     } else {
         type JavaClassPtrNext = u32;
         type JavaClassDescriptorPtr = u32;
         type JavaClassDescriptorNamePtr = u32;
+        type JavaClassPtr = u32;
+        type JavaMethodBody = u32;
+        type JavaMethodArrayPtr = u32;
     }
 }
 
@@ -36,7 +43,7 @@ pub struct JavaClassDescriptor {
     pub ptr_name: JavaClassDescriptorNamePtr,
     pub unk1: u32,
     pub ptr_parent_class: u32,
-    pub ptr_methods: u32,
+    pub ptr_methods: JavaMethodArrayPtr,
     pub ptr_interfaces: u32,
     pub ptr_fields_or_element_type: u32, // for array class, this is element type
     pub method_count: u16,
@@ -73,19 +80,28 @@ pub struct JavaFieldDefinition {
     pub offset_or_value: u32,
 }
 
+#[repr(transparent)]
+pub struct JavaMethodArray<const N: usize>(pub [*const JavaMethodDefinition; N]);
+
+unsafe impl<const N: usize> Sync for JavaMethodArray<N> {}
+
 #[repr(C)]
-#[derive(Clone, Copy, Pod, Zeroable)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct JavaMethodDefinition {
     pub fn_body: u32,
-    pub ptr_class: u32,
-    pub fn_body_native_or_exception_table: u32,
-    pub ptr_name: u32,
+    pub ptr_class: JavaClassPtr,
+    pub fn_body_native_or_exception_table: JavaMethodBody,
+    pub ptr_name: StringPtr,
     pub exception_table_count: u16,
     pub unk3: u16,
     pub index_in_vtable: u16,
     pub access_flags: u16,
     pub unk6: u32,
 }
+
+unsafe impl Sync for JavaMethodDefinition {}
+unsafe impl Send for JavaMethodDefinition {}
 
 #[repr(C)]
 #[derive(Clone, Copy, Pod, Zeroable)]

@@ -9,17 +9,14 @@ cfg_if::cfg_if! {
         type ExeInterfaceInitPtr = unsafe extern "C" fn(*const InitParam0, *const InitParam1, *const InitParam2, *const InitParam3, *const InitParam4) -> u32;
         type ExeInterfaceGetClassPtr = unsafe extern "C" fn(*const c_char) -> u32;
         type ExeInterfaceFunctionsPtr = *const ExeInterfaceFunctions;
-        type ExeInterfaceNamePtr = *const c_char;
+        type StringPtr = *const c_char;
         type ExeInterfacePtr = *const ExeInterface;
-        type WipiExeNamePtr = *const c_char;
         type WipiExeInitPtr = unsafe extern "C" fn() -> u32;
     } else {
         type ExeInterfaceInitPtr = u32;
         type ExeInterfaceGetClassPtr = u32;
         type ExeInterfaceFunctionsPtr = u32;
-        type ExeInterfaceNamePtr = u32;
         type ExeInterfacePtr = u32;
-        type WipiExeNamePtr = u32;
         type WipiExeInitPtr = u32;
     }
 }
@@ -100,7 +97,7 @@ unsafe impl Sync for ExeInterfaceFunctions {}
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct ExeInterface {
     pub ptr_functions: ExeInterfaceFunctionsPtr,
-    pub ptr_name: ExeInterfaceNamePtr,
+    pub ptr_name: StringPtr,
     pub unk1: u32,
     pub unk2: u32,
     pub unk3: u32,
@@ -116,7 +113,7 @@ unsafe impl Sync for ExeInterface {}
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct WipiExe {
     pub ptr_exe_interface: ExeInterfacePtr,
-    pub ptr_name: WipiExeNamePtr,
+    pub ptr_name: StringPtr,
     pub unk1: u32,
     pub unk2: u32,
     pub fn_unk1: u32,
