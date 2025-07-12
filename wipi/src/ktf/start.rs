@@ -37,40 +37,37 @@ static WIPI_EXE: WipiExe = WipiExe {
     unk5: 0,
 };
 
+pub(super) static mut INIT_PARAM_0: *const InitParam0 = core::ptr::null_mut();
+pub(super) static mut INIT_PARAM_1: *const InitParam1 = core::ptr::null_mut();
+pub(super) static mut INIT_PARAM_2: *const InitParam2 = core::ptr::null_mut();
+pub(super) static mut INIT_PARAM_3: *const InitParam3 = core::ptr::null_mut();
+pub(super) static mut INIT_PARAM_4: *const InitParam4 = core::ptr::null_mut();
+
 #[unsafe(no_mangle)]
 unsafe extern "C" fn start() -> *const WipiExe {
+    // TODO should perform relocations
     &WIPI_EXE
 }
 
-#[allow(dead_code)]
-unsafe extern "C" {
-    #[link_name = "startClet"]
-    fn start_clet();
-    #[link_name = "destroyClet"]
-    fn destroy_clet();
-    #[link_name = "paintClet"]
-    fn paint_clet();
-    #[link_name = "pauseClet"]
-    fn pause_clet();
-    #[link_name = "resumeClet"]
-    fn resume_clet();
-
-}
-
 extern "C" fn wipi_start() -> u32 {
-    unsafe {
-        start_clet();
-    } // TODO should be called by clet class
-
+    // TODO should initialize java environments(instantiate java constant strings, resolve external superclasses, ...)
     0
 }
 
 extern "C" fn exe_start(
-    _param0: *const InitParam0,
-    _param1: *const InitParam1,
-    _param2: *const InitParam2,
-    _param3: *const InitParam3,
-    _param4: *const InitParam4,
+    param0: *const InitParam0,
+    param1: *const InitParam1,
+    param2: *const InitParam2,
+    param3: *const InitParam3,
+    param4: *const InitParam4,
 ) -> u32 {
+    unsafe {
+        INIT_PARAM_0 = param0;
+        INIT_PARAM_1 = param1;
+        INIT_PARAM_2 = param2;
+        INIT_PARAM_3 = param3;
+        INIT_PARAM_4 = param4;
+    }
+
     0
 }
