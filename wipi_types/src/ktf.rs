@@ -7,14 +7,15 @@ cfg_if::cfg_if! {
         use core::ffi::c_char;
 
         type ExeInterfaceInitPtr = unsafe extern "C" fn(*const InitParam0, *const InitParam1, *const InitParam2, *const InitParam3, *const InitParam4) -> u32;
+        type ExeInterfaceGetClassPtr = unsafe extern "C" fn(*const c_char) -> u32;
         type ExeInterfaceFunctionsPtr = *const ExeInterfaceFunctions;
         type ExeInterfaceNamePtr = *const c_char;
         type ExeInterfacePtr = *const ExeInterface;
         type WipiExeNamePtr = *const c_char;
         type WipiExeInitPtr = unsafe extern "C" fn() -> u32;
     } else {
-
         type ExeInterfaceInitPtr = u32;
+        type ExeInterfaceGetClassPtr = u32;
         type ExeInterfaceFunctionsPtr = u32;
         type ExeInterfaceNamePtr = u32;
         type ExeInterfacePtr = u32;
@@ -87,7 +88,7 @@ pub struct ExeInterfaceFunctions {
     pub unk2: u32,
     pub fn_init: ExeInterfaceInitPtr,
     pub fn_get_default_dll: u32,
-    pub fn_get_class: u32,
+    pub fn_get_class: ExeInterfaceGetClassPtr,
     pub fn_unk2: u32,
     pub fn_unk3: u32,
 }

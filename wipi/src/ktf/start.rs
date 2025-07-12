@@ -1,3 +1,5 @@
+use core::ffi::c_char;
+
 use wipi_types::ktf::{
     ExeInterface, ExeInterfaceFunctions, InitParam0, InitParam1, InitParam2, InitParam3,
     InitParam4, WipiExe,
@@ -8,7 +10,7 @@ static EXE_INTERFACE_FUNCTIONS: ExeInterfaceFunctions = ExeInterfaceFunctions {
     unk2: 0,
     fn_init: exe_start,
     fn_get_default_dll: 0,
-    fn_get_class: 0,
+    fn_get_class: get_class,
     fn_unk2: 0,
     fn_unk3: 0,
 };
@@ -47,6 +49,12 @@ pub(super) static mut INIT_PARAM_4: *const InitParam4 = core::ptr::null_mut();
 unsafe extern "C" fn start() -> *const WipiExe {
     // TODO should perform relocations
     &WIPI_EXE
+}
+
+extern "C" fn get_class(_name: *const c_char) -> u32 {
+    // TODO
+
+    0
 }
 
 extern "C" fn wipi_start() -> u32 {
