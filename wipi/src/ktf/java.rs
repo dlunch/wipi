@@ -27,7 +27,7 @@ pub const fn java_native_method_definition(
 }
 
 pub fn java_invoke_special(class: &CStr, fullname: &CStr, args: &[u32]) -> u32 {
-    // TODO cache and free
+    // TODO cache
     unsafe {
         let mut class_data = MaybeUninit::<*const JavaClass>::uninit();
         let result = ((*INIT_PARAM_4).fn_java_class_load)(class_data.as_mut_ptr(), class.as_ptr());
