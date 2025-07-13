@@ -2,22 +2,10 @@ use core::ptr::null;
 
 use wipi_types::ktf::java::{JavaClass, JavaClassDescriptor, JavaMethodArray};
 
-use crate::ktf::java::{java_invoke_special, java_native_method_definition};
-
-#[allow(dead_code)]
-unsafe extern "C" {
-    #[link_name = "startClet"]
-    fn start_clet();
-    #[link_name = "destroyClet"]
-    fn destroy_clet();
-    #[link_name = "paintClet"]
-    fn paint_clet();
-    #[link_name = "pauseClet"]
-    fn pause_clet();
-    #[link_name = "resumeClet"]
-    fn resume_clet();
-
-}
+use crate::{
+    ktf::java::{java_invoke_special, java_native_method_definition},
+    start_clet,
+};
 
 pub static mut CLET_CLASS: JavaClass = JavaClass {
     ptr_next: unsafe { &raw const CLET_CLASS.unk1 },
