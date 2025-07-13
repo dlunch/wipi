@@ -31,19 +31,6 @@ pub fn println(s: &str) {
     wipic::println(s)
 }
 
-#[cfg(target_os = "none")]
-#[panic_handler]
-fn panic_handler(_info: &core::panic::PanicInfo) -> ! {
-    // force crash the program
-    unsafe {
-        core::arch::asm!("bkpt");
-    }
-    loop {}
-}
-
-#[cfg(not(test))]
-#[cfg(not(target_os = "none"))]
-#[unsafe(no_mangle)]
-pub extern "C" fn main() {
-    self::emulation::start()
+pub fn exit(code: i32) {
+    wipic::exit(code)
 }

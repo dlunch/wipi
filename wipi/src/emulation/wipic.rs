@@ -1,5 +1,11 @@
 extern crate std;
 
+use std::{println, process};
+
 pub fn println(s: &str) {
-    std::println!("{s}");
+    println!("{s}");
+}
+
+pub fn exit(code: i32) {
+    process::exit(code);
 }

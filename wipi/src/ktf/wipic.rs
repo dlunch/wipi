@@ -27,6 +27,11 @@ pub fn println(s: &str) {
     free(null_terminated_buf);
 }
 
+pub fn exit(code: i32) {
+    let exit: extern "C" fn(i32) = unsafe { transmute((*WIPIC_KNLINTERFACE).exit) };
+    exit(code);
+}
+
 pub fn alloc(size: u32) -> KtfWipiMemory {
     let alloc: extern "C" fn(u32) -> *mut u8 = unsafe { transmute((*WIPIC_KNLINTERFACE).alloc) };
 
