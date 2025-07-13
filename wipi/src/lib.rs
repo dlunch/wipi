@@ -1,5 +1,8 @@
 #![cfg_attr(target_os = "none", no_std)]
 
+#[cfg(all(feature = "ktf", feature = "lgt"))]
+compile_error!("Cannot enable both 'ktf' and 'lgt' features at the same time");
+
 #[cfg(target_os = "none")]
 #[cfg(feature = "ktf")]
 mod ktf;
@@ -7,6 +10,14 @@ mod ktf;
 #[cfg(target_os = "none")]
 #[cfg(feature = "ktf")]
 use self::ktf::wipic;
+
+#[cfg(target_os = "none")]
+#[cfg(feature = "lgt")]
+mod lgt;
+
+#[cfg(target_os = "none")]
+#[cfg(feature = "lgt")]
+use self::lgt::wipic;
 
 #[cfg(not(target_os = "none"))]
 mod emulation;
