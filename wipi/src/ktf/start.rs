@@ -87,6 +87,8 @@ extern "C" fn wipi_start() -> u32 {
             }
 
             (*(*class).ptr_descriptor).ptr_parent_class = ptr_super_class as _;
+            (*(*class).ptr_descriptor).fields_size +=
+                (*(*ptr_super_class).ptr_descriptor).fields_size;
         }
     }
 
