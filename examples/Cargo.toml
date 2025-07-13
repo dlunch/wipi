@@ -4,8 +4,12 @@ version = "0.0.1"
 edition = "2024"
 
 [dependencies]
-wipi = { path = "../wipi", features = ["ktf"] }
+wipi = { path = "../wipi" }
 
-[[example]]
+[features]
+ktf = ["wipi/ktf"]
+lgt = ["wipi/lgt"]
+
+[[bin]]
 name = "helloworld"
 path = "src/helloworld.rs"

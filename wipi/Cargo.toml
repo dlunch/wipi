@@ -5,6 +5,7 @@ edition = "2024"
 
 [features]
 ktf = ["wipi_types/ktf"]
+lgt = ["wipi_types/lgt"]
 
 [dependencies]
 wipi_types = { path = "../wipi_types" }

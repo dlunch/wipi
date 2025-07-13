@@ -5,6 +5,7 @@ edition = "2024"
 
 [features]
 ktf = []
+lgt = []
 
 [dependencies]
 bytemuck = { version = "^1.23", default-features = false, features = ["derive"] }
