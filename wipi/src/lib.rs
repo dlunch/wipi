@@ -3,10 +3,12 @@
 #[cfg(target_os = "none")]
 #[cfg(feature = "ktf")]
 mod ktf;
-// TODO
 
-pub fn print(_s: &str) {
-    todo!()
+#[cfg(feature = "ktf")]
+use ktf::wipic;
+
+pub fn println(s: &str) {
+    wipic::println(s)
 }
 
 #[cfg(target_os = "none")]

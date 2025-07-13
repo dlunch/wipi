@@ -43,8 +43,13 @@ static mut CLET_CLASS_DESCRIPTOR: JavaClassDescriptor = JavaClassDescriptor {
     unk8: 0,
 };
 
-static CLET_CLASS_METHODS: JavaMethodArray<2> = JavaMethodArray([
+static CLET_CLASS_METHODS: JavaMethodArray<3> = JavaMethodArray([
     &java_native_method_definition(clet_init, &raw const CLET_CLASS, c".()V+<init>"),
+    &java_native_method_definition(
+        clet_start_app,
+        &raw const CLET_CLASS,
+        c".([Ljava/lang/String;)V+startApp",
+    ),
     null(),
 ]);
 
@@ -52,4 +57,12 @@ extern "C" fn clet_init(_: u32, args: *const ()) -> u32 {
     let this = unsafe { *(args as *const u32) };
 
     java_invoke_special(c"org/kwis/msp/lcdui/Jlet", c".()V+<init>", &[this])
+}
+
+extern "C" fn clet_start_app(_: u32, _args: *const ()) -> u32 {
+    unsafe {
+        start_clet();
+    }
+
+    0
 }
