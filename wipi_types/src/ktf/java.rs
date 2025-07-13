@@ -6,19 +6,21 @@ cfg_if::cfg_if! {
     if #[cfg(target_os = "none")] {
         use core::ffi::c_char;
 
-        type JavaClassPtrNext = *const u32;
-        type JavaClassDescriptorPtr = *const JavaClassDescriptor;
-        type JavaClassPtr = *const JavaClass;
-        type StringPtr = *const c_char;
-        type JavaMethodBody = extern "C" fn (u32) -> u32;
-        type JavaMethodArrayPtr = *const JavaMethodDefinition;
+        pub type JavaClassPtrNext = *const u32;
+        pub type JavaClassDescriptorPtr = *const JavaClassDescriptor;
+        pub type JavaClassPtr = *const JavaClass;
+        pub type StringPtr = *const c_char;
+        pub type JavaNativeMethodBody = extern "C" fn (u32, *const ()) -> u32;
+        pub type JavaMethodArrayPtr = *const JavaMethodDefinition;
+        pub type GetJavaMethodPtr = extern "C" fn (*const JavaClass, *const c_char) -> *const JavaMethodDefinition;
     } else {
-        type JavaClassPtrNext = u32;
-        type JavaClassDescriptorPtr = u32;
-        type JavaClassPtr = u32;
-        type StringPtr = u32;
-        type JavaMethodBody = u32;
-        type JavaMethodArrayPtr = u32;
+        pub type JavaClassPtrNext = u32;
+        pub type JavaClassDescriptorPtr = u32;
+        pub type JavaClassPtr = u32;
+        pub type StringPtr = u32;
+        pub type JavaNativeMethodBody = u32;
+        pub type JavaMethodArrayPtr = u32;
+        pub type GetJavaMethodPtr = u32;
     }
 }
 
@@ -90,9 +92,9 @@ unsafe impl<const N: usize> Sync for JavaMethodArray<N> {}
 #[derive(Clone, Copy)]
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct JavaMethodDefinition {
-    pub fn_body: u32,
+    pub fn_body: TargetPtr,
     pub ptr_class: JavaClassPtr,
-    pub fn_body_native_or_exception_table: JavaMethodBody,
+    pub fn_body_native_or_exception_table: JavaNativeMethodBody,
     pub ptr_name: StringPtr,
     pub exception_table_count: u16,
     pub unk3: u16,
@@ -133,7 +135,7 @@ pub struct WIPIJBInterface {
     pub fn_java_jump_1: TargetPtr,
     pub fn_java_jump_2: TargetPtr,
     pub fn_java_jump_3: TargetPtr,
-    pub fn_get_java_method: TargetPtr,
+    pub fn_get_java_method: GetJavaMethodPtr,
     pub fn_get_field: TargetPtr,
     pub fn_unk4: u32,
     pub fn_unk5: u32,

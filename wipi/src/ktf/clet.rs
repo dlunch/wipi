@@ -44,12 +44,12 @@ static CLET_CLASS_DESCRIPTOR: JavaClassDescriptor = JavaClassDescriptor {
 };
 
 static CLET_CLASS_METHODS: JavaMethodArray<2> = JavaMethodArray([
-    &java_native_method_definition(clet_init, &CLET_CLASS, c".()V+<init>".as_ptr()),
+    &java_native_method_definition(clet_init, &CLET_CLASS, c".()V+<init>"),
     null(),
 ]);
 
-extern "C" fn clet_init(_args: u32) -> u32 {
-    java_invoke_special("org/kwis/msp/lcdui/Jlet", "<init>", "()V");
+extern "C" fn clet_init(_: u32, args: *const ()) -> u32 {
+    let this = unsafe { *(args as *const u32) };
 
-    0
+    java_invoke_special(c"org/kwis/msp/lcdui/Jlet", c".()V+<init>", &[this])
 }

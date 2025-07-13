@@ -7,6 +7,8 @@ cfg_if::cfg_if! {
     if #[cfg(target_os = "none")] {
         use core::ffi::c_char;
 
+        use self::java::JavaClass;
+
         type ExeInterfaceInitPtr = extern "C" fn(*const InitParam0, *const InitParam1, *const InitParam2, *const InitParam3, *const InitParam4) -> u32;
         type ExeInterfaceGetClassPtr = extern "C" fn(*const c_char) -> u32;
         type ExeInterfaceFunctionsPtr = *const ExeInterfaceFunctions;
@@ -14,6 +16,7 @@ cfg_if::cfg_if! {
         type ExeInterfacePtr = *const ExeInterface;
         type WipiExeInitPtr = extern "C" fn() -> u32;
         type GetInterfacePtr = extern "C" fn(*const c_char) -> *const ();
+        type JavaClassLoadPtr = extern "C" fn(*mut *const JavaClass, *const c_char) -> u32;
         type TargetPtr = *const ();
     } else {
         type ExeInterfaceInitPtr = u32;
@@ -23,6 +26,7 @@ cfg_if::cfg_if! {
         type ExeInterfacePtr = u32;
         type WipiExeInitPtr = u32;
         type GetInterfacePtr = u32;
+        type JavaClassLoadPtr = u32;
         type TargetPtr = u32;
     }
 }
@@ -78,7 +82,7 @@ pub struct InitParam4 {
     pub fn_java_new: u32,
     pub fn_java_array_new: u32,
     pub unk6: u32,
-    pub fn_java_class_load: u32,
+    pub fn_java_class_load: JavaClassLoadPtr,
     pub unk7: u32,
     pub unk8: u32,
     pub fn_alloc: u32,
