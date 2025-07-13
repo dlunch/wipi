@@ -7,7 +7,7 @@ cfg_if::cfg_if! {
         use core::ffi::c_char;
 
         pub type JavaClassPtrNext = *const u32;
-        pub type JavaClassDescriptorPtr = *const JavaClassDescriptor;
+        pub type JavaClassDescriptorPtr = *mut JavaClassDescriptor;
         pub type JavaClassPtr = *const JavaClass;
         pub type StringPtr = *const c_char;
         pub type JavaNativeMethodBody = extern "C" fn (u32, *const ()) -> u32;
@@ -45,7 +45,7 @@ unsafe impl Send for JavaClass {}
 pub struct JavaClassDescriptor {
     pub ptr_name: StringPtr,
     pub unk1: u32,
-    pub ptr_parent_class: u32,
+    pub ptr_parent_class: TargetPtr,
     pub ptr_methods: JavaMethodArrayPtr,
     pub ptr_interfaces: u32,
     pub ptr_fields_or_element_type: u32, // for array class, this is element type

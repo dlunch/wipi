@@ -17,6 +17,11 @@ SECTIONS {
         . = ALIGN(4);
     } >ram = 0x00
 
+    .data : {
+        *(.data .data.*);
+        . = ALIGN(4);
+    } >ram = 0x00
+
     .bss : {
         *(.bss .bss.*);
         . = ALIGN(4);

@@ -1,4 +1,7 @@
-use core::ffi::{CStr, c_char};
+use core::{
+    ffi::{CStr, c_char},
+    mem::MaybeUninit,
+};
 
 use wipi_types::ktf::{
     ExeInterface, ExeInterfaceFunctions, InitParam0, InitParam1, InitParam2, InitParam3,
@@ -50,15 +53,43 @@ unsafe extern "C" fn start() -> *const WipiExe {
 extern "C" fn get_class(name: *const c_char) -> u32 {
     // TODO Clet only for now
 
-    if unsafe { CStr::from_ptr(name) } == c"Clet" {
-        return &CLET_CLASS as *const JavaClass as u32;
+    unsafe {
+        if CStr::from_ptr(name) == c"Clet" {
+            return &raw const CLET_CLASS as u32;
+        }
     }
 
     0
 }
 
 extern "C" fn wipi_start() -> u32 {
-    // TODO should initialize java environments(instantiate java constant strings, resolve external superclasses, ...)
+    // TODO instantiate java static strings
+
+    // resolve superclasses
+    unsafe {
+        // TODO should discover classes by some kind of table
+        let classes = [&raw mut CLET_CLASS];
+
+        for class in classes {
+            let super_class = (*(*class).ptr_descriptor).ptr_parent_class as *const c_char;
+
+            let mut ptr_super_class = MaybeUninit::<*const JavaClass>::uninit();
+            let result = ((*globals::INIT_PARAM_4).fn_java_class_load)(
+                ptr_super_class.as_mut_ptr(),
+                super_class,
+            );
+
+            let ptr_super_class = ptr_super_class.assume_init();
+
+            if result != 0 {
+                // TODO error handling
+                panic!("Can't load class");
+            }
+
+            (*(*class).ptr_descriptor).ptr_parent_class = ptr_super_class as _;
+        }
+    }
+
     0
 }
 

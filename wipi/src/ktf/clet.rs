@@ -19,19 +19,19 @@ unsafe extern "C" {
 
 }
 
-pub static CLET_CLASS: JavaClass = JavaClass {
-    ptr_next: &CLET_CLASS.unk1,
+pub static mut CLET_CLASS: JavaClass = JavaClass {
+    ptr_next: unsafe { &raw const CLET_CLASS.unk1 },
     unk1: 0,
-    ptr_descriptor: &CLET_CLASS_DESCRIPTOR,
+    ptr_descriptor: &raw mut CLET_CLASS_DESCRIPTOR,
     ptr_vtable: 0,
     vtable_count: 0,
     unk_flag: 0,
 };
 
-static CLET_CLASS_DESCRIPTOR: JavaClassDescriptor = JavaClassDescriptor {
+static mut CLET_CLASS_DESCRIPTOR: JavaClassDescriptor = JavaClassDescriptor {
     ptr_name: c"Clet".as_ptr(),
     unk1: 0,
-    ptr_parent_class: 0,
+    ptr_parent_class: c"org/kwis/msp/lcdui/Jlet".as_ptr() as _,
     ptr_methods: &CLET_CLASS_METHODS as *const _ as _,
     ptr_interfaces: 0,
     ptr_fields_or_element_type: 0,
@@ -44,7 +44,7 @@ static CLET_CLASS_DESCRIPTOR: JavaClassDescriptor = JavaClassDescriptor {
 };
 
 static CLET_CLASS_METHODS: JavaMethodArray<2> = JavaMethodArray([
-    &java_native_method_definition(clet_init, &CLET_CLASS, c".()V+<init>"),
+    &java_native_method_definition(clet_init, &raw const CLET_CLASS, c".()V+<init>"),
     null(),
 ]);
 
