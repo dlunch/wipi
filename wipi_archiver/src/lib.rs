@@ -1,6 +1,10 @@
 #![cfg_attr(target_os = "none", no_std)]
 #![cfg(not(target_os = "none"))]
 
+mod lgt_elf;
+
+use lgt_elf::fix_lgt_elf;
+
 pub fn create_ktf_archive(
     executable_path: &str,
     main_class_name: &str,
@@ -56,7 +60,8 @@ pub fn create_lgt_archive(
     use zip::{ZipWriter, write::SimpleFileOptions};
 
     let executable_file = fs::read(executable_path)?;
-    let jar = build_jar("binary.mod", executable_file, resource_path)?;
+    let fixed_executable = fix_lgt_elf(&executable_file)?;
+    let jar = build_jar("binary.mod", fixed_executable, resource_path)?;
 
     let mut archive = Vec::new();
     {
