@@ -8,3 +8,7 @@ panic = "abort"
 
 [profile.release]
 panic = "abort"
+
+[profile.examples]
+inherits = "dev"
+debug = false
