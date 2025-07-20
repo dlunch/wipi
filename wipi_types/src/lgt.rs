@@ -1,3 +1,5 @@
+pub mod java;
+
 use bytemuck::{Pod, Zeroable};
 
 #[repr(C)]
