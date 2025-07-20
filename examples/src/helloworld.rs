@@ -10,21 +10,16 @@ extern "C" fn start_clet() {
 }
 
 #[unsafe(export_name = "destroyClet")]
-extern "C" fn destroy_clet() {
-    println("Destroying Clet!");
-}
+extern "C" fn destroy_clet() {}
 
 #[unsafe(export_name = "paintClet")]
-extern "C" fn paint_clet() {
-    println("Painting Clet!");
-}
+extern "C" fn paint_clet() {}
 
 #[unsafe(export_name = "pauseClet")]
-extern "C" fn pause_clet() {
-    println("Pausing Clet!");
-}
+extern "C" fn pause_clet() {}
 
 #[unsafe(export_name = "resumeClet")]
-extern "C" fn resume_clet() {
-    println("Resuming Clet!");
-}
+extern "C" fn resume_clet() {}
+
+#[unsafe(export_name = "handleCletEvent")]
+extern "C" fn handle_clet_event() {}

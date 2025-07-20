@@ -29,6 +29,8 @@ pub struct InitStruct {
     pub ptr_str_init: StringPtr, // pointer to string "init"
 }
 
+unsafe impl Sync for InitStruct {}
+
 #[repr(C)]
 #[derive(Clone, Copy)]
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]

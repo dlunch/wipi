@@ -3,6 +3,9 @@
 #[cfg(all(feature = "ktf", feature = "lgt"))]
 compile_error!("Cannot enable both 'ktf' and 'lgt' features at the same time");
 
+#[cfg(all(not(feature = "ktf"), not(feature = "lgt"), target_os = "none"))]
+compile_error!("At least one of 'ktf' or 'lgt' features must be enabled");
+
 #[cfg(target_os = "none")]
 #[cfg(feature = "ktf")]
 mod ktf;
@@ -36,6 +39,8 @@ unsafe extern "C" {
     pub fn pause_clet();
     #[link_name = "resumeClet"]
     pub fn resume_clet();
+    #[link_name = "handleCletEvent"]
+    pub fn handle_clet_event();
 }
 
 pub fn println(s: &str) {

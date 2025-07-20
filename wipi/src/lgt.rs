@@ -1,8 +1,13 @@
+mod external;
+mod globals;
+mod start;
 pub mod wipic;
 
-#[unsafe(export_name = "_start")]
-pub fn start(_init_param_0: u32, _init_param_1: u32, _unk: u32) -> u32 {
-    unsafe { crate::start_clet() };
-
-    0
+#[panic_handler]
+fn panic_handler(_info: &core::panic::PanicInfo) -> ! {
+    // force crash the program
+    unsafe {
+        core::arch::asm!("bkpt");
+    }
+    loop {}
 }
