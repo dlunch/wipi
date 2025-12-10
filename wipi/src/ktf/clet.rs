@@ -23,7 +23,7 @@ static mut CLET_CLASS_DESCRIPTOR: JavaClassDescriptor = JavaClassDescriptor {
     ptr_methods: &CLET_CLASS_METHODS as *const _ as _,
     ptr_interfaces: 0,
     ptr_fields_or_element_type: 0,
-    method_count: 1,
+    method_count: CLET_CLASS_METHODS.0.len() as u16 - 1,
     fields_size: 0,
     access_flag: 0,
     unk6: 0,
