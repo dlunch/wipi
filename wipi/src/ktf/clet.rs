@@ -3,7 +3,10 @@ use core::ptr::null;
 use wipi_types::ktf::java::{JavaClass, JavaClassDescriptor, JavaMethodArray};
 
 use crate::{
-    ktf::java::{java_invoke_special, java_native_method_definition},
+    ktf::java::{
+        java_instantiate, java_invoke_special, java_invoke_static, java_invoke_virtual,
+        java_native_method_definition,
+    },
     start_clet,
 };
 
@@ -48,6 +51,20 @@ extern "C" fn clet_init(_: u32, args: *const ()) -> u32 {
 }
 
 extern "C" fn clet_start_app(_: u32, _args: *const ()) -> u32 {
+    let display = java_invoke_static(
+        c"org/kwis/msp/lcdui/Display",
+        c".(Ljava/lang/String;)Lorg/kwis/msp/lcdui/Display;+getDisplay",
+        &[],
+    );
+
+    let clet_card = java_instantiate(c"CletCard", c".()V+<init>", &[]);
+
+    java_invoke_virtual(
+        c"org/kwis/msp/lcdui/Display",
+        c".(Lorg/kwis/msp/lcdui/Card;)V+pushCard",
+        &[display, clet_card],
+    );
+
     unsafe {
         start_clet();
     }

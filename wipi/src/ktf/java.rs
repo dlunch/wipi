@@ -27,6 +27,22 @@ pub const fn java_native_method_definition(
 }
 
 pub fn java_invoke_special(class: &CStr, fullname: &CStr, args: &[u32]) -> u32 {
+    java_invoke(class, fullname, args)
+}
+
+pub fn java_invoke_static(class: &CStr, fullname: &CStr, args: &[u32]) -> u32 {
+    java_invoke(class, fullname, args)
+}
+
+pub fn java_invoke_virtual(class: &CStr, fullname: &CStr, args: &[u32]) -> u32 {
+    java_invoke(class, fullname, args)
+}
+
+pub fn java_instantiate(class: &CStr, constructor: &CStr, args: &[u32]) -> u32 {
+    0 // TODO
+}
+
+fn java_invoke(class: &CStr, fullname: &CStr, args: &[u32]) -> u32 {
     // TODO cache
     unsafe {
         let mut class_data = MaybeUninit::<*const JavaClass>::uninit();

@@ -8,7 +8,7 @@ use wipi_types::ktf::{
     InitParam4, WipiExe, java::JavaClass,
 };
 
-use super::{clet::CLET_CLASS, globals};
+use super::{clet::CLET_CLASS, clet_card::CLET_CARD_CLASS, globals};
 
 static EXE_INTERFACE_FUNCTIONS: ExeInterfaceFunctions = ExeInterfaceFunctions {
     unk1: 0,
@@ -56,6 +56,8 @@ extern "C" fn get_class(name: *const c_char) -> u32 {
     unsafe {
         if CStr::from_ptr(name) == c"Clet" {
             return &raw const CLET_CLASS as u32;
+        } else if CStr::from_ptr(name) == c"CletCard" {
+            return &raw const CLET_CARD_CLASS as u32;
         }
     }
 
@@ -68,7 +70,7 @@ extern "C" fn wipi_start() -> u32 {
     // resolve superclasses
     unsafe {
         // TODO should discover classes by some kind of table
-        let classes = [&raw mut CLET_CLASS];
+        let classes = [&raw mut CLET_CLASS, &raw mut CLET_CARD_CLASS];
 
         for class in classes {
             let super_class = (*(*class).ptr_descriptor).ptr_parent_class as *const c_char;

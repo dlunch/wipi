@@ -13,3 +13,7 @@ lgt = ["wipi/lgt"]
 [[bin]]
 name = "helloworld"
 path = "src/helloworld.rs"
+
+[[bin]]
+name = "triangle"
+path = "src/triangle.rs"
