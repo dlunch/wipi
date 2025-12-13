@@ -1,6 +1,6 @@
 use core::{
     ffi::CStr,
-    mem::{transmute, MaybeUninit},
+    mem::{MaybeUninit, transmute},
     ptr::null,
 };
 
