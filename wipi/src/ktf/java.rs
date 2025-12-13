@@ -1,6 +1,6 @@
 use core::{
     ffi::CStr,
-    mem::{MaybeUninit, transmute},
+    mem::{transmute, MaybeUninit},
     ptr::null,
 };
 
@@ -38,7 +38,7 @@ pub fn java_invoke_virtual(class: &CStr, fullname: &CStr, args: &[u32]) -> u32 {
     java_invoke(class, fullname, args)
 }
 
-pub fn java_instantiate(class: &CStr, constructor: &CStr, args: &[u32]) -> u32 {
+pub fn java_instantiate(_class: &CStr, _constructor: &CStr, _args: &[u32]) -> u32 {
     0 // TODO
 }
 
