@@ -1,32 +1,32 @@
 #![cfg_attr(target_os = "none", no_std)]
 
-#[cfg(all(feature = "ktf", feature = "lgt"))]
-compile_error!("Cannot enable both 'ktf' and 'lgt' features at the same time");
+cfg_if::cfg_if! {
+    if #[cfg(all(feature = "ktf", feature = "lgt"))] {
+        compile_error!("Cannot enable both 'ktf' and 'lgt' features at the same time");
+    } else if #[cfg(all(not(feature = "ktf"), not(feature = "lgt"), target_os = "none"))] {
+        compile_error!("At least one of 'ktf' or 'lgt' features must be enabled");
+    }
+}
 
-#[cfg(all(not(feature = "ktf"), not(feature = "lgt"), target_os = "none"))]
-compile_error!("At least one of 'ktf' or 'lgt' features must be enabled");
+cfg_if::cfg_if! {
+    // common target modules
+    if #[cfg(any(feature = "ktf", feature = "lgt"))] {
+        pub mod panic_handler;
+    }
+}
 
-#[cfg(target_os = "none")]
-#[cfg(feature = "ktf")]
-mod ktf;
-
-#[cfg(target_os = "none")]
-#[cfg(feature = "ktf")]
-use self::ktf::wipic;
-
-#[cfg(target_os = "none")]
-#[cfg(feature = "lgt")]
-mod lgt;
-
-#[cfg(target_os = "none")]
-#[cfg(feature = "lgt")]
-use self::lgt::wipic;
-
-#[cfg(not(target_os = "none"))]
-mod emulation;
-
-#[cfg(not(target_os = "none"))]
-use self::emulation::wipic;
+cfg_if::cfg_if! {
+    if #[cfg(feature = "ktf")] {
+        pub mod ktf;
+        use self::ktf::wipic;
+    } else if #[cfg(feature = "lgt")] {
+        pub mod lgt;
+        use self::lgt::wipic;
+    } else if #[cfg(not(target_os = "none"))] {
+        pub mod emulation;
+        use self::emulation::wipic;
+    }
+}
 
 unsafe extern "C" {
     #[link_name = "startClet"]
