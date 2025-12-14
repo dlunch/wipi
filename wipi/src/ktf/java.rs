@@ -102,8 +102,9 @@ fn java_invoke(
             let body: extern "C" fn(*const (), *const ()) -> *const () =
                 transmute((*method).fn_body_native_or_exception_table);
 
+            #[allow(clippy::collapsible_else_if)]
             if let Some(instance) = instance {
-                if args.len() == 0 {
+                if args.is_empty() {
                     (body)(ptr::null(), [instance].as_ptr() as *const ())
                 } else if args.len() == 1 {
                     (body)(ptr::null(), [instance, args[0]].as_ptr() as *const ())
@@ -116,8 +117,8 @@ fn java_invoke(
                     panic!("Too many arguments");
                 }
             } else {
-                if args.len() == 0 {
-                    (body)(ptr::null(), [].as_ptr() as *const ())
+                if args.is_empty() {
+                    (body)(ptr::null(), [].as_ptr())
                 } else if args.len() == 1 {
                     (body)(ptr::null(), [args[0]].as_ptr() as *const ())
                 } else if args.len() == 2 {
@@ -132,20 +133,21 @@ fn java_invoke(
             let unk: *const () = ptr::null();
 
             // TODO is it best?
-            if instance.is_some() {
-                if args.len() == 0 {
-                    (body)(unk, instance.unwrap())
+            #[allow(clippy::collapsible_else_if)]
+            if let Some(instance) = instance {
+                if args.is_empty() {
+                    (body)(unk, instance)
                 } else if args.len() == 1 {
-                    (body)(unk, instance.unwrap(), args[0])
+                    (body)(unk, instance, args[0])
                 } else if args.len() == 2 {
-                    (body)(unk, instance.unwrap(), args[0], args[1])
+                    (body)(unk, instance, args[0], args[1])
                 } else if args.len() == 3 {
-                    (body)(unk, instance.unwrap(), args[0], args[1], args[2])
+                    (body)(unk, instance, args[0], args[1], args[2])
                 } else {
                     panic!("Too many arguments");
                 }
             } else {
-                if args.len() == 0 {
+                if args.is_empty() {
                     (body)(unk)
                 } else if args.len() == 1 {
                     (body)(unk, args[0])
