@@ -1,4 +1,4 @@
-use core::ptr::null;
+use core::{ptr, slice};
 
 use wipi_types::ktf::java::{JavaClass, JavaClassDescriptor, JavaMethodArray};
 
@@ -41,16 +41,17 @@ static CLET_CLASS_METHODS: JavaMethodArray<3> = JavaMethodArray([
         &raw const CLET_CLASS,
         c".([Ljava/lang/String;)V+startApp",
     ),
-    null(),
+    ptr::null(),
 ]);
 
-extern "C" fn clet_init(_: u32, args: *const ()) -> u32 {
-    let this = unsafe { *(args as *const u32) };
+extern "C" fn clet_init(_: u32, args: *const *const ()) -> *const () {
+    let args = unsafe { slice::from_raw_parts(args, 1) };
+    let this = args[0];
 
     java_invoke_special(c"org/kwis/msp/lcdui/Jlet", c".()V+<init>", &[this])
 }
 
-extern "C" fn clet_start_app(_: u32, _args: *const ()) -> u32 {
+extern "C" fn clet_start_app(_: u32, _args: *const *const ()) -> *const () {
     let display = java_invoke_static(
         c"org/kwis/msp/lcdui/Display",
         c".(Ljava/lang/String;)Lorg/kwis/msp/lcdui/Display;+getDisplay",
@@ -69,5 +70,5 @@ extern "C" fn clet_start_app(_: u32, _args: *const ()) -> u32 {
         start_clet();
     }
 
-    0
+    ptr::null()
 }

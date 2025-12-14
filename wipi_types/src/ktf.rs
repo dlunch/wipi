@@ -10,7 +10,7 @@ cfg_if::cfg_if! {
         use self::java::JavaClass;
 
         type ExeInterfaceInitPtr = extern "C" fn(*const InitParam0, *const InitParam1, *const InitParam2, *const InitParam3, *const InitParam4) -> u32;
-        type ExeInterfaceGetClassPtr = extern "C" fn(*const c_char) -> u32;
+        type ExeInterfaceGetClassPtr = extern "C" fn(*const c_char) -> *const ();
         type ExeInterfaceFunctionsPtr = *const ExeInterfaceFunctions;
         type StringPtr = *const c_char;
         type ExeInterfacePtr = *const ExeInterface;

@@ -1,6 +1,7 @@
 use core::{
     ffi::{CStr, c_char},
     mem::MaybeUninit,
+    ptr,
 };
 
 use wipi_types::ktf::{
@@ -50,18 +51,18 @@ unsafe extern "C" fn start() -> *const WipiExe {
     &WIPI_EXE
 }
 
-extern "C" fn get_class(name: *const c_char) -> u32 {
+extern "C" fn get_class(name: *const c_char) -> *const () {
     // TODO Clet only for now
 
     unsafe {
         if CStr::from_ptr(name) == c"Clet" {
-            return &raw const CLET_CLASS as u32;
+            return &raw const CLET_CLASS as *const ();
         } else if CStr::from_ptr(name) == c"CletCard" {
-            return &raw const CLET_CARD_CLASS as u32;
+            return &raw const CLET_CARD_CLASS as *const ();
         }
     }
 
-    0
+    ptr::null()
 }
 
 extern "C" fn wipi_start() -> u32 {

@@ -1,4 +1,4 @@
-use core::ptr::null;
+use core::{ptr, slice};
 
 use wipi_types::ktf::java::{JavaClass, JavaClassDescriptor, JavaMethodArray};
 
@@ -30,11 +30,12 @@ static mut CLET_CARD_CLASS_DESCRIPTOR: JavaClassDescriptor = JavaClassDescriptor
 
 static CLET_CARD_CLASS_METHODS: JavaMethodArray<2> = JavaMethodArray([
     &java_native_method_definition(clet_card_init, &raw const CLET_CARD_CLASS, c".()V+<init>"),
-    null(),
+    ptr::null(),
 ]);
 
-extern "C" fn clet_card_init(_: u32, args: *const ()) -> u32 {
-    let this = unsafe { *(args as *const u32) };
+extern "C" fn clet_card_init(_: u32, args: *const *const ()) -> *const () {
+    let args = unsafe { slice::from_raw_parts(args, 1) };
+    let this = args[0];
 
     java_invoke_special(c"org/kwis/msp/lcdui/Card", c".()V+<init>", &[this])
 }

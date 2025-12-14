@@ -1,7 +1,7 @@
 use core::{
     ffi::CStr,
     mem::{MaybeUninit, transmute},
-    ptr::null,
+    ptr,
 };
 
 use wipi_types::ktf::java::{JavaClass, JavaMethodDefinition, JavaNativeMethodBody};
@@ -14,7 +14,7 @@ pub const fn java_native_method_definition(
     fullname: &CStr,
 ) -> JavaMethodDefinition {
     JavaMethodDefinition {
-        fn_body: null(),
+        fn_body: ptr::null(),
         ptr_class: class,
         fn_body_native_or_exception_table: body,
         ptr_name: fullname.as_ptr(),
@@ -26,23 +26,23 @@ pub const fn java_native_method_definition(
     }
 }
 
-pub fn java_invoke_special(class: &CStr, fullname: &CStr, args: &[u32]) -> u32 {
+pub fn java_invoke_special(class: &CStr, fullname: &CStr, args: &[*const ()]) -> *const () {
     java_invoke(class, fullname, args)
 }
 
-pub fn java_invoke_static(class: &CStr, fullname: &CStr, args: &[u32]) -> u32 {
+pub fn java_invoke_static(class: &CStr, fullname: &CStr, args: &[*const ()]) -> *const () {
     java_invoke(class, fullname, args)
 }
 
-pub fn java_invoke_virtual(class: &CStr, fullname: &CStr, args: &[u32]) -> u32 {
+pub fn java_invoke_virtual(class: &CStr, fullname: &CStr, args: &[*const ()]) -> *const () {
     java_invoke(class, fullname, args)
 }
 
-pub fn java_instantiate(_class: &CStr, _constructor: &CStr, _args: &[u32]) -> u32 {
-    0 // TODO
+pub fn java_instantiate(_class: &CStr, _constructor: &CStr, _args: &[*const ()]) -> *const () {
+    ptr::null() // TODO
 }
 
-fn java_invoke(class: &CStr, fullname: &CStr, args: &[u32]) -> u32 {
+fn java_invoke(class: &CStr, fullname: &CStr, args: &[*const ()]) -> *const () {
     // TODO cache
     unsafe {
         let mut class_data = MaybeUninit::<*const JavaClass>::uninit();
@@ -62,8 +62,8 @@ fn java_invoke(class: &CStr, fullname: &CStr, args: &[u32]) -> u32 {
             panic!("Can't find method");
         }
 
-        let body: extern "C" fn(u32, ...) -> u32 = transmute((*method).fn_body);
+        let body: extern "C" fn(*const (), ...) -> *const () = transmute((*method).fn_body);
 
-        (body)(0, args[0]) // TODO hardcoded argument
+        (body)(ptr::null(), args[0]) // TODO hardcoded argument
     }
 }

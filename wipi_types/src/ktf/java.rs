@@ -10,7 +10,7 @@ cfg_if::cfg_if! {
         pub type JavaClassDescriptorPtr = *mut JavaClassDescriptor;
         pub type JavaClassPtr = *const JavaClass;
         pub type StringPtr = *const c_char;
-        pub type JavaNativeMethodBody = extern "C" fn (u32, *const ()) -> u32;
+        pub type JavaNativeMethodBody = extern "C" fn (u32, *const *const ()) -> *const ();
         pub type JavaMethodArrayPtr = *const JavaMethodDefinition;
         pub type GetJavaMethodPtr = extern "C" fn (*const JavaClass, *const c_char) -> *const JavaMethodDefinition;
     } else {
