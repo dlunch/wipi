@@ -11,19 +11,19 @@ cfg_if::cfg_if! {
 cfg_if::cfg_if! {
     // common target modules
     if #[cfg(any(feature = "ktf", feature = "lgt"))] {
-        pub mod panic_handler;
+        mod panic_handler;
     }
 }
 
 cfg_if::cfg_if! {
     if #[cfg(feature = "ktf")] {
-        pub mod ktf;
+        mod ktf;
         use self::ktf::wipic;
     } else if #[cfg(feature = "lgt")] {
-        pub mod lgt;
+        mod lgt;
         use self::lgt::wipic;
     } else if #[cfg(not(target_os = "none"))] {
-        pub mod emulation;
+        mod emulation;
         use self::emulation::wipic;
     }
 }
