@@ -5,7 +5,7 @@ use wipi::println;
 
 #[unsafe(export_name = "startClet")]
 extern "C" fn start_clet() {
-    println("Triangle Clet started");
+    println("paint started");
 }
 
 #[unsafe(export_name = "destroyClet")]
