@@ -69,7 +69,7 @@ mod tests {
         write::{Object, Symbol, SymbolSection},
     };
 
-    use crate::fix_lgt_elf;
+    use super::*;
 
     fn create_test_elf() -> Vec<u8> {
         let mut obj = Object::new(BinaryFormat::Elf, Architecture::Arm, Endianness::Little);
