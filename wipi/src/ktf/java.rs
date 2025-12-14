@@ -26,44 +26,137 @@ pub const fn java_native_method_definition(
     }
 }
 
-pub fn java_invoke_special(class: &CStr, fullname: &CStr, args: &[*const ()]) -> *const () {
-    java_invoke(class, fullname, args)
+pub fn java_invoke_special(
+    class_name: &CStr,
+    fullname: &CStr,
+    instance: *const (),
+    args: &[*const ()],
+) -> *const () {
+    java_invoke(class_name, fullname, Some(instance), args)
 }
 
-pub fn java_invoke_static(class: &CStr, fullname: &CStr, args: &[*const ()]) -> *const () {
-    java_invoke(class, fullname, args)
+pub fn java_invoke_static(class_name: &CStr, fullname: &CStr, args: &[*const ()]) -> *const () {
+    java_invoke(class_name, fullname, None, args)
 }
 
-pub fn java_invoke_virtual(class: &CStr, fullname: &CStr, args: &[*const ()]) -> *const () {
-    java_invoke(class, fullname, args)
+pub fn java_invoke_virtual(
+    class_name: &CStr,
+    fullname: &CStr,
+    instance: *const (),
+    args: &[*const ()],
+) -> *const () {
+    java_invoke(class_name, fullname, Some(instance), args)
 }
 
-pub fn java_instantiate(_class: &CStr, _constructor: &CStr, _args: &[*const ()]) -> *const () {
-    ptr::null() // TODO
+pub fn java_instantiate(
+    class_name: &CStr,
+    constructor_type: &CStr,
+    args: &[*const ()],
+) -> *const () {
+    unsafe {
+        let class = get_java_class(class_name);
+
+        let instance = ((*INIT_PARAM_4).fn_java_new)(class);
+
+        // call ctor
+        java_invoke_virtual(class_name, constructor_type, instance, args);
+
+        instance
+    }
 }
 
-fn java_invoke(class: &CStr, fullname: &CStr, args: &[*const ()]) -> *const () {
+fn get_java_class(class_name: &CStr) -> *const JavaClass {
     // TODO cache
     unsafe {
         let mut class_data = MaybeUninit::<*const JavaClass>::uninit();
-        let result = ((*INIT_PARAM_4).fn_java_class_load)(class_data.as_mut_ptr(), class.as_ptr());
+        let result =
+            ((*INIT_PARAM_4).fn_java_class_load)(class_data.as_mut_ptr(), class_name.as_ptr());
 
         if result != 0 {
             // TODO error handling
             panic!("Can't load class");
         }
 
-        let class_data = class_data.assume_init();
+        class_data.assume_init()
+    }
+}
 
-        let method = ((*WIPI_JBINTERFACE).fn_get_java_method)(class_data, fullname.as_ptr());
+fn java_invoke(
+    class_name: &CStr,
+    fullname: &CStr,
+    instance: Option<*const ()>,
+    args: &[*const ()],
+) -> *const () {
+    unsafe {
+        let class = get_java_class(class_name);
+
+        let method = ((*WIPI_JBINTERFACE).fn_get_java_method)(class, fullname.as_ptr());
 
         if method.is_null() {
             // TODO error handling
             panic!("Can't find method");
         }
 
-        let body: extern "C" fn(*const (), ...) -> *const () = transmute((*method).fn_body);
+        if (*method).access_flags & 0x100 == 0x100 {
+            // native method
+            let body: extern "C" fn(*const (), *const ()) -> *const () =
+                transmute((*method).fn_body_native_or_exception_table);
 
-        (body)(ptr::null(), args[0]) // TODO hardcoded argument
+            if let Some(instance) = instance {
+                if args.len() == 0 {
+                    (body)(ptr::null(), [instance].as_ptr() as *const ())
+                } else if args.len() == 1 {
+                    (body)(ptr::null(), [instance, args[0]].as_ptr() as *const ())
+                } else if args.len() == 2 {
+                    (body)(
+                        ptr::null(),
+                        [instance, args[0], args[1]].as_ptr() as *const (),
+                    )
+                } else {
+                    panic!("Too many arguments");
+                }
+            } else {
+                if args.len() == 0 {
+                    (body)(ptr::null(), [].as_ptr() as *const ())
+                } else if args.len() == 1 {
+                    (body)(ptr::null(), [args[0]].as_ptr() as *const ())
+                } else if args.len() == 2 {
+                    (body)(ptr::null(), [args[0], args[1]].as_ptr() as *const ())
+                } else {
+                    panic!("Too many arguments");
+                }
+            }
+        } else {
+            let body: extern "C" fn(...) -> *const () = transmute((*method).fn_body);
+
+            let unk: *const () = ptr::null();
+
+            // TODO is it best?
+            if instance.is_some() {
+                if args.len() == 0 {
+                    (body)(unk, instance.unwrap())
+                } else if args.len() == 1 {
+                    (body)(unk, instance.unwrap(), args[0])
+                } else if args.len() == 2 {
+                    (body)(unk, instance.unwrap(), args[0], args[1])
+                } else if args.len() == 3 {
+                    (body)(unk, instance.unwrap(), args[0], args[1], args[2])
+                } else {
+                    panic!("Too many arguments");
+                }
+            } else {
+                if args.len() == 0 {
+                    (body)(unk)
+                } else if args.len() == 1 {
+                    (body)(unk, args[0])
+                } else if args.len() == 2 {
+                    (body)(unk, args[0], args[1])
+                } else if args.len() == 3 {
+                    (body)(unk, args[0], args[1], args[2])
+                } else {
+                    panic!("Too many arguments");
+                }
+            }
+        }
     }
 }

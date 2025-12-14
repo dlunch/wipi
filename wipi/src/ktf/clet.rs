@@ -48,14 +48,14 @@ extern "C" fn clet_init(_: u32, args: *const *const ()) -> *const () {
     let args = unsafe { slice::from_raw_parts(args, 1) };
     let this = args[0];
 
-    java_invoke_special(c"org/kwis/msp/lcdui/Jlet", c".()V+<init>", &[this])
+    java_invoke_special(c"org/kwis/msp/lcdui/Jlet", c".()V+<init>", this, &[])
 }
 
 extern "C" fn clet_start_app(_: u32, _args: *const *const ()) -> *const () {
     let display = java_invoke_static(
         c"org/kwis/msp/lcdui/Display",
         c".(Ljava/lang/String;)Lorg/kwis/msp/lcdui/Display;+getDisplay",
-        &[],
+        &[ptr::null()],
     );
 
     let clet_card = java_instantiate(c"CletCard", c".()V+<init>", &[]);
@@ -63,7 +63,8 @@ extern "C" fn clet_start_app(_: u32, _args: *const *const ()) -> *const () {
     java_invoke_virtual(
         c"org/kwis/msp/lcdui/Display",
         c".(Lorg/kwis/msp/lcdui/Card;)V+pushCard",
-        &[display, clet_card],
+        display,
+        &[clet_card],
     );
 
     unsafe {

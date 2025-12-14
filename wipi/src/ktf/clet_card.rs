@@ -2,7 +2,10 @@ use core::{ptr, slice};
 
 use wipi_types::ktf::java::{JavaClass, JavaClassDescriptor, JavaMethodArray};
 
-use crate::ktf::java::{java_invoke_special, java_native_method_definition};
+use crate::{
+    ktf::java::{java_invoke_special, java_native_method_definition},
+    paint_clet,
+};
 
 pub static mut CLET_CARD_CLASS: JavaClass = JavaClass {
     ptr_next: unsafe { &raw const CLET_CARD_CLASS.unk1 },
@@ -28,8 +31,13 @@ static mut CLET_CARD_CLASS_DESCRIPTOR: JavaClassDescriptor = JavaClassDescriptor
     unk8: 0,
 };
 
-static CLET_CARD_CLASS_METHODS: JavaMethodArray<2> = JavaMethodArray([
+static CLET_CARD_CLASS_METHODS: JavaMethodArray<3> = JavaMethodArray([
     &java_native_method_definition(clet_card_init, &raw const CLET_CARD_CLASS, c".()V+<init>"),
+    &java_native_method_definition(
+        clet_card_paint,
+        &raw const CLET_CARD_CLASS,
+        c".(Lorg/kwis/msp/lcdui/Graphics;)V+paint",
+    ),
     ptr::null(),
 ]);
 
@@ -37,5 +45,11 @@ extern "C" fn clet_card_init(_: u32, args: *const *const ()) -> *const () {
     let args = unsafe { slice::from_raw_parts(args, 1) };
     let this = args[0];
 
-    java_invoke_special(c"org/kwis/msp/lcdui/Card", c".()V+<init>", &[this])
+    java_invoke_special(c"org/kwis/msp/lcdui/Card", c".()V+<init>", this, &[])
+}
+
+extern "C" fn clet_card_paint(_: u32, _args: *const *const ()) -> *const () {
+    unsafe { paint_clet() }
+
+    ptr::null()
 }

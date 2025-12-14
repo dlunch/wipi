@@ -15,5 +15,5 @@ name = "helloworld"
 path = "src/helloworld.rs"
 
 [[bin]]
-name = "triangle"
-path = "src/triangle.rs"
+name = "paint"
+path = "src/paint.rs"

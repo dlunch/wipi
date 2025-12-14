@@ -17,6 +17,7 @@ cfg_if::cfg_if! {
         type WipiExeInitPtr = extern "C" fn() -> u32;
         type GetInterfacePtr = extern "C" fn(*const c_char) -> *const ();
         type JavaClassLoadPtr = extern "C" fn(*mut *const JavaClass, *const c_char) -> u32;
+        type JavaClassNewPtr = extern "C" fn(*const JavaClass) -> *const ();
         type TargetPtr = *const ();
     } else {
         type ExeInterfaceInitPtr = u32;
@@ -27,6 +28,7 @@ cfg_if::cfg_if! {
         type WipiExeInitPtr = u32;
         type GetInterfacePtr = u32;
         type JavaClassLoadPtr = u32;
+        type JavaClassNewPtr = u32;
         type TargetPtr = u32;
     }
 }
@@ -79,7 +81,7 @@ pub struct InitParam4 {
     pub unk1: u32,
     pub unk2: u32,
     pub fn_java_check_type: u32,
-    pub fn_java_new: u32,
+    pub fn_java_new: JavaClassNewPtr,
     pub fn_java_array_new: u32,
     pub unk6: u32,
     pub fn_java_class_load: JavaClassLoadPtr,
