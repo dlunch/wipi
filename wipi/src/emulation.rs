@@ -4,5 +4,5 @@ pub mod wipic;
 #[unsafe(no_mangle)]
 pub extern "C" fn main() {
     unsafe { crate::start_clet() }
-    wipic::exit(0);
+    wipic::kernel::exit(0);
 }

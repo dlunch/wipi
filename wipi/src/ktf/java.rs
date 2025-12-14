@@ -6,7 +6,7 @@ use core::{
 
 use wipi_types::ktf::java::{JavaClass, JavaMethodDefinition, JavaNativeMethodBody};
 
-use super::globals::{INIT_PARAM_4, WIPI_JBINTERFACE};
+use crate::ktf::globals::{INIT_PARAM_4, WIPI_JBINTERFACE};
 
 pub const fn java_native_method_definition(
     body: JavaNativeMethodBody,

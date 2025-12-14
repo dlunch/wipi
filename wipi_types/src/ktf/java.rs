@@ -1,6 +1,6 @@
 use bytemuck::{Pod, Zeroable};
 
-use super::TargetPtr;
+use crate::ktf::TargetPtr;
 
 cfg_if::cfg_if! {
     if #[cfg(target_os = "none")] {

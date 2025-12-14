@@ -2,8 +2,11 @@ use core::mem::transmute;
 
 use wipi_types::lgt::{CletFunctions, InitParam1, InitParam2, InitStruct};
 
-use super::{external::get_external_method, globals};
-use crate::{destroy_clet, handle_clet_event, paint_clet, pause_clet, resume_clet, start_clet};
+use crate::{
+    destroy_clet, handle_clet_event,
+    lgt::{external::get_external_method, globals},
+    paint_clet, pause_clet, resume_clet, start_clet,
+};
 
 static INIT_STRUCT: InitStruct = InitStruct {
     unk1: 0,

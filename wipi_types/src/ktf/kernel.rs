@@ -1,4 +1,4 @@
-use super::TargetPtr;
+use crate::ktf::TargetPtr;
 
 #[cfg(not(target_os = "none"))]
 use bytemuck::{Pod, Zeroable};

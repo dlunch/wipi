@@ -44,9 +44,9 @@ unsafe extern "C" {
 }
 
 pub fn println(s: &str) {
-    wipic::println(s)
+    wipic::kernel::println(s)
 }
 
 pub fn exit(code: i32) {
-    wipic::exit(code)
+    wipic::kernel::exit(code)
 }

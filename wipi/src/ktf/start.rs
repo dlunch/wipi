@@ -9,7 +9,7 @@ use wipi_types::ktf::{
     InitParam4, WipiExe, java::JavaClass,
 };
 
-use super::{clet::CLET_CLASS, clet_card::CLET_CARD_CLASS, globals};
+use crate::ktf::{clet::CLET_CLASS, clet_card::CLET_CARD_CLASS, globals};
 
 static EXE_INTERFACE_FUNCTIONS: ExeInterfaceFunctions = ExeInterfaceFunctions {
     unk1: 0,

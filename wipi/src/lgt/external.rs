@@ -1,4 +1,4 @@
-use super::globals;
+use crate::lgt::globals;
 
 pub fn get_external_method(table: u32, index: u32) -> extern "C" fn(...) -> u32 {
     // TODO caching
