@@ -2,7 +2,7 @@ use core::ptr;
 
 use wipi_types::ktf::{
     InitParam0, InitParam1, InitParam2, InitParam3, InitParam4, java::WIPIJBInterface,
-    kernel::WIPICKnlInterface,
+    wipic::WIPICKnlInterface,
 };
 
 pub(super) static mut INIT_PARAM_0: *const InitParam0 = ptr::null();

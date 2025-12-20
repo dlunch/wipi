@@ -1,5 +1,5 @@
 pub mod java;
-pub mod kernel;
+pub mod wipic;
 
 use bytemuck::{Pod, Zeroable};
 
