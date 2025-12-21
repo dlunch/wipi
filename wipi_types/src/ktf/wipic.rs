@@ -40,7 +40,7 @@ pub struct WIPICKnlInterface {
     pub set_system_property: TargetPtr,
     pub get_resource_id: TargetPtr,
     pub get_resource: TargetPtr,
-    pub reserved1: TargetPtr,
+    pub reserved1: TargetPtr, // get_wipic_interface for ktf
     pub reserved2: TargetPtr,
     pub reserved3: TargetPtr,
     pub reserved4: TargetPtr,
@@ -72,6 +72,29 @@ pub struct WIPICKnlInterface {
     pub get_lib_private_area: TargetPtr,
     pub get_platform_version: TargetPtr,
     pub get_token: TargetPtr,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
+pub struct WIPICInterface {
+    util_interface: TargetPtr,
+    misc_interface: TargetPtr,
+    graphics_interface: TargetPtr,
+    interface_3: TargetPtr,
+    interface_4: TargetPtr,
+    interface_5: TargetPtr,
+    database_interface: TargetPtr,
+    interface_7: TargetPtr,
+    uic_interface: TargetPtr,
+    media_interface: TargetPtr,
+    net_interface: TargetPtr,
+    interface_11: TargetPtr,
+    interface_12: TargetPtr,
+    interface_13: TargetPtr,
+    interface_14: TargetPtr,
+    interface_15: TargetPtr,
+    interface_16: TargetPtr,
 }
 
 #[repr(C)]
