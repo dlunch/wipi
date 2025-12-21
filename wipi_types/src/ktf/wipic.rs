@@ -78,6 +78,7 @@ pub struct WIPICKnlInterface {
 #[derive(Clone, Copy)]
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct WIPICGraphicsInterface {
+    pub get_image_property: TargetPtr,
     pub get_image_framebuffer: TargetPtr,
     pub get_screen_framebuffer: TargetPtr,
     pub destroy_offscreen_framebuffer: TargetPtr,
