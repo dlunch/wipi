@@ -162,3 +162,31 @@ pub struct WIPICGraphicsInterface {
     pub encode_image_ex: TargetPtr,
     pub get_image_info: TargetPtr,
 }
+
+// MC_GrpDisplayInfo
+#[repr(C)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
+pub struct WIPICDisplayInfo {
+    pub bpp: u32,
+    pub depth: u32,
+    pub width: u32,
+    pub height: u32,
+    pub bpl: u32,
+    pub color_type: u32,
+    pub red_mask: u32,
+    pub blue_mask: u32,
+    pub green_mask: u32,
+}
+
+// MC_GrpFrameBuffer
+#[repr(C)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
+pub struct WIPICFramebuffer {
+    pub width: u32,
+    pub height: u32,
+    pub bpl: u32,
+    pub bpp: u32,
+    pub buf: u32, // indirect pointer
+}
