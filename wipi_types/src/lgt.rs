@@ -1,4 +1,5 @@
 pub mod java;
+pub mod wipic;
 
 use crate::wipic::TargetPtr;
 

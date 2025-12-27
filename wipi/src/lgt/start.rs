@@ -1,6 +1,9 @@
 use core::mem::transmute;
 
-use wipi_types::lgt::{CletFunctions, InitParam1, InitParam2, InitStruct};
+use wipi_types::lgt::{
+    wipic::{ImportModule, WIPICMethod},
+    {CletFunctions, InitParam1, InitParam2, InitStruct},
+};
 
 use crate::{
     destroy_clet, handle_clet_event,
@@ -37,7 +40,7 @@ extern "C" fn init() {
     unsafe {
         // TODO enum
         let clet_register: extern "C" fn(*const CletFunctions, u32) =
-            transmute(get_external_method(0x1fb, 0x03));
+            transmute(get_external_method(ImportModule::WIPIC, WIPICMethod::CletRegister as _));
 
         clet_register(&functions as *const _, 0)
     };

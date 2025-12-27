@@ -1,5 +1,7 @@
 use core::mem::transmute;
 
+use wipi_types::lgt::wipic::{ImportModule, WIPICMethod};
+
 use crate::lgt::external::get_external_method;
 
 pub fn println(s: &str) {
@@ -11,7 +13,10 @@ pub fn println(s: &str) {
     }
 
     unsafe {
-        let printk: extern "C" fn(*const u8) = transmute(get_external_method(0x1fb, 0x64));
+        let printk: extern "C" fn(*const u8) = transmute(get_external_method(
+            ImportModule::WIPIC,
+            WIPICMethod::Printk as _,
+        ));
         printk(buffer as *const u8);
     }
 
@@ -20,7 +25,10 @@ pub fn println(s: &str) {
 
 pub fn exit(code: i32) {
     unsafe {
-        let exit: extern "C" fn(i32) = transmute(get_external_method(0x1fb, 0x6b));
+        let exit: extern "C" fn(i32) = transmute(get_external_method(
+            ImportModule::WIPIC,
+            WIPICMethod::Exit as _,
+        ));
 
         exit(code);
     }
@@ -28,7 +36,10 @@ pub fn exit(code: i32) {
 
 fn alloc(size: u32) -> *const () {
     unsafe {
-        let alloc: extern "C" fn(u32) -> *const () = transmute(get_external_method(0x1fb, 0x75));
+        let alloc: extern "C" fn(u32) -> *const () = transmute(get_external_method(
+            ImportModule::WIPIC,
+            WIPICMethod::Alloc as _,
+        ));
 
         alloc(size)
     }
@@ -36,7 +47,10 @@ fn alloc(size: u32) -> *const () {
 
 fn free(ptr: *const ()) {
     unsafe {
-        let free: extern "C" fn(*const ()) = transmute(get_external_method(0x1fb, 0x77));
+        let free: extern "C" fn(*const ()) = transmute(get_external_method(
+            ImportModule::WIPIC,
+            WIPICMethod::Free as _,
+        ));
 
         free(ptr)
     }
