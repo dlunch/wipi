@@ -122,7 +122,7 @@ pub struct WIPICGraphicsInterface {
     pub draw_unicode_string: TargetPtr,
     pub get_rgb_pixels: TargetPtr,
     pub set_rgb_pixels: TargetPtr,
-    pub flush: TargetPtr,
+    pub flush_lcd: TargetPtr,
     pub get_pixel_from_rgb: TargetPtr,
     pub get_rgb_from_pixel: TargetPtr,
     pub get_display_info: TargetPtr,
