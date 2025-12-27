@@ -18,13 +18,13 @@ cfg_if::cfg_if! {
 cfg_if::cfg_if! {
     if #[cfg(feature = "ktf")] {
         mod ktf;
-        use self::ktf::wipic;
+        pub use self::ktf::wipic;
     } else if #[cfg(feature = "lgt")] {
         mod lgt;
-        use self::lgt::wipic;
+        pub use self::lgt::wipic;
     } else if #[cfg(not(target_os = "none"))] {
         mod emulation;
-        use self::emulation::wipic;
+        pub use self::emulation::wipic;
     }
 }
 
@@ -41,12 +41,4 @@ unsafe extern "C" {
     pub fn resume_clet();
     #[link_name = "handleCletEvent"]
     pub fn handle_clet_event();
-}
-
-pub fn println(s: &str) {
-    wipic::kernel::println(s)
-}
-
-pub fn exit(code: i32) {
-    wipic::kernel::exit(code)
 }

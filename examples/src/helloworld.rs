@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 
-use wipi::{exit, println};
+use wipi::wipic::kernel::{exit, println};
 
 #[unsafe(export_name = "startClet")]
 extern "C" fn start_clet() {

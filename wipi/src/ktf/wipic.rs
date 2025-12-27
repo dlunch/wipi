@@ -1,11 +1,8 @@
 pub mod graphics;
 pub mod kernel;
 
-#[repr(transparent)]
-pub struct KtfWipiCMemory(*mut u8);
+use wipi_types::wipic::WIPICIndirectPtr;
 
-impl KtfWipiCMemory {
-    pub fn as_ptr(&self) -> *mut u8 {
-        unsafe { self.0.add(12) }
-    }
+pub fn deref_indirect_ptr(ptr: WIPICIndirectPtr) -> *mut u8 {
+    unsafe { (ptr.0 as *mut u8).add(8) } // Offset by 8 bytes to get the actual pointer
 }

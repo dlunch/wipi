@@ -2,11 +2,15 @@
 use bytemuck::{Pod, Zeroable};
 
 pub type WIPICWord = u32;
+#[cfg(target_os = "none")]
+pub type TargetPtr = *const ();
+#[cfg(not(target_os = "none"))]
+pub type TargetPtr = u32;
 
 #[repr(C)]
 #[derive(Clone, Copy)]
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
-pub struct WIPICIndirectPtr(pub WIPICWord);
+pub struct WIPICIndirectPtr(pub TargetPtr);
 
 // MC_GrpDisplayInfo
 #[repr(C)]

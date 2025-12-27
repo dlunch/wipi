@@ -3,6 +3,8 @@ pub mod wipic;
 
 use bytemuck::{Pod, Zeroable};
 
+use crate::wipic::TargetPtr;
+
 cfg_if::cfg_if! {
     if #[cfg(target_os = "none")] {
         use core::ffi::c_char;
@@ -18,7 +20,6 @@ cfg_if::cfg_if! {
         type GetInterfacePtr = extern "C" fn(*const c_char) -> *const ();
         type JavaClassLoadPtr = extern "C" fn(*mut *const JavaClass, *const c_char) -> u32;
         type JavaClassNewPtr = extern "C" fn(*const JavaClass) -> *const ();
-        type TargetPtr = *const ();
     } else {
         type ExeInterfaceInitPtr = u32;
         type ExeInterfaceGetClassPtr = u32;
@@ -29,7 +30,6 @@ cfg_if::cfg_if! {
         type GetInterfacePtr = u32;
         type JavaClassLoadPtr = u32;
         type JavaClassNewPtr = u32;
-        type TargetPtr = u32;
     }
 }
 

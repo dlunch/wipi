@@ -1,12 +1,13 @@
 pub mod java;
 
+use crate::wipic::TargetPtr;
+
 cfg_if::cfg_if! {
     if #[cfg(target_os = "none")] {
         use core::ffi::c_char;
 
         type FnInitPtr = extern "C" fn() -> ();
         type StringPtr = *const c_char;
-        type TargetPtr = *const ();
         type FnGetImportTablePtr = extern "C" fn(u32) -> u32;
         type FnGetImportFunctionPtr = extern "C" fn(u32, u32) -> extern "C" fn(...) -> u32;
     } else {
@@ -14,7 +15,6 @@ cfg_if::cfg_if! {
 
         type FnInitPtr = u32;
         type StringPtr = u32;
-        type TargetPtr = u32;
         type FnGetImportTablePtr = u32;
         type FnGetImportFunctionPtr = u32;
     }

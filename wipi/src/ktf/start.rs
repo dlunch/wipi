@@ -1,12 +1,12 @@
 use core::{
     ffi::{CStr, c_char},
-    mem::MaybeUninit,
+    mem::{MaybeUninit, transmute},
     ptr,
 };
 
 use wipi_types::ktf::{
     ExeInterface, ExeInterfaceFunctions, InitParam0, InitParam1, InitParam2, InitParam3,
-    InitParam4, WipiExe, java::JavaClass,
+    InitParam4, WipiExe, java::JavaClass, wipic::WIPICInterface,
 };
 
 use crate::ktf::{clet::CLET_CLASS, clet_card::CLET_CARD_CLASS, globals};
@@ -115,6 +115,13 @@ extern "C" fn exe_start(
         globals::WIPIC_KNLINTERFACE =
             ((*param4).fn_get_interface)(c"WIPIC_knlInterface".as_ptr()) as _;
         globals::WIPI_JBINTERFACE = ((*param4).fn_get_interface)(c"WIPI_JBInterface".as_ptr()) as _;
+
+        let get_wipic_interfaces: extern "C" fn() -> *const WIPICInterface =
+            transmute((*globals::WIPIC_KNLINTERFACE).reserved1);
+
+        let wipic_interface = get_wipic_interfaces();
+
+        globals::WIPIC_GRAPHICS_INTERFACE = (*wipic_interface).graphics_interface as _;
     }
 
     0
