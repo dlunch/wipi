@@ -39,8 +39,9 @@ extern "C" fn init() {
 
     unsafe {
         // TODO enum
-        let clet_register: extern "C" fn(*const CletFunctions, u32) =
-            transmute(get_external_method(ImportModule::WIPIC, WIPICMethod::CletRegister as _));
+        let clet_register: extern "C" fn(*const CletFunctions, u32) = transmute(
+            get_external_method(ImportModule::WIPIC, WIPICMethod::CletRegister as _),
+        );
 
         clet_register(&functions as *const _, 0)
     };

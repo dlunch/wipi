@@ -10,3 +10,10 @@ pub fn get_screen_framebuffer() -> WIPICIndirectPtr {
 
     get_screen_framebuffer(0)
 }
+
+pub fn flush_lcd(i: i32, framebuffer: WIPICIndirectPtr, x: i32, y: i32, width: i32, height: i32) {
+    let flush_lcd: extern "C" fn(i32, WIPICIndirectPtr, i32, i32, i32, i32) -> () =
+        unsafe { transmute((*WIPIC_GRAPHICS_INTERFACE).flush_lcd) };
+
+    flush_lcd(i, framebuffer, x, y, width, height);
+}
