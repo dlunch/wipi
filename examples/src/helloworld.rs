@@ -1,11 +1,18 @@
 #![no_std]
 #![no_main]
 
-use wipi::wipic::kernel::{exit, println};
+use core::mem::transmute;
+
+use wipi::wipic::kernel::{exit, printk};
 
 #[unsafe(export_name = "startClet")]
 extern "C" fn start_clet() {
-    println("Hello, world!");
+    unsafe {
+        printk(
+            "Hello, %s! %d",
+            &[c"world".as_ptr() as _, transmute(2024_usize)],
+        )
+    };
     exit(0);
 }
 

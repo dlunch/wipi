@@ -2,8 +2,8 @@ extern crate std;
 
 use std::{println, process};
 
-pub fn println(s: &str) {
-    println!("{s}");
+pub fn printk(fmt: &str, _args: &[*const ()]) {
+    println!("{fmt}");
 }
 
 pub fn exit(code: i32) {
