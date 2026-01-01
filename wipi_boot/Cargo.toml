@@ -11,4 +11,4 @@ lgt = ["wipi_types/lgt"]
 [dependencies]
 cfg-if = { workspace = true }
 
-wipi_types = { path = "../wipi_types" }
+wipi_types = { workspace = true }

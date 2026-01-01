@@ -12,6 +12,15 @@ license = "MIT"
 [workspace.dependencies]
 cfg-if = { version = "^1.0", default-features = false }
 
+wipi = { path = "wipi" }
+wipi_boot = { path = "wipi_boot" }
+wipi_types = { path = "wipi_types" }
+wipic_sys = { path = "wipic_sys" }
+
+wipi_build = { path = "host/wipi_build" }
+wipic_simulation = { path = "host/wipic_simulation" }
+
+
 [profile.dev]
 panic = "abort"
 

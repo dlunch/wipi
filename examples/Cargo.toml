@@ -11,10 +11,10 @@ lgt = ["wipi/lgt", "wipi_build/lgt"]
 simulation = ["wipi/simulation"]
 
 [dependencies]
-wipi = { path = "../wipi" }
+wipi = { workspace = true }
 
 [build-dependencies]
-wipi_build = { path = "../host/wipi_build" }
+wipi_build = { workspace = true }
 
 [[bin]]
 name = "helloworld"

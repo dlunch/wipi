@@ -12,6 +12,6 @@ simulation = ["wipi_types", "wipi_boot", "wipic_simulation"]
 [dependencies]
 cfg-if = { workspace = true }
 
-wipi_boot = { path = "../wipi_boot", optional = true }
-wipi_types = { path = "../wipi_types", optional = true }
-wipic_simulation = { path = "../host/wipic_simulation", optional = true }
+wipi_boot = { workspace = true, optional = true }
+wipi_types = { workspace = true, optional = true }
+wipic_simulation = { workspace = true, optional = true }
