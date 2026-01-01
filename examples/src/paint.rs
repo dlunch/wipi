@@ -1,7 +1,10 @@
 #![no_std]
 #![no_main]
 
-use wipi::{Color, Framebuffer, println};
+use wipi::{
+    framebuffer::{Color, Framebuffer},
+    println,
+};
 
 #[unsafe(export_name = "startClet")]
 extern "C" fn start_clet() {
