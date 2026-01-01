@@ -1,9 +1,7 @@
-use crate::println;
-
 #[cfg(target_os = "none")]
 #[panic_handler]
 fn panic_handler(info: &core::panic::PanicInfo) -> ! {
-    println!("{}", info);
+    crate::println!("{}", info);
 
     // force crash the program
     unsafe {
