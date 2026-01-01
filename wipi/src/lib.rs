@@ -1,5 +1,17 @@
 #![no_std]
 
+mod console;
 mod panic_handler;
 
-pub use wipic_sys::kernel; // TODO implement rust interface for wipic_sys
+#[macro_export]
+macro_rules! println {
+    ($($arg:tt)*) => {{
+        use core::fmt::Write;
+        let _ = write!($crate::Console, $($arg)*);
+        let _ = write!($crate::Console, "\n");
+    }};
+}
+
+// re-exports
+pub use self::console::Console;
+pub use wipic_sys::kernel::exit;

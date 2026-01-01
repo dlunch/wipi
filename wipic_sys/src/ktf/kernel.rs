@@ -5,7 +5,6 @@ use wipi_types::wipic::WIPICIndirectPtr;
 
 use crate::ktf::deref_indirect_ptr;
 
-// TODO macro for variable arguments
 pub fn printk(fmt: &str, args: &[*const ()]) {
     let printk: extern "C" fn(*const c_char, ...) -> () =
         unsafe { transmute((*WIPIC_KNLINTERFACE).printk) };

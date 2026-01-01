@@ -1,11 +1,11 @@
 #![no_std]
 #![no_main]
 
-use wipi::kernel::printk;
+use wipi::println;
 
 #[unsafe(export_name = "startClet")]
 extern "C" fn start_clet() {
-    printk("paint started", &[]);
+    println!("paint started");
 }
 
 #[unsafe(export_name = "destroyClet")]
@@ -13,7 +13,7 @@ extern "C" fn destroy_clet() {}
 
 #[unsafe(export_name = "paintClet")]
 extern "C" fn paint_clet() {
-    printk("paintClet called", &[]);
+    println!("paintClet called");
 }
 
 #[unsafe(export_name = "pauseClet")]
