@@ -1,5 +1,5 @@
 pub fn main() -> anyhow::Result<()> {
-    use std::io::{stdout, Write};
+    use std::io::{Write, stdout};
 
     use clap::Parser;
 
