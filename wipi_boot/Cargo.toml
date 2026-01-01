@@ -9,6 +9,6 @@ ktf = ["wipi_types/ktf"]
 lgt = ["wipi_types/lgt"]
 
 [dependencies]
-cfg-if = { version = "^1.0", default-features = false }
+cfg-if = { workspace = true }
 
 wipi_types = { path = "../wipi_types" }

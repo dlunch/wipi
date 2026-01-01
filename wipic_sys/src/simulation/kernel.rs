@@ -1,11 +1,7 @@
-extern crate std;
-
-use std::{println, process};
-
-pub fn printk(fmt: &str, _args: &[*const ()]) {
-    println!("{fmt}");
+pub fn printk(fmt: &str, args: &[*const ()]) {
+    wipic_simulation::kernel::printk(fmt, args);
 }
 
 pub fn exit(code: i32) {
-    process::exit(code);
+    wipic_simulation::kernel::exit(code);
 }

@@ -844,12 +844,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "wipic_simulation"
+version = "0.0.1"
+
+[[package]]
 name = "wipic_sys"
 version = "0.0.1"
 dependencies = [
  "cfg-if",
  "wipi_boot",
  "wipi_types",
+ "wipic_simulation",
 ]
 
 [[package]]

@@ -1,12 +1,15 @@
 [workspace]
 resolver = "3"
 
-members = ["examples", "wipi", "wipi_archiver", "wipi_types"]
+members = ["examples", "wipi", "wipi_archiver", "wipi_boot", "wipi_types", "wipic_simulation", "wipic_sys"]
 
 [workspace.package]
 version = "0.0.1"
 edition = "2024"
 license = "MIT"
+
+[workspace.dependencies]
+cfg-if = { version = "^1.0", default-features = false }
 
 [profile.dev]
 panic = "abort"

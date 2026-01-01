@@ -4,13 +4,14 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 
-[dependencies]
-wipi = { path = "../wipi" }
-
 [features]
+default = ["simulation"]
 ktf = ["wipi/ktf"]
 lgt = ["wipi/lgt"]
 simulation = ["wipi/simulation"]
+
+[dependencies]
+wipi = { path = "../wipi" }
 
 [[bin]]
 name = "helloworld"
