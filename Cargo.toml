@@ -2,7 +2,7 @@
 resolver = "3"
 
 members = ["examples", "wipi", "wipi_boot", "wipi_types", "wipic_sys"]
-exclude = ["host"]
+exclude = ["host_crates"]
 
 [workspace.package]
 version = "0.0.1"
@@ -17,8 +17,8 @@ wipi_boot = { path = "wipi_boot" }
 wipi_types = { path = "wipi_types" }
 wipic_sys = { path = "wipic_sys" }
 
-wipi_build = { path = "host/wipi_build" }
-wipic_simulation = { path = "host/wipic_simulation" }
+wipi_build = { path = "host_crates/wipi_build" }
+wipic_simulation = { path = "host_crates/wipic_simulation" }
 
 
 [profile.dev]
