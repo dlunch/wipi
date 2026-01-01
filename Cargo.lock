@@ -103,6 +103,10 @@ dependencies = [
 [[package]]
 name = "wipic_simulation"
 version = "0.0.1"
+dependencies = [
+ "wipi_boot",
+ "wipi_types",
+]
 
 [[package]]
 name = "wipic_sys"

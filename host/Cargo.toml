@@ -7,3 +7,7 @@ members = ["wipi_archiver", "wipi_build", "wipic_simulation"]
 version = "0.0.1"
 edition = "2024"
 license = "MIT"
+
+[workspace.dependencies]
+wipi_boot = { path = "../wipi_boot" }
+wipi_types = { path = "../wipi_types" }

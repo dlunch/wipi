@@ -3,3 +3,7 @@ name = "wipic_simulation"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+
+[dependencies]
+wipi_boot = { workspace = true }
+wipi_types = { workspace = true }
