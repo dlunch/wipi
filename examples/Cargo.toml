@@ -6,12 +6,15 @@ license.workspace = true
 
 [features]
 default = ["simulation"]
-ktf = ["wipi/ktf"]
-lgt = ["wipi/lgt"]
+ktf = ["wipi/ktf", "wipi_build/ktf"]
+lgt = ["wipi/lgt", "wipi_build/lgt"]
 simulation = ["wipi/simulation"]
 
 [dependencies]
 wipi = { path = "../wipi" }
+
+[build-dependencies]
+wipi_build = { path = "../host/wipi_build" }
 
 [[bin]]
 name = "helloworld"

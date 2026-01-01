@@ -33,6 +33,7 @@ name = "examples"
 version = "0.0.1"
 dependencies = [
  "wipi",
+ "wipi_build",
 ]
 
 [[package]]
@@ -86,6 +87,10 @@ dependencies = [
  "cfg-if",
  "wipi_types",
 ]
+
+[[package]]
+name = "wipi_build"
+version = "0.0.1"
 
 [[package]]
 name = "wipi_types"

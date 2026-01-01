@@ -1,7 +1,7 @@
 [workspace]
 resolver = "3"
 
-members = ["wipi_archiver", "wipic_simulation"]
+members = ["wipi_archiver", "wipi_build", "wipic_simulation"]
 
 [workspace.package]
 version = "0.0.1"

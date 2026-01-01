@@ -678,6 +678,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "wipi_build"
+version = "0.0.1"
+
+[[package]]
 name = "wipic_simulation"
 version = "0.0.1"
 
