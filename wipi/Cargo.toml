@@ -1,13 +1,16 @@
 [package]
 name = "wipi"
-version = "0.0.1"
-edition = "2024"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
 
 [features]
-ktf = ["wipi_types/ktf"]
-lgt = ["wipi_types/lgt"]
+default = ["simulation"]
+ktf = ["wipi_types/ktf", "wipi_boot/ktf", "wipic_sys/ktf"]
+lgt = ["wipi_types/lgt", "wipi_boot/lgt", "wipic_sys/lgt"]
+simulation = ["wipi_types", "wipic_sys/simulation"]
 
 [dependencies]
-cfg-if = { version = "^1.0", default-features = false }
-
-wipi_types = { path = "../wipi_types" }
+wipi_boot = { path = "../wipi_boot", optional = true }
+wipi_types = { path = "../wipi_types", optional = true }
+wipic_sys = { path = "../wipic_sys" }

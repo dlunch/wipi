@@ -1,8 +1,9 @@
 use core::{ffi::c_char, mem::transmute};
 
+use wipi_boot::ktf::WIPIC_KNLINTERFACE;
 use wipi_types::wipic::WIPICIndirectPtr;
 
-use crate::ktf::{globals::WIPIC_KNLINTERFACE, wipic::deref_indirect_ptr};
+use crate::ktf::deref_indirect_ptr;
 
 // TODO macro for variable arguments
 pub fn printk(fmt: &str, args: &[*const ()]) {

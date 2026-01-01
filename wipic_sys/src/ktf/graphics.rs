@@ -1,8 +1,7 @@
 use core::mem::transmute;
 
+use wipi_boot::ktf::WIPIC_GRAPHICS_INTERFACE;
 use wipi_types::wipic::{TargetPtr, WIPICIndirectPtr, WIPICWord};
-
-use crate::ktf::globals::WIPIC_GRAPHICS_INTERFACE;
 
 pub fn get_screen_framebuffer() -> WIPICIndirectPtr {
     let get_screen_framebuffer: extern "C" fn(WIPICWord) -> WIPICIndirectPtr =

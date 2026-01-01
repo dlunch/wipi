@@ -1,8 +1,7 @@
-use crate::wipic::kernel::printk;
-
+#[cfg(target_os = "none")]
 #[panic_handler]
 fn panic_handler(info: &core::panic::PanicInfo) -> ! {
-    printk(info.message().as_str().unwrap_or("Panic occurred"), &[]);
+    wipic_sys::kernel::printk(info.message().as_str().unwrap_or("Panic occurred"), &[]);
 
     // force crash the program
     unsafe {

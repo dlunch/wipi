@@ -3,6 +3,11 @@ resolver = "3"
 
 members = ["examples", "wipi", "wipi_archiver", "wipi_types"]
 
+[workspace.package]
+version = "0.0.1"
+edition = "2024"
+license = "MIT"
+
 [profile.dev]
 panic = "abort"
 

@@ -3,7 +3,7 @@
 
 use core::mem::transmute;
 
-use wipi::wipic::kernel::{exit, printk};
+use wipi::kernel::{exit, printk};
 
 #[unsafe(export_name = "startClet")]
 extern "C" fn start_clet() {

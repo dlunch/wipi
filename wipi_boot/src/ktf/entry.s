@@ -17,4 +17,5 @@ __entrypoint:
 .byte 0x00
 
 after_data:
-    b start
+    ldr r0, =start
+    bx r0

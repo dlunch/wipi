@@ -812,8 +812,9 @@ checksum = "589f6da84c646204747d1270a2a5661ea66ed1cced2631d546fdfb155959f9ec"
 name = "wipi"
 version = "0.0.1"
 dependencies = [
- "cfg-if",
+ "wipi_boot",
  "wipi_types",
+ "wipic_sys",
 ]
 
 [[package]]
@@ -827,11 +828,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "wipi_boot"
+version = "0.0.1"
+dependencies = [
+ "cfg-if",
+ "wipi_types",
+]
+
+[[package]]
 name = "wipi_types"
 version = "0.0.1"
 dependencies = [
  "bytemuck",
  "cfg-if",
+]
+
+[[package]]
+name = "wipic_sys"
+version = "0.0.1"
+dependencies = [
+ "cfg-if",
+ "wipi_boot",
+ "wipi_types",
 ]
 
 [[package]]

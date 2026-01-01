@@ -1,0 +1,16 @@
+[package]
+name = "wipic_sys"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[features]
+ktf = ["wipi_types/ktf", "wipi_boot/ktf"]
+lgt = ["wipi_types/lgt", "wipi_boot/lgt"]
+simulation = ["wipi_types", "wipi_boot"]
+
+[dependencies]
+cfg-if = { version = "^1.0", default-features = false }
+
+wipi_boot = { path = "../wipi_boot", optional = true }
+wipi_types = { path = "../wipi_types", optional = true }

@@ -1,8 +1,7 @@
 use core::mem::transmute;
 
+use wipi_boot::lgt::get_external_method;
 use wipi_types::lgt::wipic::{ImportModule, WIPICMethod};
-
-use crate::lgt::external::get_external_method;
 
 pub fn printk(fmt: &str, args: &[*const ()]) {
     let buffer = alloc((fmt.len() + 1) as u32);
