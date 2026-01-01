@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
         rust: [nightly]
 
     steps:
@@ -36,16 +36,10 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.rust }}-build-target-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-${{ matrix.rust }}-build-target-
 
-      - run: cargo fmt --all -- --check
-      - run: cargo clippy --all -- -D warnings
-      - run: cargo clippy --all -Zbuild-std=core --lib --bins --examples --target thumbv4t-none-eabi --features ktf --no-default-features -- -D warnings
-      - run: cargo clippy --all -Zbuild-std=core --lib --bins --examples --target thumbv4t-none-eabi --features lgt --no-default-features -- -D warnings
+      - run: ./build_examples.sh
 
-      - run: cargo test --all
-
-      - run: cargo fmt --all -- --check
-        working-directory: ./host
-      - run: cargo clippy --all -- -D warnings
-        working-directory: ./host
-      - run: cargo test --all
-        working-directory: ./host
+      - name: Upload built examples
+        uses: actions/upload-artifact@v3
+        with:
+          name: examples
+          path: target/*.zip

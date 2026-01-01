@@ -1,17 +1,5 @@
-#![cfg_attr(target_os = "none", no_std)]
-
-#[cfg(target_os = "none")]
-pub fn main() {}
-
-#[cfg(target_os = "none")]
-#[panic_handler]
-fn panic_handler(_info: &core::panic::PanicInfo) -> ! {
-    loop {}
-}
-
-#[cfg(not(target_os = "none"))]
 pub fn main() -> anyhow::Result<()> {
-    use std::io::{Write, stdout};
+    use std::io::{stdout, Write};
 
     use clap::Parser;
 

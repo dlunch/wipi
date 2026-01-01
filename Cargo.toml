@@ -1,7 +1,8 @@
 [workspace]
 resolver = "3"
 
-members = ["examples", "wipi", "wipi_archiver", "wipi_boot", "wipi_types", "wipic_simulation", "wipic_sys"]
+members = ["examples", "wipi", "wipi_boot", "wipi_types", "wipic_sys"]
+exclude = ["host"]
 
 [workspace.package]
 version = "0.0.1"

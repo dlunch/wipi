@@ -1,6 +1,3 @@
-#![cfg_attr(target_os = "none", no_std)]
-#![cfg(not(target_os = "none"))]
-
 mod lgt_elf;
 
 use lgt_elf::fix_lgt_elf;
@@ -17,7 +14,7 @@ pub fn create_ktf_archive(
         io::{Cursor, Write},
     };
 
-    use zip::{ZipWriter, write::SimpleFileOptions};
+    use zip::{write::SimpleFileOptions, ZipWriter};
 
     let executable_file = fs::read(executable_path)?;
     // we store bss size at last 4 bytes of the file
@@ -57,7 +54,7 @@ pub fn create_lgt_archive(
         io::{Cursor, Write},
     };
 
-    use zip::{ZipWriter, write::SimpleFileOptions};
+    use zip::{write::SimpleFileOptions, ZipWriter};
 
     let executable_file = fs::read(executable_path)?;
     let fixed_executable = fix_lgt_elf(&executable_file)?;
@@ -96,7 +93,7 @@ fn build_jar(
         io::{Cursor, Write},
     };
 
-    use zip::{ZipWriter, write::SimpleFileOptions};
+    use zip::{write::SimpleFileOptions, ZipWriter};
 
     let mut jar = Vec::new();
     {
