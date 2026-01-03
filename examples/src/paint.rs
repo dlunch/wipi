@@ -1,40 +1,46 @@
 #![no_std]
 #![no_main]
+extern crate alloc;
 
 use wipi::{
+    app::App,
     framebuffer::{Color, Framebuffer},
-    println,
 };
+use wipi_macros::wipi_main;
 
-#[unsafe(export_name = "startClet")]
-extern "C" fn start_clet() {
-    println!("paint started");
+#[derive(Default)]
+pub struct PaintApp;
+
+impl PaintApp {
+    pub fn new() -> Self {
+        Self {}
+    }
 }
 
-#[unsafe(export_name = "destroyClet")]
-extern "C" fn destroy_clet() {}
+impl App for PaintApp {
+    fn on_paint(&mut self) {
+        let mut fb = Framebuffer::screen_framebuffer();
 
-#[unsafe(export_name = "paintClet")]
-extern "C" fn paint_clet() {
-    let mut fb = Framebuffer::screen_framebuffer();
+        fb.set_pixel(
+            10,
+            10,
+            Color {
+                r: 255,
+                g: 255,
+                b: 255,
+                a: 255,
+            },
+        );
+    }
 
-    fb.set_pixel(
-        10,
-        10,
-        Color {
-            r: 255,
-            g: 255,
-            b: 255,
-            a: 255,
-        },
-    );
+    fn on_pause(&mut self) {}
+
+    fn on_resume(&mut self) {}
+
+    fn on_event(&mut self) {}
 }
 
-#[unsafe(export_name = "pauseClet")]
-extern "C" fn pause_clet() {}
-
-#[unsafe(export_name = "resumeClet")]
-extern "C" fn resume_clet() {}
-
-#[unsafe(export_name = "handleCletEvent")]
-extern "C" fn handle_clet_event() {}
+#[wipi_main]
+pub fn wipi_main() -> PaintApp {
+    PaintApp::new()
+}

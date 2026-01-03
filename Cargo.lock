@@ -34,6 +34,7 @@ version = "0.0.1"
 dependencies = [
  "wipi",
  "wipi_build",
+ "wipi_macros",
 ]
 
 [[package]]
@@ -91,6 +92,15 @@ dependencies = [
 [[package]]
 name = "wipi_build"
 version = "0.0.1"
+
+[[package]]
+name = "wipi_macros"
+version = "0.0.1"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "wipi_types"

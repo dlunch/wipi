@@ -1,25 +1,33 @@
 #![no_std]
 #![no_main]
+extern crate alloc;
 
-use wipi::{kernel::exit, println};
+use wipi::{app::App, kernel::exit, println};
+use wipi_macros::wipi_main;
 
-#[unsafe(export_name = "startClet")]
-extern "C" fn start_clet() {
-    println!("Hello, world! {}", 2024);
-    exit(0);
+#[derive(Default)]
+pub struct HelloWorldApp;
+
+impl HelloWorldApp {
+    pub fn new() -> Self {
+        println!("Hello, world! {}", 2024);
+        exit(0);
+
+        Self {}
+    }
 }
 
-#[unsafe(export_name = "destroyClet")]
-extern "C" fn destroy_clet() {}
+impl App for HelloWorldApp {
+    fn on_paint(&mut self) {}
 
-#[unsafe(export_name = "paintClet")]
-extern "C" fn paint_clet() {}
+    fn on_pause(&mut self) {}
 
-#[unsafe(export_name = "pauseClet")]
-extern "C" fn pause_clet() {}
+    fn on_resume(&mut self) {}
 
-#[unsafe(export_name = "resumeClet")]
-extern "C" fn resume_clet() {}
+    fn on_event(&mut self) {}
+}
 
-#[unsafe(export_name = "handleCletEvent")]
-extern "C" fn handle_clet_event() {}
+#[wipi_main]
+pub fn wipi_main() -> HelloWorldApp {
+    HelloWorldApp::new()
+}

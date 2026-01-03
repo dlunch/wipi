@@ -1,5 +1,9 @@
 #![no_std]
+extern crate alloc;
 
+#[cfg(target_os = "none")]
+mod allocator;
+pub mod app;
 pub mod console;
 pub mod framebuffer;
 mod panic_handler;

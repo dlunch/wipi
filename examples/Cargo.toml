@@ -12,6 +12,7 @@ simulation = ["wipi/simulation"]
 
 [dependencies]
 wipi = { workspace = true }
+wipi_macros = { workspace = true }
 
 [build-dependencies]
 wipi_build = { workspace = true }
