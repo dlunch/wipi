@@ -25,6 +25,6 @@ impl App for InputApp {
 }
 
 #[wipi_main]
-pub fn wipi_main() -> InputApp {
+pub fn main() -> InputApp {
     InputApp::new()
 }

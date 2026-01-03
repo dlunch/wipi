@@ -35,6 +35,6 @@ impl App for PaintApp {
 }
 
 #[wipi_main]
-pub fn wipi_main() -> PaintApp {
+pub fn main() -> PaintApp {
     PaintApp::new()
 }

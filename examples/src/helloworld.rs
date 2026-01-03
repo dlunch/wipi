@@ -20,6 +20,6 @@ impl HelloWorldApp {
 impl App for HelloWorldApp {}
 
 #[wipi_main]
-pub fn wipi_main() -> HelloWorldApp {
+pub fn main() -> HelloWorldApp {
     HelloWorldApp::new()
 }
