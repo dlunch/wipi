@@ -1,7 +1,7 @@
-use std::{println, process};
+use std::{print, process};
 
 pub fn printk(fmt: &str, _args: &[*const ()]) {
-    println!("{fmt}");
+    print!("{fmt}");
 }
 
 pub fn exit(code: i32) {
