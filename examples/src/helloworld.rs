@@ -17,15 +17,7 @@ impl HelloWorldApp {
     }
 }
 
-impl App for HelloWorldApp {
-    fn on_paint(&mut self) {}
-
-    fn on_pause(&mut self) {}
-
-    fn on_resume(&mut self) {}
-
-    fn on_event(&mut self) {}
-}
+impl App for HelloWorldApp {}
 
 #[wipi_main]
 pub fn wipi_main() -> HelloWorldApp {

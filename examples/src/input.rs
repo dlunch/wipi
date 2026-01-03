@@ -1,0 +1,30 @@
+#![no_std]
+#![no_main]
+extern crate alloc;
+
+use wipi::{app::App, event::KeyCode, println};
+use wipi_macros::wipi_main;
+
+#[derive(Default)]
+pub struct InputApp;
+
+impl InputApp {
+    pub fn new() -> Self {
+        Self {}
+    }
+}
+
+impl App for InputApp {
+    fn on_keydown(&mut self, key_code: KeyCode) {
+        println!("Key down: {:?}", key_code);
+    }
+
+    fn on_keyup(&mut self, key_code: KeyCode) {
+        println!("Key up: {:?}", key_code);
+    }
+}
+
+#[wipi_main]
+pub fn wipi_main() -> InputApp {
+    InputApp::new()
+}

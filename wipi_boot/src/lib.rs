@@ -21,5 +21,5 @@ unsafe extern "C" {
     #[link_name = "resumeClet"]
     pub fn resume_clet();
     #[link_name = "handleCletEvent"]
-    pub fn handle_clet_event();
+    pub fn handle_clet_event(r#type: i32, param1: i32, param2: i32);
 }

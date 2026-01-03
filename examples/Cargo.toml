@@ -24,3 +24,7 @@ path = "src/helloworld.rs"
 [[bin]]
 name = "paint"
 path = "src/paint.rs"
+
+[[bin]]
+name = "input"
+path = "src/input.rs"

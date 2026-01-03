@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-examples="helloworld paint"
+examples=$(ls examples/src | grep .rs | sed 's/\.rs//')
 
 cargo -Zbuild-std=core,alloc build -p examples --target thumbv4t-none-eabi --features ktf --profile examples --no-default-features
 for example in $examples

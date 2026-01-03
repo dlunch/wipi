@@ -3,6 +3,7 @@ use core::{ptr, slice};
 use wipi_types::ktf::java::{JavaClass, JavaClassDescriptor, JavaMethodArray};
 
 use crate::{
+    handle_clet_event,
     ktf::java::{java_invoke_special, java_native_method_definition},
     paint_clet,
 };
@@ -31,12 +32,17 @@ static mut CLET_CARD_CLASS_DESCRIPTOR: JavaClassDescriptor = JavaClassDescriptor
     unk8: 0,
 };
 
-static CLET_CARD_CLASS_METHODS: JavaMethodArray<3> = JavaMethodArray([
+static CLET_CARD_CLASS_METHODS: JavaMethodArray<4> = JavaMethodArray([
     &java_native_method_definition(clet_card_init, &raw const CLET_CARD_CLASS, c".()V+<init>"),
     &java_native_method_definition(
         clet_card_paint,
         &raw const CLET_CARD_CLASS,
         c".(Lorg/kwis/msp/lcdui/Graphics;)V+paint",
+    ),
+    &java_native_method_definition(
+        clet_card_key_notify,
+        &raw const CLET_CARD_CLASS,
+        c".(II)Z+keyNotify",
     ),
     ptr::null(),
 ]);
@@ -52,4 +58,15 @@ extern "C" fn clet_card_paint(_: u32, _args: *const *const ()) -> *const () {
     unsafe { paint_clet() }
 
     ptr::null()
+}
+
+extern "C" fn clet_card_key_notify(_: u32, args: *const *const ()) -> *const () {
+    let args = unsafe { slice::from_raw_parts(args, 3) };
+    let _this = args[0];
+    let r#type = args[1] as i32;
+    let key_code = args[2] as i32;
+
+    unsafe { handle_clet_event(r#type, key_code, 0) };
+
+    ptr::null() // TODO: return false
 }

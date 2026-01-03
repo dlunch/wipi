@@ -1,3 +1,5 @@
+#![allow(static_mut_refs)]
+
 use alloc::boxed::Box;
 
 use crate::app::App;
@@ -20,7 +22,6 @@ extern "C" fn start_clet() {
 extern "C" fn destroy_clet() {}
 
 #[unsafe(export_name = "paintClet")]
-#[allow(static_mut_refs)]
 extern "C" fn paint_clet() {
     unsafe {
         if let Some(app) = APP.as_mut() {
@@ -36,4 +37,10 @@ extern "C" fn pause_clet() {}
 extern "C" fn resume_clet() {}
 
 #[unsafe(export_name = "handleCletEvent")]
-extern "C" fn handle_clet_event() {}
+extern "C" fn handle_clet_event(r#type: i32, param1: i32, param2: i32) {
+    unsafe {
+        if let Some(app) = APP.as_mut() {
+            app.on_raw_event(r#type, param1, param2);
+        }
+    }
+}
