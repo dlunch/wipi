@@ -7,6 +7,7 @@ pub mod app;
 pub mod console;
 pub mod framebuffer;
 mod panic_handler;
+#[cfg(not(test))]
 mod sys;
 
 #[macro_export]
