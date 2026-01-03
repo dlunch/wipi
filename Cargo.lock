@@ -34,7 +34,6 @@ version = "0.0.1"
 dependencies = [
  "wipi",
  "wipi_build",
- "wipi_macros",
 ]
 
 [[package]]
@@ -77,6 +76,7 @@ name = "wipi"
 version = "0.0.1"
 dependencies = [
  "wipi_boot",
+ "wipi_macros",
  "wipi_types",
  "wipic_sys",
 ]

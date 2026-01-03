@@ -24,3 +24,4 @@ macro_rules! println {
 pub mod kernel {
     pub use wipic_sys::kernel::exit;
 }
+pub use wipi_macros::wipi_main;

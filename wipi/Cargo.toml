@@ -11,5 +11,6 @@ simulation = ["wipi_types", "wipic_sys/simulation"]
 
 [dependencies]
 wipi_boot = { workspace = true, optional = true }
+wipi_macros = { workspace = true }
 wipi_types = { workspace = true, optional = true }
 wipic_sys = { workspace = true }

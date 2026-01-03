@@ -2,8 +2,7 @@
 #![no_main]
 extern crate alloc;
 
-use wipi::{app::App, event::KeyCode, println};
-use wipi_macros::wipi_main;
+use wipi::{app::App, event::KeyCode, println, wipi_main};
 
 #[derive(Default)]
 pub struct InputApp;

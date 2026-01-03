@@ -5,8 +5,8 @@ extern crate alloc;
 use wipi::{
     app::App,
     framebuffer::{Color, Framebuffer},
+    wipi_main,
 };
-use wipi_macros::wipi_main;
 
 #[derive(Default)]
 pub struct PaintApp;
