@@ -39,7 +39,7 @@ jobs:
       - run: ./build_examples.sh
 
       - name: Upload built examples
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: examples
           path: target/*.zip
