@@ -49,7 +49,7 @@ fn transform_wipi_main(input: proc_macro2::TokenStream) -> proc_macro2::TokenStr
         #output
 
         #[unsafe(no_mangle)]
-        fn __wipi_main() -> alloc::boxed::Box<dyn wipi::app::App> {
+        pub fn __wipi_main() -> alloc::boxed::Box<dyn wipi::app::App> {
             alloc::boxed::Box::new(__app_main())
         }
     }
@@ -75,7 +75,7 @@ mod tests {
             }
 
             #[unsafe(no_mangle)]
-            fn __wipi_main() -> alloc::boxed::Box<dyn wipi::app::App> {
+            pub fn __wipi_main() -> alloc::boxed::Box<dyn wipi::app::App> {
                 alloc::boxed::Box::new(__app_main())
             }
         };
