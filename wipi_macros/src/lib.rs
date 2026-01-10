@@ -52,6 +52,19 @@ fn transform_wipi_main(input: proc_macro2::TokenStream) -> proc_macro2::TokenStr
         pub fn __wipi_main() -> alloc::boxed::Box<dyn wipi::app::App> {
             alloc::boxed::Box::new(__app_main())
         }
+
+        // for host build
+        #[cfg(all(not(test), not(target_os = "none")))]
+        #[unsafe(no_mangle)]
+        pub extern "C" fn main() {
+            unsafe extern "C" {
+                #[link_name = "startClet"]
+                pub fn start_clet();
+            }
+
+            unsafe { start_clet() };
+            wipi::kernel::exit(0);
+        }
     }
 }
 
@@ -77,6 +90,18 @@ mod tests {
             #[unsafe(no_mangle)]
             pub fn __wipi_main() -> alloc::boxed::Box<dyn wipi::app::App> {
                 alloc::boxed::Box::new(__app_main())
+            }
+
+            #[cfg(all(not(test), not(target_os = "none")))]
+            #[unsafe(no_mangle)]
+            pub extern "C" fn main() {
+                unsafe extern "C" {
+                    #[link_name = "startClet"]
+                    pub fn start_clet();
+                }
+
+                unsafe { start_clet() };
+                wipi::kernel::exit(0);
             }
         };
 

@@ -1,5 +1,5 @@
+#![cfg_attr(not(test), no_main)]
 #![no_std]
-#![no_main]
 extern crate alloc;
 
 use wipi::{app::App, kernel::exit, println, wipi_main};
