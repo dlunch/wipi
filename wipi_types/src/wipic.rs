@@ -39,3 +39,18 @@ pub struct WIPICFramebuffer {
     pub bpp: WIPICWord,
     pub buf: WIPICIndirectPtr,
 }
+
+#[derive(Debug)]
+#[repr(i32)]
+pub enum WIPICError {
+    Success = 0,
+    Invalid = -9,
+    NoSuchEntry = -12,
+    InsufficientBufferSize = -18,
+}
+
+impl WIPICError {
+    pub fn from_raw(raw: i32) -> Self {
+        unsafe { core::mem::transmute(raw) }
+    }
+}

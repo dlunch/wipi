@@ -10,6 +10,8 @@ pub enum WIPICMethod {
     Exit = 0x6b,
     Alloc = 0x75,
     Free = 0x77,
+    GetResourceId = 0x80,
+    GetResource = 0x81,
     GetScreenFramebuffer = 0xca,
     FlushLcd = 0xde,
 }

@@ -8,6 +8,7 @@ pub mod console;
 pub mod event;
 pub mod framebuffer;
 mod panic_handler;
+pub mod resource;
 #[cfg(not(test))]
 mod sys;
 
@@ -19,6 +20,8 @@ macro_rules! println {
         let _ = write!($crate::console::Console, "\n");
     }};
 }
+
+pub type Result<T> = core::result::Result<T, wipi_types::wipic::WIPICError>;
 
 // re-exports
 pub mod kernel {

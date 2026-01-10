@@ -27,3 +27,7 @@ path = "src/paint.rs"
 [[bin]]
 name = "input"
 path = "src/input.rs"
+
+[[bin]]
+name = "resource"
+path = "src/resource.rs"

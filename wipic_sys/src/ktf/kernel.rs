@@ -1,9 +1,9 @@
 use core::{ffi::c_char, mem::transmute};
 
 use wipi_boot::ktf::WIPIC_KNLINTERFACE;
-use wipi_types::wipic::WIPICIndirectPtr;
+use wipi_types::wipic::{WIPICError, WIPICIndirectPtr};
 
-use crate::ktf::deref_indirect_ptr;
+use crate::deref_indirect_ptr;
 
 pub fn printk(fmt: &str, args: &[*const ()]) {
     let printk: extern "C" fn(*const c_char, ...) -> () =
@@ -57,4 +57,18 @@ pub fn free(ptr: WIPICIndirectPtr) {
     let free: extern "C" fn(*mut u8) = unsafe { transmute((*WIPIC_KNLINTERFACE).free) };
 
     free(ptr.0 as _)
+}
+
+pub fn get_resource_id(name: *const c_char, out_size: *mut usize) -> i32 {
+    let get_resource_id: extern "C" fn(*const c_char, *mut usize) -> i32 =
+        unsafe { transmute((*WIPIC_KNLINTERFACE).get_resource_id) };
+
+    get_resource_id(name, out_size)
+}
+
+pub fn get_resource(id: i32, buf: WIPICIndirectPtr, buf_size: usize) -> WIPICError {
+    let get_resource: extern "C" fn(i32, *mut u8, usize) -> i32 =
+        unsafe { transmute((*WIPIC_KNLINTERFACE).get_resource) };
+
+    WIPICError::from_raw(get_resource(id, buf.0 as _, buf_size))
 }
