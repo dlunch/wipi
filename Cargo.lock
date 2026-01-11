@@ -87,6 +87,7 @@ version = "0.0.1"
 dependencies = [
  "cfg-if",
  "wipi_types",
+ "wipic_simulation",
 ]
 
 [[package]]
@@ -114,7 +115,6 @@ dependencies = [
 name = "wipic_simulation"
 version = "0.0.1"
 dependencies = [
- "wipi_boot",
  "wipi_types",
 ]
 

@@ -7,9 +7,10 @@ license.workspace = true
 [features]
 ktf = ["wipi_types/ktf"]
 lgt = ["wipi_types/lgt"]
-simulation = ["wipi_types"]
+simulation = ["wipi_types", "wipic_simulation"]
 
 [dependencies]
 cfg-if = { workspace = true }
 
 wipi_types = { workspace = true, optional = true }
+wipic_simulation = { workspace = true, optional = true }

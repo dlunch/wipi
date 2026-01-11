@@ -5,5 +5,4 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-wipi_boot = { workspace = true, features = ["simulation"] }
 wipi_types = { workspace = true }
