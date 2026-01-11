@@ -7,10 +7,10 @@ pub mod app;
 pub mod console;
 pub mod event;
 pub mod framebuffer;
+#[cfg(not(test))]
+mod lifecycle;
 mod panic_handler;
 pub mod resource;
-#[cfg(not(test))]
-mod sys;
 
 #[macro_export]
 macro_rules! println {
