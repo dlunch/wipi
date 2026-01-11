@@ -40,6 +40,21 @@ pub struct WIPICFramebuffer {
     pub buf: WIPICIndirectPtr,
 }
 
+// MC_GrpImage
+#[repr(C)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
+pub struct WIPICImage {
+    pub img: WIPICFramebuffer,
+    pub mask: WIPICFramebuffer,
+    pub loop_count: WIPICWord,
+    pub delay: WIPICWord,
+    pub animated: WIPICWord,
+    pub buf: WIPICIndirectPtr,
+    pub offset: WIPICWord,
+    pub current: WIPICWord,
+    pub len: WIPICWord,
+}
+
 #[derive(Debug)]
 #[repr(i32)]
 pub enum WIPICError {
