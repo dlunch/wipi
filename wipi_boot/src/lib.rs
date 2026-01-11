@@ -5,6 +5,8 @@ cfg_if::cfg_if! {
         pub mod ktf;
     } else if #[cfg(feature = "lgt")] {
         pub mod lgt;
+    } else if #[cfg(feature = "simulation")] {
+        pub mod simulation;
     }
 }
 

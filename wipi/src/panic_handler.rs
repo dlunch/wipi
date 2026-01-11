@@ -1,4 +1,4 @@
-#[cfg(target_os = "none")]
+#[cfg(not(feature = "simulation"))]
 #[panic_handler]
 fn panic_handler(info: &core::panic::PanicInfo) -> ! {
     crate::println!("{}", info);
