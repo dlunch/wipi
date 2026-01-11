@@ -42,6 +42,7 @@ pub struct WIPICFramebuffer {
 
 // MC_GrpImage
 #[repr(C)]
+#[derive(Clone, Copy)]
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct WIPICImage {
     pub img: WIPICFramebuffer,
