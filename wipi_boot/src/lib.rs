@@ -10,7 +10,6 @@ cfg_if::cfg_if! {
     }
 }
 
-#[allow(dead_code)]
 unsafe extern "C" {
     #[link_name = "startClet"]
     pub fn start_clet();
