@@ -56,9 +56,31 @@ pub struct WIPICImage {
     pub len: WIPICWord,
 }
 
-#[derive(Debug)]
+// MC_GrpContext
+#[repr(C)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
+pub struct WIPICGraphicsContext {
+    pub mask: WIPICWord,
+    /// top-left x, y, bottom-right x, y
+    pub clip: [WIPICWord; 4],
+    pub fgpxl: WIPICWord,
+    pub bgpxl: WIPICWord,
+    pub transpxl: WIPICWord,
+    pub alpha: WIPICWord,
+    /// x, y
+    pub offset: [WIPICWord; 2],
+    pub pixel_op_func_ptr: WIPICWord, // MC_GrpPixelOpProc
+    pub param1: WIPICWord,
+    pub reserved: WIPICWord,
+    pub font: WIPICWord,
+    pub style: WIPICWord,
+}
+
+#[derive(Debug, Eq, PartialEq)]
 #[repr(i32)]
 pub enum WIPICError {
+    ImageDone = 1,
     Success = 0,
     Invalid = -9,
     NoSuchEntry = -12,
