@@ -1,7 +1,7 @@
 [workspace]
 resolver = "3"
 
-members = ["examples", "wipi", "wipi_boot", "wipi_macros", "wipi_types", "wipic_sys"]
+members = ["examples", "wipi", "wipi_archiver", "wipi_boot", "wipi_build", "wipi_macros", "wipi_types", "wipic_simulation", "wipic_sys"]
 exclude = ["host_crates"]
 
 [workspace.package]
@@ -14,13 +14,12 @@ cfg-if = { version = "^1.0", default-features = false }
 
 wipi = { path = "wipi" }
 wipi_boot = { path = "wipi_boot" }
+wipi_build = { path = "wipi_build" }
 wipi_macros = { path = "wipi_macros" }
 wipi_types = { path = "wipi_types" }
 wipic_sys = { path = "wipic_sys" }
 
-wipi_build = { path = "host_crates/wipi_build" }
-wipic_simulation = { path = "host_crates/wipic_simulation" }
-
+wipic_simulation = { path = "wipic_simulation" }
 
 [profile.dev]
 panic = "abort"

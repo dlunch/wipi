@@ -42,8 +42,3 @@ jobs:
       - run: cargo clippy --all "-Zbuild-std=core,alloc" --lib --bins --examples --target thumbv4t-none-eabi --features lgt --no-default-features -- -D warnings
 
       - run: cargo test --all
-
-      - run: cargo clippy --all -- -D warnings
-        working-directory: ./host_crates
-      - run: cargo test --all
-        working-directory: ./host_crates

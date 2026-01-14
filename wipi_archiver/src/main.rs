@@ -1,3 +1,6 @@
+#![cfg_attr(target_os = "none", no_std)]
+#![cfg_attr(target_os = "none", no_main)]
+#[cfg(not(target_os = "none"))]
 pub fn main() -> anyhow::Result<()> {
     use std::io::{Write, stdout};
 
@@ -40,4 +43,10 @@ pub fn main() -> anyhow::Result<()> {
     stdout().write_all(&archive)?;
 
     Ok(())
+}
+
+#[cfg(target_os = "none")]
+#[panic_handler]
+fn panic_handler(_info: &core::panic::PanicInfo) -> ! {
+    loop {}
 }

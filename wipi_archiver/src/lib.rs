@@ -1,3 +1,6 @@
+#![cfg_attr(target_os = "none", no_std)]
+#![cfg(not(target_os = "none"))]
+
 mod lgt_elf;
 
 use lgt_elf::fix_lgt_elf;
