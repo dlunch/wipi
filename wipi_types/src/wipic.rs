@@ -58,7 +58,7 @@ pub struct WIPICImage {
 
 // MC_GrpContext
 #[repr(C)]
-#[derive(Clone, Copy)]
+#[derive(Default, Clone, Copy)]
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct WIPICGraphicsContext {
     pub mask: WIPICWord,
