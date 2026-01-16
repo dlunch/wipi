@@ -31,9 +31,13 @@ impl Resource {
 
     pub fn read(&self) -> &[u8] {
         unsafe {
-            let buf_ptr = deref_indirect_ptr(&self.buf);
+            let buf_ptr = deref_indirect_ptr(self.buf);
             core::slice::from_raw_parts(buf_ptr as _, self.size)
         }
+    }
+
+    pub fn buf_raw(&self) -> WIPICIndirectPtr {
+        self.buf
     }
 }
 

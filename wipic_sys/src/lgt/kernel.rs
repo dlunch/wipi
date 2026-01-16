@@ -10,7 +10,7 @@ use crate::deref_indirect_ptr;
 
 pub fn printk(fmt: &str, args: &[*const ()]) {
     let buffer = alloc((fmt.len() + 1) as u32);
-    let buf_ptr = deref_indirect_ptr(&buffer);
+    let buf_ptr = deref_indirect_ptr(buffer);
     unsafe {
         buf_ptr.copy_from_nonoverlapping(fmt.as_ptr(), fmt.len());
         *buf_ptr.add(fmt.len()) = 0; // Null-terminate the string

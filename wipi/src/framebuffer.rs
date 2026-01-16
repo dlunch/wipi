@@ -1,5 +1,7 @@
-use wipi_types::wipic::{WIPICFramebuffer, WIPICIndirectPtr};
+use wipi_types::wipic::{WIPICFramebuffer, WIPICGraphicsContext, WIPICIndirectPtr};
 use wipic_sys::deref_indirect_ptr;
+
+use crate::image::Image;
 
 pub struct Color {
     pub r: u8,
@@ -10,12 +12,17 @@ pub struct Color {
 
 pub struct Framebuffer {
     raw: WIPICIndirectPtr,
+    context: WIPICGraphicsContext,
 }
 
 impl Framebuffer {
     pub fn screen_framebuffer() -> Self {
+        let mut context = WIPICGraphicsContext::default();
         let raw = wipic_sys::graphics::get_screen_framebuffer();
-        Framebuffer { raw }
+
+        wipic_sys::graphics::init_context(&mut context as *mut _);
+
+        Framebuffer { raw, context }
     }
 
     pub fn set_pixel(&mut self, x: usize, y: usize, color: Color) {
@@ -46,18 +53,42 @@ impl Framebuffer {
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
+    pub fn draw_image(
+        &mut self,
+        dx: i32,
+        dy: i32,
+        w: u32,
+        h: u32,
+        image: &Image,
+        sx: i32,
+        sy: i32,
+    ) {
+        wipic_sys::graphics::draw_image(
+            self.raw,
+            dx,
+            dy,
+            w,
+            h,
+            image.raw(),
+            sx,
+            sy,
+            &self.context as *const _,
+        );
+    }
+
     fn read_fb(&self) -> &WIPICFramebuffer {
-        unsafe { &*(deref_indirect_ptr(&self.raw) as *const WIPICFramebuffer) }
+        unsafe { &*(deref_indirect_ptr(self.raw) as *const _) }
     }
 
     fn buffer_ptr(fb: &WIPICFramebuffer) -> *mut u8 {
-        deref_indirect_ptr(&fb.buf)
+        deref_indirect_ptr(fb.buf)
     }
 }
 
 impl Drop for Framebuffer {
     fn drop(&mut self) {
         let fb = self.read_fb();
-        wipic_sys::graphics::flush_lcd(0, &self.raw, 0, 0, fb.width, fb.height);
+        wipic_sys::graphics::flush_lcd(0, self.raw, 0, 0, fb.width, fb.height);
     }
 }

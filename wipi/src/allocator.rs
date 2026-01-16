@@ -9,7 +9,7 @@ unsafe impl GlobalAlloc for WipiAllocator {
         // alignment is ignored for now
         let ptr = wipic_sys::kernel::alloc(layout.size() as _);
 
-        deref_indirect_ptr(&ptr)
+        deref_indirect_ptr(ptr)
     }
 
     unsafe fn dealloc(&self, ptr: *mut u8, _layout: core::alloc::Layout) {

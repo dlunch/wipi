@@ -8,7 +8,7 @@ pub type TargetPtr = *const ();
 pub type TargetPtr = u32;
 
 #[repr(C)]
-#[derive(Clone, Copy)]
+#[derive(Default, Clone, Copy)]
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct WIPICIndirectPtr(pub TargetPtr);
 

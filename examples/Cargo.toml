@@ -31,3 +31,7 @@ path = "src/input.rs"
 [[bin]]
 name = "resource"
 path = "src/resource.rs"
+
+[[bin]]
+name = "image"
+path = "src/image.rs"

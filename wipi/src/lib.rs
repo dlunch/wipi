@@ -7,6 +7,7 @@ pub mod app;
 pub mod console;
 pub mod event;
 pub mod framebuffer;
+pub mod image;
 #[cfg(not(test))]
 mod lifecycle;
 mod panic_handler;
