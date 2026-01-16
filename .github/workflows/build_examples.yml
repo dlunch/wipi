@@ -10,7 +10,7 @@ on:
 name: Build Examples
 
 jobs:
-  rust_ci:
+  build_examples:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
