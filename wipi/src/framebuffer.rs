@@ -25,13 +25,16 @@ impl Framebuffer {
         Framebuffer { raw, context }
     }
 
-    pub fn set_pixel(&mut self, x: usize, y: usize, color: Color) {
+    pub fn set_pixel(&mut self, x: u32, y: u32, color: Color) {
         let fb = self.read_fb();
         let buffer_ptr = Self::buffer_ptr(fb);
 
-        let offset = y * fb.bpl + x * (fb.bpp / 8);
+        let bpl: u32 = fb.bpl as _;
+        let bpp: u32 = fb.bpp as _;
+
+        let offset = y * bpl + x * (bpp / 8);
         unsafe {
-            let pixel_ptr = buffer_ptr.add(offset);
+            let pixel_ptr = buffer_ptr.add(offset as _);
             match fb.bpp {
                 32 => {
                     *pixel_ptr.add(0) = color.b;

@@ -26,6 +26,8 @@ pub fn flush_lcd(i: i32, framebuffer: WIPICIndirectPtr, x: i32, y: i32, width: u
     }
 }
 
+/// # Safety
+/// The caller must ensure that the pointer passed to this function is valid.
 pub unsafe fn init_context(context: *mut WIPICGraphicsContext) {
     let init_context: extern "C" fn(*mut WIPICGraphicsContext) -> () = unsafe {
         transmute(get_external_method(
@@ -36,6 +38,8 @@ pub unsafe fn init_context(context: *mut WIPICGraphicsContext) {
     init_context(context);
 }
 
+/// # Safety
+/// The caller must ensure that the pointers passed to this function are valid.
 pub unsafe fn create_image(
     out_image: *mut WIPICIndirectPtr,
     image_data: WIPICIndirectPtr,
@@ -51,6 +55,8 @@ pub unsafe fn create_image(
     WIPICError::from_raw(create_image(out_image, image_data, offset, length))
 }
 
+/// # Safety
+/// The caller must ensure that the pointers passed to this function are valid.
 #[allow(clippy::too_many_arguments)]
 pub unsafe fn draw_image(
     framebuffer: WIPICIndirectPtr,

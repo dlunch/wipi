@@ -59,6 +59,8 @@ pub fn free(ptr: WIPICIndirectPtr) {
     free(ptr.0 as _)
 }
 
+/// # Safety
+/// The caller must ensure that `name` is a valid null-terminated C string.
 pub unsafe fn get_resource_id(name: *const c_char, out_size: *mut usize) -> i32 {
     let get_resource_id: extern "C" fn(*const c_char, *mut usize) -> i32 =
         unsafe { transmute((*WIPIC_KNLINTERFACE).get_resource_id) };
