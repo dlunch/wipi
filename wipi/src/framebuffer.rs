@@ -20,7 +20,7 @@ impl Framebuffer {
         let mut context = WIPICGraphicsContext::default();
         let raw = wipic_sys::graphics::get_screen_framebuffer();
 
-        wipic_sys::graphics::init_context(&mut context as *mut _);
+        unsafe { wipic_sys::graphics::init_context(&mut context as *mut _) };
 
         Framebuffer { raw, context }
     }
@@ -29,7 +29,7 @@ impl Framebuffer {
         let fb = self.read_fb();
         let buffer_ptr = Self::buffer_ptr(fb);
 
-        let offset = y * fb.bpl as usize + x * (fb.bpp as usize / 8);
+        let offset = y * fb.bpl + x * (fb.bpp / 8);
         unsafe {
             let pixel_ptr = buffer_ptr.add(offset);
             match fb.bpp {
@@ -64,17 +64,19 @@ impl Framebuffer {
         sx: i32,
         sy: i32,
     ) {
-        wipic_sys::graphics::draw_image(
-            self.raw,
-            dx,
-            dy,
-            w,
-            h,
-            image.raw(),
-            sx,
-            sy,
-            &self.context as *const _,
-        );
+        unsafe {
+            wipic_sys::graphics::draw_image(
+                self.raw,
+                dx,
+                dy,
+                w,
+                h,
+                image.raw(),
+                sx,
+                sy,
+                &self.context as *const _,
+            );
+        }
     }
 
     fn read_fb(&self) -> &WIPICFramebuffer {
@@ -89,6 +91,6 @@ impl Framebuffer {
 impl Drop for Framebuffer {
     fn drop(&mut self) {
         let fb = self.read_fb();
-        wipic_sys::graphics::flush_lcd(0, self.raw, 0, 0, fb.width, fb.height);
+        wipic_sys::graphics::flush_lcd(0, self.raw, 0, 0, fb.width as _, fb.height as _);
     }
 }

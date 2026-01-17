@@ -14,7 +14,8 @@ impl Resource {
     pub fn new(path: &str) -> Result<Self> {
         let mut size = 0;
         let path = CString::new(path).unwrap();
-        let result = wipic_sys::kernel::get_resource_id(path.as_ptr(), &mut size as *mut _);
+        let result =
+            unsafe { wipic_sys::kernel::get_resource_id(path.as_ptr(), &mut size as *mut _) };
         if result < 0 {
             return Err(WIPICError::from_raw(result));
         }

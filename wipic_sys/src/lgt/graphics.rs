@@ -26,7 +26,7 @@ pub fn flush_lcd(i: i32, framebuffer: WIPICIndirectPtr, x: i32, y: i32, width: u
     }
 }
 
-pub fn init_context(context: *mut WIPICGraphicsContext) {
+pub unsafe fn init_context(context: *mut WIPICGraphicsContext) {
     let init_context: extern "C" fn(*mut WIPICGraphicsContext) -> () = unsafe {
         transmute(get_external_method(
             ImportModule::WIPIC,
@@ -36,7 +36,7 @@ pub fn init_context(context: *mut WIPICGraphicsContext) {
     init_context(context);
 }
 
-pub fn create_image(
+pub unsafe fn create_image(
     out_image: *mut WIPICIndirectPtr,
     image_data: WIPICIndirectPtr,
     offset: u32,
@@ -52,7 +52,7 @@ pub fn create_image(
 }
 
 #[allow(clippy::too_many_arguments)]
-pub fn draw_image(
+pub unsafe fn draw_image(
     framebuffer: WIPICIndirectPtr,
     dx: i32,
     dy: i32,

@@ -12,12 +12,14 @@ impl Image {
         let resource = crate::resource::Resource::new(path)?;
 
         let mut raw = WIPICIndirectPtr::default();
-        let result = wipic_sys::graphics::create_image(
-            &mut raw as *mut _,
-            resource.buf_raw(),
-            0,
-            resource.size() as u32,
-        );
+        let result = unsafe {
+            wipic_sys::graphics::create_image(
+                &mut raw as *mut _,
+                resource.buf_raw(),
+                0,
+                resource.size() as u32,
+            )
+        };
         if result != WIPICError::ImageDone {
             return Err(result);
         }
@@ -34,10 +36,10 @@ impl Image {
     }
 
     pub fn width(&self) -> u32 {
-        self.read_image().img.width
+        self.read_image().img.width as _
     }
 
     pub fn height(&self) -> u32 {
-        self.read_image().img.height
+        self.read_image().img.height as _
     }
 }

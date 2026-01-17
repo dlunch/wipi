@@ -59,7 +59,7 @@ pub fn free(ptr: WIPICIndirectPtr) {
     free(ptr.0 as _)
 }
 
-pub fn get_resource_id(name: *const c_char, out_size: *mut usize) -> i32 {
+pub unsafe fn get_resource_id(name: *const c_char, out_size: *mut usize) -> i32 {
     let get_resource_id: extern "C" fn(*const c_char, *mut usize) -> i32 =
         unsafe { transmute((*WIPIC_KNLINTERFACE).get_resource_id) };
 

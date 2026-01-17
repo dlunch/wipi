@@ -1,10 +1,16 @@
 #[cfg(not(target_os = "none"))]
 use bytemuck::{Pod, Zeroable};
 
+#[cfg(not(feature = "simulation"))]
 pub type WIPICWord = u32;
+#[cfg(feature = "simulation")]
+pub type WIPICWord = usize;
+
 #[cfg(target_os = "none")]
 pub type TargetPtr = *const ();
-#[cfg(not(target_os = "none"))]
+#[cfg(all(not(target_os = "none"), feature = "simulation"))]
+pub type TargetPtr = usize;
+#[cfg(all(not(target_os = "none"), not(feature = "simulation")))]
 pub type TargetPtr = u32;
 
 #[repr(C)]

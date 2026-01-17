@@ -5,4 +5,8 @@ edition.workspace = true
 license.workspace = true
 
 [target.'cfg(not(target_os = "none"))'.dependencies]
-wipi_types = { workspace = true }
+wipi_types = { workspace = true, features = ["simulation"] }
+once_cell = "1.21"
+png = "0.17"
+winit = "0.30"
+softbuffer = "0.4"
