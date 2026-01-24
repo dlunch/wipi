@@ -87,3 +87,55 @@ pub unsafe fn draw_image(
     };
     draw_image(framebuffer, dx, dy, w, h, image, sx, sy, graphics_context);
 }
+
+/// # Safety
+/// The caller must ensure that the pointers passed to this function are valid.
+pub unsafe fn draw_rect(
+    framebuffer: WIPICIndirectPtr,
+    x: i32,
+    y: i32,
+    width: i32,
+    height: i32,
+    graphics_context: *const WIPICGraphicsContext,
+) {
+    let draw_rect: extern "C" fn(
+        WIPICIndirectPtr,
+        i32,
+        i32,
+        i32,
+        i32,
+        *const WIPICGraphicsContext,
+    ) = unsafe {
+        transmute(get_external_method(
+            ImportModule::WIPIC,
+            WIPICMethod::DrawRect as _,
+        ))
+    };
+    draw_rect(framebuffer, x, y, width, height, graphics_context);
+}
+
+/// # Safety
+/// The caller must ensure that the pointers passed to this function are valid.
+pub unsafe fn fill_rect(
+    framebuffer: WIPICIndirectPtr,
+    x: i32,
+    y: i32,
+    width: i32,
+    height: i32,
+    graphics_context: *const WIPICGraphicsContext,
+) {
+    let fill_rect: extern "C" fn(
+        WIPICIndirectPtr,
+        i32,
+        i32,
+        i32,
+        i32,
+        *const WIPICGraphicsContext,
+    ) = unsafe {
+        transmute(get_external_method(
+            ImportModule::WIPIC,
+            WIPICMethod::FillRect as _,
+        ))
+    };
+    fill_rect(framebuffer, x, y, width, height, graphics_context);
+}

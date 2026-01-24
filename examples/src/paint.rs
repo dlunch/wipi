@@ -31,6 +31,32 @@ impl App for PaintApp {
                 a: 255,
             },
         );
+
+        fb.draw_rect(
+            20,
+            20,
+            50,
+            30,
+            Color {
+                r: 255,
+                g: 0,
+                b: 0,
+                a: 255,
+            },
+        );
+
+        fb.fill_rect(
+            100,
+            50,
+            60,
+            40,
+            Color {
+                r: 0,
+                g: 255,
+                b: 0,
+                a: 255,
+            },
+        );
     }
 }
 

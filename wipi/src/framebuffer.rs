@@ -90,6 +90,41 @@ impl Framebuffer {
         }
     }
 
+    pub fn draw_rect(&mut self, x: i32, y: i32, width: i32, height: i32, color: Color) {
+        self.context.fgpxl = Self::color_to_pixel(color) as _;
+        unsafe {
+            wipic_sys::graphics::draw_rect(
+                self.raw,
+                x,
+                y,
+                width,
+                height,
+                &self.context as *const _,
+            );
+        }
+    }
+
+    pub fn fill_rect(&mut self, x: i32, y: i32, width: i32, height: i32, color: Color) {
+        self.context.fgpxl = Self::color_to_pixel(color) as _;
+        unsafe {
+            wipic_sys::graphics::fill_rect(
+                self.raw,
+                x,
+                y,
+                width,
+                height,
+                &self.context as *const _,
+            );
+        }
+    }
+
+    fn color_to_pixel(color: Color) -> u32 {
+        ((color.a as u32) << 24)
+            | ((color.r as u32) << 16)
+            | ((color.g as u32) << 8)
+            | (color.b as u32)
+    }
+
     fn read_fb(&self) -> &WIPICFramebuffer {
         unsafe { &*(deref_indirect_ptr(self.raw) as *const _) }
     }

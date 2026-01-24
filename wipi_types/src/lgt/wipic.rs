@@ -14,6 +14,8 @@ pub enum WIPICMethod {
     GetResource = 0x81,
     GetScreenFramebuffer = 0xca,
     InitContext = 0xcd,
+    DrawRect = 0xd2,
+    FillRect = 0xd3,
     DrawImage = 0xd5,
     FlushLcd = 0xde,
     CreateImage = 0xe9,

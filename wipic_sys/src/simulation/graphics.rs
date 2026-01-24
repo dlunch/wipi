@@ -83,3 +83,47 @@ pub unsafe fn draw_image(
         )
     };
 }
+
+/// # Safety
+/// `graphics_context` must be a valid pointer
+pub unsafe fn draw_rect(
+    framebuffer: WIPICIndirectPtr,
+    x: i32,
+    y: i32,
+    width: i32,
+    height: i32,
+    graphics_context: *const WIPICGraphicsContext,
+) {
+    unsafe {
+        wipic_simulation::graphics::draw_rect(
+            deref_indirect_ptr(framebuffer) as *mut WIPICFramebuffer,
+            x,
+            y,
+            width,
+            height,
+            graphics_context,
+        )
+    };
+}
+
+/// # Safety
+/// `graphics_context` must be a valid pointer
+pub unsafe fn fill_rect(
+    framebuffer: WIPICIndirectPtr,
+    x: i32,
+    y: i32,
+    width: i32,
+    height: i32,
+    graphics_context: *const WIPICGraphicsContext,
+) {
+    unsafe {
+        wipic_simulation::graphics::fill_rect(
+            deref_indirect_ptr(framebuffer) as *mut WIPICFramebuffer,
+            x,
+            y,
+            width,
+            height,
+            graphics_context,
+        )
+    };
+}

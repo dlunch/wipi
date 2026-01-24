@@ -185,6 +185,97 @@ pub fn create_image(data: &[u8]) -> Result<WIPICImage, WIPICError> {
 
 /// # Safety
 /// All pointers must be valid
+pub unsafe fn draw_rect(
+    framebuffer: *mut WIPICFramebuffer,
+    x: i32,
+    y: i32,
+    width: i32,
+    height: i32,
+    graphics_context: *const WIPICGraphicsContext,
+) {
+    let fb = unsafe { &*framebuffer };
+    let gctx = unsafe { &*graphics_context };
+    let dst_buf = fb.buf.0 as *mut u8;
+    let color = gctx.fgpxl as u32;
+
+    let x = x.max(0) as usize;
+    let y = y.max(0) as usize;
+    let width = width.max(0) as usize;
+    let height = height.max(0) as usize;
+
+    for i in 0..width {
+        let px = x + i;
+        if px >= fb.width {
+            continue;
+        }
+        for py in [y, y + height.saturating_sub(1)] {
+            if py >= fb.height {
+                continue;
+            }
+            let offset = py * fb.bpl + px * (fb.bpp / 8);
+            unsafe {
+                std::ptr::write(dst_buf.add(offset) as *mut u32, color);
+            }
+        }
+    }
+
+    for j in 0..height {
+        let py = y + j;
+        if py >= fb.height {
+            continue;
+        }
+        for px in [x, x + width.saturating_sub(1)] {
+            if px >= fb.width {
+                continue;
+            }
+            let offset = py * fb.bpl + px * (fb.bpp / 8);
+            unsafe {
+                std::ptr::write(dst_buf.add(offset) as *mut u32, color);
+            }
+        }
+    }
+}
+
+/// # Safety
+/// All pointers must be valid
+pub unsafe fn fill_rect(
+    framebuffer: *mut WIPICFramebuffer,
+    x: i32,
+    y: i32,
+    width: i32,
+    height: i32,
+    graphics_context: *const WIPICGraphicsContext,
+) {
+    let fb = unsafe { &*framebuffer };
+    let gctx = unsafe { &*graphics_context };
+    let dst_buf = fb.buf.0 as *mut u8;
+    let color = gctx.fgpxl as u32;
+
+    let x = x.max(0) as usize;
+    let y = y.max(0) as usize;
+    let width = width.max(0) as usize;
+    let height = height.max(0) as usize;
+
+    for j in 0..height {
+        let py = y + j;
+        if py >= fb.height {
+            continue;
+        }
+        for i in 0..width {
+            let px = x + i;
+            if px >= fb.width {
+                continue;
+            }
+            let offset = py * fb.bpl + px * (fb.bpp / 8);
+            unsafe {
+                std::ptr::write(dst_buf.add(offset) as *mut u32, color);
+            }
+        }
+    }
+}
+
+/// # Safety
+/// All pointers must be valid
 #[allow(clippy::too_many_arguments)]
 pub unsafe fn draw_image(
     framebuffer: *mut WIPICFramebuffer,
