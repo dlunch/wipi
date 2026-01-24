@@ -1,9 +1,9 @@
 use core::ptr;
 
 use wipi_types::ktf::{
+    InitParam0, InitParam1, InitParam2, InitParam3, InitParam4,
     java::WIPIJBInterface,
     wipic::{WIPICDatabaseInterface, WIPICGraphicsInterface, WIPICKnlInterface},
-    InitParam0, InitParam1, InitParam2, InitParam3, InitParam4,
 };
 
 pub(super) static mut INIT_PARAM_0: *const InitParam0 = ptr::null();
