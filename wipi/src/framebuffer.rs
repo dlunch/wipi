@@ -118,6 +118,20 @@ impl Framebuffer {
         }
     }
 
+    pub fn draw_text(&mut self, x: i32, y: i32, text: &str, color: Color) {
+        self.context.fgpxl = Self::color_to_pixel(color) as _;
+        unsafe {
+            wipic_sys::graphics::draw_string(
+                self.raw,
+                x,
+                y,
+                text.as_ptr(),
+                text.len() as i32,
+                &self.context as *const _,
+            );
+        }
+    }
+
     fn color_to_pixel(color: Color) -> u32 {
         ((color.a as u32) << 24)
             | ((color.r as u32) << 16)

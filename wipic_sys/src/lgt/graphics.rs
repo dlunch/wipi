@@ -139,3 +139,29 @@ pub unsafe fn fill_rect(
     };
     fill_rect(framebuffer, x, y, width, height, graphics_context);
 }
+
+/// # Safety
+/// The caller must ensure that the pointers passed to this function are valid.
+pub unsafe fn draw_string(
+    framebuffer: WIPICIndirectPtr,
+    x: i32,
+    y: i32,
+    string: *const u8,
+    length: i32,
+    graphics_context: *const WIPICGraphicsContext,
+) {
+    let draw_string: extern "C" fn(
+        WIPICIndirectPtr,
+        i32,
+        i32,
+        *const u8,
+        i32,
+        *const WIPICGraphicsContext,
+    ) = unsafe {
+        transmute(get_external_method(
+            ImportModule::WIPIC,
+            WIPICMethod::DrawString as _,
+        ))
+    };
+    draw_string(framebuffer, x, y, string, length, graphics_context);
+}

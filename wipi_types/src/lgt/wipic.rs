@@ -17,6 +17,7 @@ pub enum WIPICMethod {
     DrawRect = 0xd2,
     FillRect = 0xd3,
     DrawImage = 0xd5,
+    DrawString = 0xda,
     FlushLcd = 0xde,
     CreateImage = 0xe9,
 }

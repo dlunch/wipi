@@ -127,3 +127,25 @@ pub unsafe fn fill_rect(
         )
     };
 }
+
+/// # Safety
+/// `graphics_context` must be a valid pointer
+pub unsafe fn draw_string(
+    framebuffer: WIPICIndirectPtr,
+    x: i32,
+    y: i32,
+    string: *const u8,
+    length: i32,
+    graphics_context: *const WIPICGraphicsContext,
+) {
+    unsafe {
+        wipic_simulation::graphics::draw_string(
+            deref_indirect_ptr(framebuffer) as *mut WIPICFramebuffer,
+            x,
+            y,
+            string,
+            length,
+            graphics_context,
+        )
+    };
+}

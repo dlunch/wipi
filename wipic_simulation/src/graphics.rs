@@ -328,3 +328,16 @@ pub unsafe fn draw_image(
         }
     }
 }
+
+/// # Safety
+/// All pointers must be valid
+pub unsafe fn draw_string(
+    _framebuffer: *mut WIPICFramebuffer,
+    _x: i32,
+    _y: i32,
+    _string: *const u8,
+    _length: i32,
+    _graphics_context: *const WIPICGraphicsContext,
+) {
+    // TODO: implement text rendering
+}

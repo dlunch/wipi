@@ -57,6 +57,18 @@ impl App for PaintApp {
                 a: 255,
             },
         );
+
+        fb.draw_text(
+            20,
+            100,
+            "Hello WIPI!",
+            Color {
+                r: 255,
+                g: 255,
+                b: 255,
+                a: 255,
+            },
+        );
     }
 }
 
