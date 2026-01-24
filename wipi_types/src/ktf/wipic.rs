@@ -175,4 +175,13 @@ pub struct WIPICDatabaseInterface {
     pub update_record: TargetPtr,
     pub delete_record: TargetPtr,
     pub list_record: TargetPtr,
+    pub sort_records: TargetPtr,
+    pub get_access_mode: TargetPtr,
+    pub get_number_of_records: TargetPtr,
+    pub get_record_size: TargetPtr,
+    pub list_databases: TargetPtr,
+    pub unk13: TargetPtr,
+    pub unk14: TargetPtr,
+    pub unk15: TargetPtr,
+    pub unk16: TargetPtr,
 }
