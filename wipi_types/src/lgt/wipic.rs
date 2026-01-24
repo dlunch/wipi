@@ -20,4 +20,8 @@ pub enum WIPICMethod {
     DrawString = 0xda,
     FlushLcd = 0xde,
     CreateImage = 0xe9,
+    OpenDatabase = 0x190,
+    ReadRecordSingle = 0x191,
+    WriteRecordSingle = 0x192,
+    CloseDatabase = 0x193,
 }

@@ -162,3 +162,17 @@ pub struct WIPICGraphicsInterface {
     pub encode_image_ex: TargetPtr,
     pub get_image_info: TargetPtr,
 }
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
+pub struct WIPICDatabaseInterface {
+    pub open_database: TargetPtr,
+    pub read_record_single: TargetPtr,
+    pub write_record_single: TargetPtr,
+    pub close_database: TargetPtr,
+    pub select_record: TargetPtr,
+    pub update_record: TargetPtr,
+    pub delete_record: TargetPtr,
+    pub list_record: TargetPtr,
+}

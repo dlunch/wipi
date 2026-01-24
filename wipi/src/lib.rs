@@ -5,6 +5,7 @@ extern crate alloc;
 mod allocator;
 pub mod app;
 pub mod console;
+pub mod database;
 pub mod event;
 pub mod framebuffer;
 pub mod image;

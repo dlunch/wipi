@@ -91,6 +91,8 @@ pub enum WIPICError {
     Invalid = -9,
     NoSuchEntry = -12,
     InsufficientBufferSize = -18,
+    BadRecordId = -22,
+    InvalidHandle = -25,
 }
 
 impl WIPICError {
