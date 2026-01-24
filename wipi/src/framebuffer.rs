@@ -25,6 +25,14 @@ impl Framebuffer {
         Framebuffer { raw, context }
     }
 
+    pub fn width(&self) -> u32 {
+        self.read_fb().width as u32
+    }
+
+    pub fn height(&self) -> u32 {
+        self.read_fb().height as u32
+    }
+
     pub fn set_pixel(&mut self, x: u32, y: u32, color: Color) {
         let fb = self.read_fb();
         let buffer_ptr = Self::buffer_ptr(fb);
