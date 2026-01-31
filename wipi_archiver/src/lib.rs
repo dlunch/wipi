@@ -3,6 +3,14 @@
 
 mod lgt_elf;
 
+use std::{
+    fs,
+    io::{Cursor, Write},
+    path::Path,
+};
+
+use zip::{ZipWriter, write::SimpleFileOptions};
+
 use lgt_elf::fix_lgt_elf;
 
 pub fn create_ktf_archive(
@@ -12,13 +20,6 @@ pub fn create_ktf_archive(
     pid: &str,
     resource_path: Option<&str>,
 ) -> anyhow::Result<Vec<u8>> {
-    use std::{
-        fs,
-        io::{Cursor, Write},
-    };
-
-    use zip::{ZipWriter, write::SimpleFileOptions};
-
     let executable_file = fs::read(executable_path)?;
     // we store bss size at last 4 bytes of the file
     let bss_size = u32::from_le_bytes(
@@ -52,13 +53,6 @@ pub fn create_lgt_archive(
     pid: &str,
     resource_path: Option<&str>,
 ) -> anyhow::Result<Vec<u8>> {
-    use std::{
-        fs,
-        io::{Cursor, Write},
-    };
-
-    use zip::{ZipWriter, write::SimpleFileOptions};
-
     let executable_file = fs::read(executable_path)?;
     let fixed_executable = fix_lgt_elf(&executable_file)?;
     let jar = build_jar("binary.mod", fixed_executable, resource_path)?;
@@ -91,13 +85,6 @@ fn build_jar(
     executable_file: Vec<u8>,
     resource_path: Option<&str>,
 ) -> anyhow::Result<Vec<u8>> {
-    use std::{
-        io::{Cursor, Write},
-        path::Path,
-    };
-
-    use zip::{ZipWriter, write::SimpleFileOptions};
-
     let mut jar = Vec::new();
     {
         let mut jar_zip = ZipWriter::new(Cursor::new(&mut jar));
@@ -115,14 +102,11 @@ fn build_jar(
     Ok(jar)
 }
 
-fn add_directory_to_zip<W: std::io::Write + std::io::Seek>(
-    zip: &mut zip::ZipWriter<W>,
-    base_path: &std::path::Path,
-    current_path: &std::path::Path,
+fn add_directory_to_zip<W: Write + std::io::Seek>(
+    zip: &mut ZipWriter<W>,
+    base_path: &Path,
+    current_path: &Path,
 ) -> anyhow::Result<()> {
-    use std::{fs, io::Write};
-    use zip::write::SimpleFileOptions;
-
     for entry in fs::read_dir(current_path)? {
         let path = entry?.path();
 
