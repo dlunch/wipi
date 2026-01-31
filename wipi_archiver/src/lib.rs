@@ -92,8 +92,8 @@ fn build_jar(
     resource_path: Option<&str>,
 ) -> anyhow::Result<Vec<u8>> {
     use std::{
-        fs,
         io::{Cursor, Write},
+        path::Path,
     };
 
     use zip::{ZipWriter, write::SimpleFileOptions};
@@ -107,23 +107,39 @@ fn build_jar(
         jar_zip.write_all("Manifest-Version: 1.0\n".as_bytes())?;
 
         if let Some(resource_path) = resource_path {
-            let resource_files = fs::read_dir(resource_path)?;
-            for entry in resource_files {
-                let path = entry?.path();
-
-                if path.is_file() {
-                    let file_name = path
-                        .file_name()
-                        .ok_or(anyhow::anyhow!("Invalid file name"))?
-                        .to_str()
-                        .ok_or(anyhow::anyhow!("Invalid UTF-8 in file name"))?;
-
-                    jar_zip.start_file(file_name, SimpleFileOptions::default())?;
-                    jar_zip.write_all(&fs::read(&path)?)?;
-                }
-            }
+            let base_path = Path::new(resource_path);
+            add_directory_to_zip(&mut jar_zip, base_path, base_path)?;
         }
     }
 
     Ok(jar)
+}
+
+fn add_directory_to_zip<W: std::io::Write + std::io::Seek>(
+    zip: &mut zip::ZipWriter<W>,
+    base_path: &std::path::Path,
+    current_path: &std::path::Path,
+) -> anyhow::Result<()> {
+    use std::{fs, io::Write};
+    use zip::write::SimpleFileOptions;
+
+    for entry in fs::read_dir(current_path)? {
+        let path = entry?.path();
+
+        if path.is_file() {
+            let relative_path = path
+                .strip_prefix(base_path)
+                .map_err(|e| anyhow::anyhow!("Failed to strip prefix: {}", e))?;
+            let file_name = relative_path
+                .to_str()
+                .ok_or(anyhow::anyhow!("Invalid UTF-8 in file name"))?;
+
+            zip.start_file(file_name, SimpleFileOptions::default())?;
+            zip.write_all(&fs::read(&path)?)?;
+        } else if path.is_dir() {
+            add_directory_to_zip(zip, base_path, &path)?;
+        }
+    }
+
+    Ok(())
 }
