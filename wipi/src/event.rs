@@ -14,7 +14,7 @@ impl EventType {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum KeyCode {
     Key1,
     Key2,
