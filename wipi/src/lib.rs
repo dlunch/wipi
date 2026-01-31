@@ -29,6 +29,9 @@ pub type Result<T> = core::result::Result<T, wipi_types::wipic::WIPICError>;
 pub mod kernel {
     pub use wipic_sys::kernel::exit;
 }
+pub mod graphics {
+    pub use wipic_sys::graphics::repaint;
+}
 pub use wipi_macros::wipi_main;
 #[doc(hidden)]
 pub mod __internal {

@@ -341,3 +341,7 @@ pub unsafe fn draw_string(
 ) {
     // TODO: implement text rendering
 }
+
+pub fn request_repaint() {
+    // simulation already repaints every frame
+}

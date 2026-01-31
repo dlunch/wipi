@@ -132,6 +132,11 @@ impl Framebuffer {
         }
     }
 
+    pub fn request_repaint(&self) {
+        let fb = self.read_fb();
+        wipic_sys::graphics::repaint(0, 0, 0, fb.width as i32, fb.height as i32);
+    }
+
     fn color_to_pixel(color: Color) -> u32 {
         ((color.a as u32) << 24)
             | ((color.r as u32) << 16)

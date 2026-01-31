@@ -132,3 +132,10 @@ pub unsafe fn draw_string(
 
     draw_string(framebuffer, x, y, string, length, graphics_context);
 }
+
+pub fn repaint(lcd: i32, x: i32, y: i32, width: i32, height: i32) {
+    let repaint: extern "C" fn(i32, i32, i32, i32, i32) =
+        unsafe { transmute((*WIPIC_GRAPHICS_INTERFACE).repaint) };
+
+    repaint(lcd, x, y, width, height);
+}

@@ -149,3 +149,7 @@ pub unsafe fn draw_string(
         )
     };
 }
+
+pub fn repaint(_lcd: i32, _x: i32, _y: i32, _width: i32, _height: i32) {
+    wipic_simulation::graphics::request_repaint();
+}
