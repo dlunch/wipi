@@ -23,7 +23,8 @@ macro_rules! println {
     }};
 }
 
-pub type Result<T> = core::result::Result<T, wipi_types::wipic::WIPICError>;
+pub use wipi_types::wipic::WIPICError;
+pub type Result<T> = core::result::Result<T, WIPICError>;
 
 // re-exports
 pub mod kernel {
