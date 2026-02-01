@@ -3,6 +3,7 @@ use wipic_sys::deref_indirect_ptr;
 
 use crate::image::Image;
 
+#[derive(Clone, Copy, Debug)]
 pub struct Color {
     pub r: u8,
     pub g: u8,
