@@ -74,3 +74,21 @@ pub fn get_resource(id: i32, buf: WIPICIndirectPtr, buf_size: usize) -> WIPICErr
 
     WIPICError::from_raw(get_resource(id, buf.0 as _, buf_size))
 }
+
+pub fn def_timer(timer: *mut u8, callback: extern "C" fn(*mut u8, *mut u8)) {
+    let def_timer: extern "C" fn(*mut u8, extern "C" fn(*mut u8, *mut u8)) =
+        unsafe { transmute((*WIPIC_KNLINTERFACE).def_timer) };
+    def_timer(timer, callback);
+}
+
+pub fn set_timer(timer: *mut u8, timeout_low: u32, timeout_high: u32, param: *mut u8) {
+    let set_timer: extern "C" fn(*mut u8, u32, u32, *mut u8) =
+        unsafe { transmute((*WIPIC_KNLINTERFACE).set_timer) };
+    set_timer(timer, timeout_low, timeout_high, param);
+}
+
+pub fn unset_timer(timer: *mut u8) {
+    let unset_timer: extern "C" fn(*mut u8) =
+        unsafe { transmute((*WIPIC_KNLINTERFACE).unset_timer) };
+    unset_timer(timer);
+}

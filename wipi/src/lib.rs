@@ -13,6 +13,7 @@ pub mod image;
 mod lifecycle;
 mod panic_handler;
 pub mod resource;
+pub mod timer;
 
 #[macro_export]
 macro_rules! println {

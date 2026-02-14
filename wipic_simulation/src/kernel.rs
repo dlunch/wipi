@@ -1,4 +1,4 @@
-use core::ffi::{CStr, c_char};
+use core::ffi::{c_char, CStr};
 use std::alloc::Layout;
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -99,4 +99,25 @@ pub unsafe fn get_resource(id: i32, buf: *mut u8, buf_size: usize) -> i32 {
         }
         None => -12,
     }
+}
+
+pub fn def_timer(timer: *mut u8, callback: extern "C" fn(*mut u8, *mut u8)) {
+    unsafe { *(timer as *mut usize) = callback as usize };
+}
+
+pub fn set_timer(timer: *mut u8, timeout_low: u32, timeout_high: u32, param: *mut u8) {
+    let timeout_ms = ((timeout_high as u64) << 32) | (timeout_low as u64);
+    let callback: extern "C" fn(*mut u8, *mut u8) =
+        unsafe { core::mem::transmute(*(timer as *const usize)) };
+    let timer_addr = timer as usize;
+    let param_addr = param as usize;
+
+    std::thread::spawn(move || {
+        std::thread::sleep(std::time::Duration::from_millis(timeout_ms));
+        callback(timer_addr as *mut u8, param_addr as *mut u8);
+    });
+}
+
+pub fn unset_timer(_timer: *mut u8) {
+    // TODO: implement cancellation
 }

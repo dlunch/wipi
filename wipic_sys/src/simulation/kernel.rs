@@ -32,3 +32,15 @@ pub fn get_resource(id: i32, buf: WIPICIndirectPtr, buf_size: usize) -> WIPICErr
         unsafe { wipic_simulation::kernel::get_resource(id, deref_indirect_ptr(buf), buf_size) };
     WIPICError::from_raw(result)
 }
+
+pub fn def_timer(timer: *mut u8, callback: extern "C" fn(*mut u8, *mut u8)) {
+    wipic_simulation::kernel::def_timer(timer, callback);
+}
+
+pub fn set_timer(timer: *mut u8, timeout_low: u32, timeout_high: u32, param: *mut u8) {
+    wipic_simulation::kernel::set_timer(timer, timeout_low, timeout_high, param);
+}
+
+pub fn unset_timer(timer: *mut u8) {
+    wipic_simulation::kernel::unset_timer(timer);
+}

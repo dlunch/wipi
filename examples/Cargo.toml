@@ -35,3 +35,7 @@ path = "src/resource.rs"
 [[bin]]
 name = "image"
 path = "src/image.rs"
+
+[[bin]]
+name = "timer"
+path = "src/timer.rs"
