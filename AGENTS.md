@@ -76,6 +76,7 @@ let f: extern "C" fn(...) = unsafe { transmute(get_external_method(ImportModule:
 - **Edition 2024**, nightly-only (rust-toolchain.toml)
 - **no_std + alloc** everywhere except wipic_simulation
 - **Panic = abort** in all profiles
+- **Always run `cargo fmt --all` before committing**
 - Platform features are **mutually exclusive** — never enable ktf+lgt simultaneously
 - Safe wrappers in `wipi/` follow: struct + methods + `Drop` for cleanup (see database.rs)
 - `WIPICIndirectPtr` must be dereferenced via `deref_indirect_ptr()` before use — KTF adds 8-byte offset, LGT/simulation direct cast
