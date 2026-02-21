@@ -1,6 +1,12 @@
+use std::fs;
 use std::io::Cursor;
 use std::sync::Mutex;
 
+use ab_glyph::{Font, FontArc, FontVec, PxScale, ScaleFont, point};
+use font_kit::family_name::FamilyName;
+use font_kit::handle::Handle;
+use font_kit::properties::Properties;
+use font_kit::source::SystemSource;
 use once_cell::sync::Lazy;
 use wipi_types::wipic::{
     WIPICError, WIPICFramebuffer, WIPICGraphicsContext, WIPICImage, WIPICIndirectPtr,
@@ -12,9 +18,28 @@ pub const SCREEN_WIDTH: usize = 240;
 pub const SCREEN_HEIGHT: usize = 320;
 const SCREEN_BPP: usize = 32;
 const SCREEN_BPL: usize = SCREEN_WIDTH * (SCREEN_BPP / 8);
+const TAB_SPACES: i32 = 4;
+const SYSTEM_FONT_SIZE: f32 = 13.0;
 
 pub static SCREEN_FRAMEBUFFER: Lazy<Mutex<ScreenFramebuffer>> =
     Lazy::new(|| Mutex::new(ScreenFramebuffer::new()));
+static SYSTEM_FONT: Lazy<Option<FontArc>> = Lazy::new(load_system_font);
+
+fn load_system_font() -> Option<FontArc> {
+    let source = SystemSource::new();
+    let families = [FamilyName::SansSerif];
+    let handle = source
+        .select_best_match(&families, &Properties::new())
+        .ok()?;
+
+    let (font_data, font_index) = match handle {
+        Handle::Path { path, font_index } => (fs::read(path).ok()?, font_index),
+        Handle::Memory { bytes, font_index } => (bytes.as_ref().to_vec(), font_index),
+    };
+
+    let font = FontVec::try_from_vec_and_index(font_data, font_index).ok()?;
+    Some(FontArc::new(font))
+}
 
 pub struct ScreenFramebuffer {
     framebuffer_ptr: *mut WIPICFramebuffer,
@@ -332,16 +357,223 @@ pub unsafe fn draw_image(
 /// # Safety
 /// All pointers must be valid
 pub unsafe fn draw_string(
-    _framebuffer: *mut WIPICFramebuffer,
-    _x: i32,
-    _y: i32,
-    _string: *const u8,
-    _length: i32,
-    _graphics_context: *const WIPICGraphicsContext,
+    framebuffer: *mut WIPICFramebuffer,
+    x: i32,
+    y: i32,
+    string: *const u8,
+    length: i32,
+    graphics_context: *const WIPICGraphicsContext,
 ) {
-    // TODO: implement text rendering
+    if framebuffer.is_null() || graphics_context.is_null() || string.is_null() || length <= 0 {
+        return;
+    }
+
+    let Some(font) = SYSTEM_FONT.as_ref() else {
+        return;
+    };
+
+    let fb = unsafe { &*framebuffer };
+    let gctx = unsafe { &*graphics_context };
+    let dst_buf = fb.buf.0 as *mut u8;
+    if dst_buf.is_null() {
+        return;
+    }
+
+    let bytes = unsafe { std::slice::from_raw_parts(string, length as usize) };
+    let text = String::from_utf8_lossy(bytes);
+    draw_system_font_string(dst_buf, fb, gctx, x, y, &text, font);
 }
 
 pub fn request_repaint() {
     // simulation already repaints every frame
+}
+
+#[derive(Clone, Copy)]
+struct ClipRect {
+    left: i32,
+    top: i32,
+    right: i32,
+    bottom: i32,
+}
+
+impl ClipRect {
+    fn from_context(context: &WIPICGraphicsContext) -> Self {
+        Self {
+            left: context.clip[0] as i32,
+            top: context.clip[1] as i32,
+            right: context.clip[2] as i32,
+            bottom: context.clip[3] as i32,
+        }
+    }
+
+    fn contains(self, x: i32, y: i32) -> bool {
+        x >= self.left && x < self.right && y >= self.top && y < self.bottom
+    }
+}
+
+fn draw_system_font_string(
+    dst_buf: *mut u8,
+    fb: &WIPICFramebuffer,
+    gctx: &WIPICGraphicsContext,
+    x: i32,
+    y: i32,
+    text: &str,
+    font: &FontArc,
+) {
+    let clip = ClipRect::from_context(gctx);
+    let color = gctx.fgpxl as u32;
+    let scale = PxScale::from(SYSTEM_FONT_SIZE);
+    let scaled = font.as_scaled(scale);
+
+    let mut line_height = scaled.height().ceil() as i32;
+    if line_height <= 0 {
+        line_height = SYSTEM_FONT_SIZE.ceil() as i32;
+    }
+
+    let mut space_advance = scaled.h_advance(font.glyph_id(' ')).ceil() as i32;
+    if space_advance <= 0 {
+        space_advance = 1;
+    }
+
+    let origin_x = x + gctx.offset[0] as i32;
+    let mut cursor_x = origin_x;
+    let mut cursor_y = y + gctx.offset[1] as i32;
+    let ascent = scaled.ascent().ceil() as i32;
+
+    for ch in text.chars() {
+        match ch {
+            '\r' => continue,
+            '\n' => {
+                cursor_x = origin_x;
+                cursor_y += line_height;
+                continue;
+            }
+            '\t' => {
+                cursor_x += space_advance * TAB_SPACES;
+                continue;
+            }
+            _ => {}
+        }
+
+        let mut glyph_id = font.glyph_id(ch);
+        if glyph_id.0 == 0 {
+            glyph_id = font.glyph_id('\u{FFFD}');
+        }
+        if glyph_id.0 == 0 {
+            cursor_x += space_advance;
+            continue;
+        }
+
+        let baseline_y = cursor_y + ascent;
+        let glyph =
+            glyph_id.with_scale_and_position(scale, point(cursor_x as f32, baseline_y as f32));
+        if let Some(outlined) = font.outline_glyph(glyph) {
+            let bounds = outlined.px_bounds();
+            let min_x = bounds.min.x.floor() as i32;
+            let min_y = bounds.min.y.floor() as i32;
+            outlined.draw(|glyph_x, glyph_y, coverage| {
+                blend_pixel(
+                    dst_buf,
+                    fb,
+                    min_x + glyph_x as i32,
+                    min_y + glyph_y as i32,
+                    color,
+                    coverage,
+                    clip,
+                );
+            });
+        }
+
+        let mut advance = scaled.h_advance(glyph_id).ceil() as i32;
+        if advance <= 0 {
+            advance = 1;
+        }
+        cursor_x += advance;
+    }
+}
+
+fn blend_pixel(
+    dst_buf: *mut u8,
+    fb: &WIPICFramebuffer,
+    x: i32,
+    y: i32,
+    color: u32,
+    coverage: f32,
+    clip: ClipRect,
+) {
+    if coverage <= 0.0 {
+        return;
+    }
+    if x < 0 || y < 0 || x >= fb.width as i32 || y >= fb.height as i32 || !clip.contains(x, y) {
+        return;
+    }
+
+    let bpp = fb.bpp;
+    if !bpp.is_multiple_of(8) {
+        return;
+    }
+
+    let src_alpha = ((color >> 24) & 0xFF) as f32 / 255.0;
+    let alpha = (src_alpha * coverage).clamp(0.0, 1.0);
+    if alpha <= 0.0 {
+        return;
+    }
+
+    let bytes_per_pixel = bpp / 8;
+    let offset = y as usize * fb.bpl + x as usize * bytes_per_pixel;
+
+    let src_b = (color & 0xFF) as u8;
+    let src_g = ((color >> 8) & 0xFF) as u8;
+    let src_r = ((color >> 16) & 0xFF) as u8;
+
+    unsafe {
+        match bpp {
+            32 => {
+                let dst = std::ptr::read_unaligned(dst_buf.add(offset) as *const u32);
+                let dst_b = (dst & 0xFF) as u8;
+                let dst_g = ((dst >> 8) & 0xFF) as u8;
+                let dst_r = ((dst >> 16) & 0xFF) as u8;
+                let dst_a = ((dst >> 24) & 0xFF) as u8;
+
+                let out_b = blend_channel(src_b, dst_b, alpha);
+                let out_g = blend_channel(src_g, dst_g, alpha);
+                let out_r = blend_channel(src_r, dst_r, alpha);
+                let out_a = blend_channel(255, dst_a, alpha);
+
+                let out = ((out_a as u32) << 24)
+                    | ((out_r as u32) << 16)
+                    | ((out_g as u32) << 8)
+                    | (out_b as u32);
+                std::ptr::write_unaligned(dst_buf.add(offset) as *mut u32, out);
+            }
+            24 => {
+                let dst_b = *dst_buf.add(offset);
+                let dst_g = *dst_buf.add(offset + 1);
+                let dst_r = *dst_buf.add(offset + 2);
+
+                *dst_buf.add(offset) = blend_channel(src_b, dst_b, alpha);
+                *dst_buf.add(offset + 1) = blend_channel(src_g, dst_g, alpha);
+                *dst_buf.add(offset + 2) = blend_channel(src_r, dst_r, alpha);
+            }
+            16 => {
+                if alpha >= 0.5 {
+                    let rgb565 = (((src_r as u16) >> 3) << 11)
+                        | (((src_g as u16) >> 2) << 5)
+                        | ((src_b as u16) >> 3);
+                    std::ptr::write_unaligned(dst_buf.add(offset) as *mut u16, rgb565);
+                }
+            }
+            8 => {
+                if alpha >= 0.5 {
+                    *dst_buf.add(offset) =
+                        ((src_r as u16 * 30 + src_g as u16 * 59 + src_b as u16 * 11) / 100) as u8;
+                }
+            }
+            _ => {}
+        }
+    }
+}
+
+fn blend_channel(src: u8, dst: u8, alpha: f32) -> u8 {
+    (src as f32 * alpha + dst as f32 * (1.0 - alpha)).round() as u8
 }
