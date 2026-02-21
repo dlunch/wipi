@@ -2,7 +2,7 @@ use std::fs;
 use std::io::Cursor;
 use std::sync::Mutex;
 
-use ab_glyph::{Font, FontArc, FontVec, PxScale, ScaleFont, point};
+use ab_glyph::{Font, FontArc, FontVec, GlyphId, PxScale, ScaleFont, point};
 use font_kit::family_name::FamilyName;
 use font_kit::handle::Handle;
 use font_kit::properties::Properties;
@@ -465,30 +465,46 @@ fn draw_system_font_string(
         }
 
         let baseline_y = cursor_y + ascent;
-        let glyph =
-            glyph_id.with_scale_and_position(scale, point(cursor_x as f32, baseline_y as f32));
-        if let Some(outlined) = font.outline_glyph(glyph) {
-            let bounds = outlined.px_bounds();
-            let min_x = bounds.min.x.floor() as i32;
-            let min_y = bounds.min.y.floor() as i32;
-            outlined.draw(|glyph_x, glyph_y, coverage| {
-                blend_pixel(
-                    dst_buf,
-                    fb,
-                    min_x + glyph_x as i32,
-                    min_y + glyph_y as i32,
-                    color,
-                    coverage,
-                    clip,
-                );
-            });
-        }
+        draw_grayscale_glyph(
+            dst_buf, fb, font, glyph_id, scale, cursor_x, baseline_y, color, clip,
+        );
 
         let mut advance = scaled.h_advance(glyph_id).ceil() as i32;
         if advance <= 0 {
             advance = 1;
         }
         cursor_x += advance;
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn draw_grayscale_glyph(
+    dst_buf: *mut u8,
+    fb: &WIPICFramebuffer,
+    font: &FontArc,
+    glyph_id: GlyphId,
+    scale: PxScale,
+    x: i32,
+    baseline_y: i32,
+    color: u32,
+    clip: ClipRect,
+) {
+    let glyph = glyph_id.with_scale_and_position(scale, point(x as f32, baseline_y as f32));
+    if let Some(outlined) = font.outline_glyph(glyph) {
+        let bounds = outlined.px_bounds();
+        let min_x = bounds.min.x.floor() as i32;
+        let min_y = bounds.min.y.floor() as i32;
+        outlined.draw(|glyph_x, glyph_y, coverage| {
+            blend_pixel(
+                dst_buf,
+                fb,
+                min_x + glyph_x as i32,
+                min_y + glyph_y as i32,
+                color,
+                coverage,
+                clip,
+            );
+        });
     }
 }
 
