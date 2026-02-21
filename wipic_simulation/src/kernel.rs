@@ -3,6 +3,7 @@ use std::alloc::Layout;
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::Mutex;
+use std::time::{Duration, Instant};
 use std::{fs, print, process};
 
 use once_cell::sync::Lazy;
@@ -10,6 +11,13 @@ use once_cell::sync::Lazy;
 static RESOURCES: Lazy<Mutex<ResourceManager>> = Lazy::new(|| Mutex::new(ResourceManager::new()));
 static ALLOCATIONS: Lazy<Mutex<HashMap<usize, Layout>>> = Lazy::new(|| Mutex::new(HashMap::new()));
 static RESOURCE_PATH: Lazy<Mutex<PathBuf>> = Lazy::new(|| Mutex::new(PathBuf::from("resources")));
+static TIMERS: Lazy<Mutex<HashMap<usize, TimerState>>> = Lazy::new(|| Mutex::new(HashMap::new()));
+
+struct TimerState {
+    deadline: Instant,
+    callback: extern "C" fn(*mut u8, *mut u8),
+    param_addr: usize,
+}
 
 pub fn set_resource_path(path: PathBuf) {
     *RESOURCE_PATH.lock().unwrap() = path;
@@ -109,15 +117,50 @@ pub fn set_timer(timer: *mut u8, timeout_low: u32, timeout_high: u32, param: *mu
     let timeout_ms = ((timeout_high as u64) << 32) | (timeout_low as u64);
     let callback: extern "C" fn(*mut u8, *mut u8) =
         unsafe { core::mem::transmute(*(timer as *const usize)) };
-    let timer_addr = timer as usize;
-    let param_addr = param as usize;
+    let deadline = Instant::now()
+        .checked_add(Duration::from_millis(timeout_ms))
+        .unwrap_or_else(Instant::now);
 
-    std::thread::spawn(move || {
-        std::thread::sleep(std::time::Duration::from_millis(timeout_ms));
-        callback(timer_addr as *mut u8, param_addr as *mut u8);
-    });
+    TIMERS.lock().unwrap().insert(
+        timer as usize,
+        TimerState {
+            deadline,
+            callback,
+            param_addr: param as usize,
+        },
+    );
 }
 
-pub fn unset_timer(_timer: *mut u8) {
-    // TODO: implement cancellation
+pub fn unset_timer(timer: *mut u8) {
+    TIMERS.lock().unwrap().remove(&(timer as usize));
+}
+
+pub fn run_due_timers() {
+    // Callbacks are dispatched on the main event-loop thread to match the
+    // single-threaded assumptions of the target runtime.
+    const MAX_CALLBACKS_PER_TICK: usize = 1024;
+
+    for _ in 0..MAX_CALLBACKS_PER_TICK {
+        let next_timer = {
+            let mut timers = TIMERS.lock().unwrap();
+            let now = Instant::now();
+
+            let timer_addr = timers
+                .iter()
+                .min_by_key(|(_, timer)| timer.deadline)
+                .and_then(|(timer_addr, timer)| (timer.deadline <= now).then_some(*timer_addr));
+
+            timer_addr.and_then(|timer_addr| {
+                timers
+                    .remove(&timer_addr)
+                    .map(|timer| (timer_addr, timer.callback, timer.param_addr))
+            })
+        };
+
+        let Some((timer_addr, callback, param_addr)) = next_timer else {
+            break;
+        };
+
+        callback(timer_addr as *mut u8, param_addr as *mut u8);
+    }
 }

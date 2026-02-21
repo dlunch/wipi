@@ -41,9 +41,6 @@ impl SimulationApp {
         let Some(surface) = &mut self.surface else {
             return;
         };
-        let Some(window) = &self.window else {
-            return;
-        };
 
         unsafe { (self.paint_clet)() };
 
@@ -66,7 +63,6 @@ impl SimulationApp {
             }
         }
         sb_buffer.present().unwrap();
-        window.request_redraw();
     }
 }
 
@@ -121,6 +117,14 @@ impl ApplicationHandler for SimulationApp {
                 }
             }
             _ => {}
+        }
+    }
+
+    fn about_to_wait(&mut self, _event_loop: &ActiveEventLoop) {
+        kernel::run_due_timers();
+
+        if let Some(window) = &self.window {
+            window.request_redraw();
         }
     }
 }
