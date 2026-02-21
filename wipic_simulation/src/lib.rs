@@ -10,7 +10,7 @@ use std::rc::Rc;
 
 use softbuffer::Surface;
 use winit::application::ApplicationHandler;
-use winit::dpi::PhysicalSize;
+use winit::dpi::LogicalSize;
 use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::{Window, WindowId};
@@ -22,6 +22,8 @@ struct SimulationApp {
     surface: Option<Surface<Rc<Window>, Rc<Window>>>,
     paint_clet: unsafe extern "C" fn(),
     handle_input: unsafe extern "C" fn(i32, i32, i32),
+    surface_width: usize,
+    surface_height: usize,
 }
 
 impl SimulationApp {
@@ -34,6 +36,8 @@ impl SimulationApp {
             surface: None,
             paint_clet,
             handle_input,
+            surface_width: SCREEN_WIDTH,
+            surface_height: SCREEN_HEIGHT,
         }
     }
 
@@ -47,13 +51,15 @@ impl SimulationApp {
         let screen = graphics::SCREEN_FRAMEBUFFER.lock().unwrap();
         let buffer = screen.buffer();
 
-        let width = SCREEN_WIDTH;
-        let height = SCREEN_HEIGHT;
+        let width = self.surface_width;
+        let height = self.surface_height;
 
         let mut sb_buffer = surface.buffer_mut().unwrap();
         for y in 0..height {
+            let src_y = y * SCREEN_HEIGHT / height;
             for x in 0..width {
-                let offset = y * (SCREEN_WIDTH * 4) + x * 4;
+                let src_x = x * SCREEN_WIDTH / width;
+                let offset = src_y * (SCREEN_WIDTH * 4) + src_x * 4;
                 if offset + 3 < buffer.len() {
                     let b = buffer[offset] as u32;
                     let g = buffer[offset + 1] as u32;
@@ -64,29 +70,45 @@ impl SimulationApp {
         }
         sb_buffer.present().unwrap();
     }
+
+    fn resize_surface(&mut self, width: u32, height: u32) {
+        if width == 0 || height == 0 {
+            return;
+        }
+
+        let Some(surface) = &mut self.surface else {
+            return;
+        };
+
+        surface
+            .resize(
+                NonZeroU32::new(width).unwrap(),
+                NonZeroU32::new(height).unwrap(),
+            )
+            .unwrap();
+
+        self.surface_width = width as usize;
+        self.surface_height = height as usize;
+    }
 }
 
 impl ApplicationHandler for SimulationApp {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         let window_attrs = Window::default_attributes()
             .with_title("WIPI Simulation")
-            .with_inner_size(PhysicalSize::new(SCREEN_WIDTH as u32, SCREEN_HEIGHT as u32))
+            .with_inner_size(LogicalSize::new(SCREEN_WIDTH as f64, SCREEN_HEIGHT as f64))
             .with_resizable(false);
 
         let window = Rc::new(event_loop.create_window(window_attrs).unwrap());
 
         let context = softbuffer::Context::new(window.clone()).unwrap();
-        let mut surface = Surface::new(&context, window.clone()).unwrap();
-
-        surface
-            .resize(
-                NonZeroU32::new(SCREEN_WIDTH as u32).unwrap(),
-                NonZeroU32::new(SCREEN_HEIGHT as u32).unwrap(),
-            )
-            .unwrap();
+        let surface = Surface::new(&context, window.clone()).unwrap();
 
         self.window = Some(window.clone());
         self.surface = Some(surface);
+
+        let window_size = window.inner_size();
+        self.resize_surface(window_size.width, window_size.height);
 
         window.request_redraw();
     }
@@ -95,6 +117,15 @@ impl ApplicationHandler for SimulationApp {
         match event {
             WindowEvent::CloseRequested => {
                 event_loop.exit();
+            }
+            WindowEvent::Resized(size) => {
+                self.resize_surface(size.width, size.height);
+            }
+            WindowEvent::ScaleFactorChanged { .. } => {
+                if let Some(window) = &self.window {
+                    let size = window.inner_size();
+                    self.resize_surface(size.width, size.height);
+                }
             }
             WindowEvent::RedrawRequested => {
                 self.render();
