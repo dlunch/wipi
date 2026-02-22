@@ -4,6 +4,7 @@
 pub mod database;
 pub mod graphics;
 pub mod kernel;
+pub mod media;
 
 use std::num::NonZeroU32;
 use std::rc::Rc;

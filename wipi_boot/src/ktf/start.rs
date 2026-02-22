@@ -123,6 +123,7 @@ extern "C" fn exe_start(
 
         globals::WIPIC_GRAPHICS_INTERFACE = (*wipic_interface).graphics_interface as _;
         globals::WIPIC_DATABASE_INTERFACE = (*wipic_interface).database_interface as _;
+        globals::WIPIC_MEDIA_INTERFACE = (*wipic_interface).media_interface as _;
     }
 
     0

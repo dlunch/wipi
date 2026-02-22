@@ -28,4 +28,11 @@ pub enum WIPICMethod {
     ReadRecordSingle = 0x191,
     WriteRecordSingle = 0x192,
     CloseDatabase = 0x193,
+    ClipCreate = 0x4b0,
+    ClipFree = 0x4b1,
+    ClipPutData = 0x4b3,
+    ClipGetVolume = 0x4b8,
+    ClipSetVolume = 0x4b9,
+    Play = 0x4ba,
+    Stop = 0x4bd,
 }

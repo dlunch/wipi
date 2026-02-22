@@ -4,6 +4,7 @@ extern crate alloc;
 #[cfg(not(feature = "simulation"))]
 mod allocator;
 pub mod app;
+pub mod audio;
 pub mod console;
 pub mod database;
 pub mod event;
@@ -23,9 +24,6 @@ macro_rules! println {
         let _ = write!($crate::console::Console, "\n");
     }};
 }
-
-pub use wipi_types::wipic::WIPICError;
-pub type Result<T> = core::result::Result<T, WIPICError>;
 
 // re-exports
 pub mod kernel {

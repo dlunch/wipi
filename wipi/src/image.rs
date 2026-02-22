@@ -1,7 +1,14 @@
 use wipi_types::wipic::{WIPICError, WIPICImage, WIPICIndirectPtr};
 use wipic_sys::deref_indirect_ptr;
 
-use crate::Result;
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Error {
+    Resource(super::resource::Error),
+    InvalidData,
+    Platform(i32),
+}
+
+pub type Result<T> = core::result::Result<T, Error>;
 
 pub struct Image {
     raw: WIPICIndirectPtr,
@@ -9,7 +16,7 @@ pub struct Image {
 
 impl Image {
     pub fn new(path: &str) -> Result<Self> {
-        let resource = crate::resource::Resource::new(path)?;
+        let resource = crate::resource::Resource::new(path).map_err(Error::Resource)?;
 
         let mut raw = WIPICIndirectPtr::default();
         let result = unsafe {
@@ -20,8 +27,11 @@ impl Image {
                 resource.size() as u32,
             )
         };
+        if result == WIPICError::Invalid {
+            return Err(Error::InvalidData);
+        }
         if result != WIPICError::ImageDone {
-            return Err(result);
+            return Err(Error::Platform(result as i32));
         }
 
         Ok(Self { raw })

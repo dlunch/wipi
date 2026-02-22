@@ -185,3 +185,36 @@ pub struct WIPICDatabaseInterface {
     pub unk15: TargetPtr,
     pub unk16: TargetPtr,
 }
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
+pub struct WIPICMediaInterface {
+    pub clip_create: TargetPtr,
+    pub unk1: TargetPtr,
+    pub unk2: TargetPtr,
+    pub clip_free: TargetPtr,
+    pub clip_put_data: TargetPtr,
+    pub unk5: TargetPtr,
+    pub unk6: TargetPtr,
+    pub unk7: TargetPtr,
+    pub play: TargetPtr,
+    pub pause: TargetPtr,
+    pub resume: TargetPtr,
+    pub stop: TargetPtr,
+    pub unk12: TargetPtr,
+    pub unk13: TargetPtr,
+    pub get_volume: TargetPtr,
+    pub unk15: TargetPtr,
+    pub vibrator: TargetPtr,
+    pub unk17: TargetPtr,
+    pub unk18: TargetPtr,
+    pub unk19: TargetPtr,
+    pub unk20: TargetPtr,
+    pub unk21: TargetPtr,
+    pub unk22: TargetPtr,
+    pub unk23: TargetPtr,
+    pub unk24: TargetPtr,
+    pub clip_get_volume: TargetPtr,
+    pub clip_set_volume: TargetPtr,
+}

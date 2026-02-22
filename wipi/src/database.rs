@@ -1,11 +1,16 @@
-use wipi_types::wipic::WIPICError;
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Error {
+    Platform(i32),
+}
+
+pub type Result<T> = core::result::Result<T, Error>;
 
 pub struct Database {
     handle: i32,
 }
 
 impl Database {
-    pub fn open(name: &str, mode: OpenMode) -> Result<Self, WIPICError> {
+    pub fn open(name: &str, mode: OpenMode) -> Result<Self> {
         let name_bytes = name.as_bytes();
         let mut name_buf = [0u8; 32];
         name_buf[..name_bytes.len()].copy_from_slice(name_bytes);
@@ -13,28 +18,28 @@ impl Database {
         let handle =
             unsafe { wipic_sys::database::open_database(name_buf.as_ptr(), mode as i32, 0) };
         if handle < 0 {
-            return Err(WIPICError::from_raw(handle));
+            return Err(Error::Platform(handle));
         }
 
         Ok(Self { handle })
     }
 
-    pub fn read(&self, buf: &mut [u8]) -> Result<usize, WIPICError> {
+    pub fn read(&self, buf: &mut [u8]) -> Result<usize> {
         let result = unsafe {
             wipic_sys::database::read_record_single(self.handle, buf.as_mut_ptr(), buf.len() as u32)
         };
         if result < 0 {
-            return Err(WIPICError::from_raw(result));
+            return Err(Error::Platform(result));
         }
         Ok(result as usize)
     }
 
-    pub fn write(&mut self, data: &[u8]) -> Result<usize, WIPICError> {
+    pub fn write(&mut self, data: &[u8]) -> Result<usize> {
         let result = unsafe {
             wipic_sys::database::write_record_single(self.handle, data.as_ptr(), data.len() as u32)
         };
         if result < 0 {
-            return Err(WIPICError::from_raw(result));
+            return Err(Error::Platform(result));
         }
         Ok(result as usize)
     }
