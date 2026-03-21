@@ -104,9 +104,9 @@ pub fn flush_lcd(
 pub unsafe fn init_context(context: *mut WIPICGraphicsContext) {
     let ctx = unsafe { &mut *context };
     ctx.mask = 0;
-    ctx.clip = [0, 0, SCREEN_WIDTH, SCREEN_HEIGHT];
-    ctx.fgpxl = 0xFFFFFFFF;
-    ctx.bgpxl = 0x00000000;
+    ctx.clip = [0, 0, SCREEN_WIDTH as _, SCREEN_HEIGHT as _];
+    ctx.fgpxl = (-1) as _;
+    ctx.bgpxl = 0x0;
     ctx.transpxl = 0;
     ctx.alpha = 255;
     ctx.offset = [0, 0];
@@ -571,19 +571,15 @@ fn blend_pixel(
                 *dst_buf.add(offset + 1) = blend_channel(src_g, dst_g, alpha);
                 *dst_buf.add(offset + 2) = blend_channel(src_r, dst_r, alpha);
             }
-            16 => {
-                if alpha >= 0.5 {
-                    let rgb565 = (((src_r as u16) >> 3) << 11)
-                        | (((src_g as u16) >> 2) << 5)
-                        | ((src_b as u16) >> 3);
-                    std::ptr::write_unaligned(dst_buf.add(offset) as *mut u16, rgb565);
-                }
+            16 if alpha >= 0.5 => {
+                let rgb565 = (((src_r as u16) >> 3) << 11)
+                    | (((src_g as u16) >> 2) << 5)
+                    | ((src_b as u16) >> 3);
+                std::ptr::write_unaligned(dst_buf.add(offset) as *mut u16, rgb565);
             }
-            8 => {
-                if alpha >= 0.5 {
-                    *dst_buf.add(offset) =
-                        ((src_r as u16 * 30 + src_g as u16 * 59 + src_b as u16 * 11) / 100) as u8;
-                }
+            8 if alpha >= 0.5 => {
+                *dst_buf.add(offset) =
+                    ((src_r as u16 * 30 + src_g as u16 * 59 + src_b as u16 * 11) / 100) as u8;
             }
             _ => {}
         }

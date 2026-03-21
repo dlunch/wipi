@@ -63,19 +63,19 @@ pub struct WIPICImage {
 }
 
 // MC_GrpContext
-#[repr(C)]
+#[repr(C, packed(4))]
 #[derive(Default, Clone, Copy)]
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct WIPICGraphicsContext {
     pub mask: WIPICWord,
     /// top-left x, y, bottom-right x, y
-    pub clip: [WIPICWord; 4],
-    pub fgpxl: WIPICWord,
-    pub bgpxl: WIPICWord,
-    pub transpxl: WIPICWord,
-    pub alpha: WIPICWord,
+    pub clip: [u16; 4],
+    pub fgpxl: u16,
+    pub bgpxl: u16,
+    pub transpxl: u16,
+    pub alpha: u16,
     /// x, y
-    pub offset: [WIPICWord; 2],
+    pub offset: [u16; 2],
     pub pixel_op_func_ptr: WIPICWord, // MC_GrpPixelOpProc
     pub param1: WIPICWord,
     pub reserved: WIPICWord,
