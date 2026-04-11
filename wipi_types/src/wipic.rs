@@ -73,7 +73,7 @@ pub struct WIPICGraphicsContext {
     pub fgpxl: u32,
     pub bgpxl: u32,
     pub transpxl: u32,
-    pub alpha: u16,
+    pub alpha: u32,
     /// x, y
     pub offset: [u16; 2],
     pub pixel_op_func_ptr: WIPICWord, // MC_GrpPixelOpProc

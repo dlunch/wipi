@@ -221,7 +221,7 @@ pub unsafe fn draw_rect(
     let fb = unsafe { &*framebuffer };
     let gctx = unsafe { &*graphics_context };
     let dst_buf = fb.buf.0 as *mut u8;
-    let color = gctx.fgpxl as u32;
+    let color = gctx.fgpxl as _;
 
     let x = x.max(0) as usize;
     let y = y.max(0) as usize;
@@ -274,7 +274,7 @@ pub unsafe fn fill_rect(
     let fb = unsafe { &*framebuffer };
     let gctx = unsafe { &*graphics_context };
     let dst_buf = fb.buf.0 as *mut u8;
-    let color = gctx.fgpxl as u32;
+    let color = gctx.fgpxl as _;
 
     let x = x.max(0) as usize;
     let y = y.max(0) as usize;
@@ -421,7 +421,7 @@ fn draw_system_font_string(
     font: &FontArc,
 ) {
     let clip = ClipRect::from_context(gctx);
-    let color = gctx.fgpxl as u32;
+    let color = gctx.fgpxl as _;
     let scale = PxScale::from(SYSTEM_FONT_SIZE);
     let scaled = font.as_scaled(scale);
 
