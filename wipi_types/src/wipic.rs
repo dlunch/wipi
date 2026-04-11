@@ -67,12 +67,12 @@ pub struct WIPICImage {
 #[derive(Default, Clone, Copy)]
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct WIPICGraphicsContext {
-    pub mask: WIPICWord,
+    pub mask: u32,
     /// top-left x, y, bottom-right x, y
     pub clip: [u16; 4],
-    pub fgpxl: u16,
-    pub bgpxl: u16,
-    pub transpxl: u16,
+    pub fgpxl: u32,
+    pub bgpxl: u32,
+    pub transpxl: u32,
     pub alpha: u16,
     /// x, y
     pub offset: [u16; 2],
