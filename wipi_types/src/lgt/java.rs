@@ -11,23 +11,31 @@ pub struct LgtJavaClass {
 #[repr(C)]
 #[derive(Clone, Copy, Pod, Zeroable)]
 pub struct LgtJavaClassDescriptor {
-    pub unk1: u32,
-    pub unk2: u32,
+    pub access_flags: u32,
+    /// Next class record in the compiler-generated singly linked list.
+    pub ptr_next_class: u32,
     pub ptr_name: u32,
-    pub unk3: u32,
+    /// Points to the class-pointer word inside the instance field initializer record.
+    pub ptr_instance_field_initializer_class: u32,
     pub ptr_super_class_name: u32,
     pub unk4: u32,
-    pub unk5: u16,
-    pub unk6: u16,
+    /// Total instance field storage slots, including slots inherited from the superclass.
+    pub instance_field_slot_count: u16,
+    /// Registration state checked before resolving the runtime class.
+    pub link_state: u16,
     pub unk7: u32,
-    pub unk8: u32,
+    /// Describes a callback that initializes object fields, not `<init>` or `<clinit>`.
+    pub ptr_instance_field_initializer_record: u32,
     pub unk9: u8,
     pub unk10: u8,
     pub unk11: u16,
-    pub unk12: u32,
-    pub fn_unk1: u32,
-    pub fn_unk2: u32,
-    pub fn_unk3: u32,
+    pub ptr_interface_names: u32,
+    /// Links member metadata to a runtime class and patches member slots.
+    pub fn_link_members: u32,
+    /// Resolves the runtime class and ensures its `<clinit>` callback has run.
+    pub fn_get_initialized_class: u32,
+    /// Registers and resolves the runtime class without ensuring class initialization.
+    pub fn_get_class: u32,
     pub ptr_methods: u32,
     pub ptr_fields: u32,
     pub unk13: u32,
@@ -40,10 +48,10 @@ pub struct LgtJavaClassDescriptor {
 pub struct LgtJavaClassField {
     pub ptr_class: u32,
     pub ptr_name: u32,
-    pub ptr_type: u32,
-    pub unk1: u16,
+    pub ptr_descriptor: u32,
+    pub flags: u16,
     pub unk2: u16,
-    pub index: u32,
+    pub slot: u32,
 }
 
 #[repr(C)]
@@ -58,9 +66,10 @@ pub struct LgtJavaClassFields {
 pub struct LgtJavaClassMethod {
     pub ptr_class: u32,
     pub ptr_name: u32,
-    pub ptr_type: u32,
-    pub unk1: u16,
-    pub unk2: u16,
+    pub ptr_descriptor: u32,
+    pub access_flags: u16,
+    /// Java argument slots, including `this` for an instance method.
+    pub argument_slot_count: u16,
     pub unk3: u32,
     pub ptr_method: u32,
     pub unk4: u32,
@@ -75,48 +84,31 @@ pub struct LgtJavaClassMethods {
 
 #[repr(C)]
 #[derive(Clone, Copy, Pod, Zeroable)]
-pub struct LgtJavaImportedClass {
+/// Member ranges used when linking an imported or exported class.
+pub struct LgtJavaClassLink {
     pub ptr_name: u32,
-    pub unk1: u32,
+    pub instance_field_offset: u16,
+    pub instance_field_count: u16,
     pub static_field_offset: u16,
     pub static_field_count: u16,
     pub virtual_method_offset: u16,
     pub virtual_method_count: u16,
-    pub unk2: u32,
-    pub static_method_offset: u16,
-    pub static_method_count: u16,
+    pub interface_method_offset: u16,
+    pub interface_method_count: u16,
+    pub non_virtual_method_offset: u16,
+    pub non_virtual_method_count: u16,
 }
 
 #[repr(C)]
 #[derive(Clone, Copy, Pod, Zeroable)]
-pub struct LgtJavaImportedClasses {
+pub struct LgtJavaClassLinks {
     pub count: u32,
-    pub classes: [LgtJavaImportedClass; 0],
+    pub classes: [LgtJavaClassLink; 0],
 }
 
 #[repr(C)]
 pub struct LgtJavaClassInstance {
-    pub ptr_vtable: u32,
+    pub ptr_dispatch_table: u32,
     pub unk1: u32,
     pub ptr_fields: u32,
-}
-
-#[repr(C)]
-#[derive(Clone, Copy, Pod, Zeroable)]
-pub struct LgtJavaPublicClass {
-    pub ptr_name: u32,
-    pub unk1: u16,
-    pub unk2: u16,
-    pub unk3: u32,
-    pub virtual_method_offset: u16,
-    pub virtual_method_count: u16,
-    pub unk4: u32,
-    pub unk5: u32,
-}
-
-#[repr(C)]
-#[derive(Clone, Copy, Pod, Zeroable)]
-pub struct LgtJavaPublicClasses {
-    pub count: u32,
-    pub classes: [LgtJavaPublicClass; 0],
 }
