@@ -373,6 +373,8 @@ fn handle_event(
             let _ = send_midi_message(midi_out, [0xb0 | (*channel & 0x0f), *control, *value]);
         }
         SmafEvent::End => {}
+        SmafEvent::MidiPitchBend { .. } => {}
+        SmafEvent::MidiSysEx(_) => {}
     }
 }
 
