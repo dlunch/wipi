@@ -15,8 +15,8 @@ pub struct LgtJavaClassDescriptor {
     /// Next class record in the compiler-generated singly linked list.
     pub ptr_next_class: u32,
     pub ptr_name: u32,
-    /// Points to the class-pointer word inside the instance field initializer record.
-    pub ptr_instance_field_initializer_class: u32,
+    /// Compiler-generated dispatch table with the class pointer in word zero.
+    pub ptr_vtable: u32,
     pub ptr_super_class_name: u32,
     pub unk4: u32,
     /// Total 32-bit instance field words, including words inherited from the superclass.
@@ -28,7 +28,8 @@ pub struct LgtJavaClassDescriptor {
     pub ptr_instance_field_initializer_record: u32,
     pub unk9: u8,
     pub unk10: u8,
-    pub unk11: u16,
+    /// Number of method entries following the class pointer in `ptr_vtable`.
+    pub vtable_count: u16,
     /// Points to a count-prefixed `LgtJavaClassNames` record.
     pub ptr_interface_names: u32,
     /// Links member metadata to a runtime class and patches member indices.
