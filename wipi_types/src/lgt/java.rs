@@ -121,12 +121,3 @@ pub struct LgtJavaClassInstance {
     pub unk1: u32,
     pub ptr_fields: u32,
 }
-
-#[repr(C)]
-#[derive(Clone, Copy, Pod, Zeroable)]
-pub struct LgtJavaClassInstanceFields {
-    pub unk1: [u32; 4],
-    pub unk2: u16,
-    pub unk3: u16,
-    pub fields: [u32; 0],
-}
