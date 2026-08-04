@@ -116,6 +116,7 @@ pub struct LgtJavaClassLinks {
 }
 
 #[repr(C)]
+#[derive(Clone, Copy, Pod, Zeroable)]
 pub struct LgtJavaClassInstance {
     pub ptr_dispatch_table: u32,
     pub unk1: u32,
