@@ -40,9 +40,11 @@ pub struct LgtJavaClassDescriptor {
     pub fn_get_class: u32,
     pub ptr_methods: u32,
     pub ptr_fields: u32,
-    pub unk13: u32,
+    /// Runtime-owned backing storage for the `java/lang/Class` instance fields and class static fields.
+    pub ptr_class_fields: u32,
     pub unk14: u32,
-    pub unk15: u32,
+    /// Number of 32-bit static field words allocated after the class instance fields.
+    pub static_field_word_count: u32,
 }
 
 /// Count-prefixed class-name pointers used by class interface lists.
