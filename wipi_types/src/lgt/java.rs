@@ -24,8 +24,8 @@ pub struct LgtJavaClassDescriptor {
     /// Registration state checked before resolving the runtime class.
     pub link_state: u16,
     pub unk7: u32,
-    /// Describes a callback that initializes object fields, not `<init>` or `<clinit>`.
-    pub ptr_instance_field_initializer_record: u32,
+    /// Bitmap of object-reference instance field words, ordered by word index and most-significant bit first within each byte.
+    pub ptr_instance_reference_bitmap: u32,
     pub unk9: u8,
     pub unk10: u8,
     /// Number of method entries following the class pointer in `ptr_vtable`.
