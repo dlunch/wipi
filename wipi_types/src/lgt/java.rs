@@ -21,7 +21,8 @@ pub struct LgtJavaClassDescriptor {
     pub ptr_vtable: u32,
     /// Points to a class record, or to its name when `LGT_JAVA_CLASS_SUPER_CLASS_IS_NAME` is set in `flags`.
     pub ptr_super_class: u32,
-    pub unk4: u32,
+    /// Points to compiler-generated interface-dispatch references whose cells contain generated class pointers or unresolved external class names.
+    pub ptr_interface_references: u32,
     /// Total 32-bit instance field words, including words inherited from the superclass.
     pub instance_field_word_count: u16,
     /// Registration state checked before resolving the runtime class.
@@ -67,6 +68,21 @@ pub struct LgtJavaClassFieldStorage {
 pub struct LgtJavaClassNames {
     pub count: u32,
     pub names: [u32; 0],
+}
+
+/// Count-prefixed pointers to mutable compiler-generated interface-dispatch reference cells.
+#[repr(C)]
+#[derive(Clone, Copy, Pod, Zeroable)]
+pub struct LgtJavaInterfaceReferences {
+    pub count: u32,
+    pub references: [u32; 0],
+}
+
+/// Interface-dispatch reference cell containing a generated class pointer or an external class-name pointer that is replaced when linked.
+#[repr(C)]
+#[derive(Clone, Copy, Pod, Zeroable)]
+pub struct LgtJavaInterfaceReference {
+    pub ptr_class_or_name: u32,
 }
 
 #[repr(C)]
