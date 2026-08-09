@@ -1,5 +1,7 @@
 use bytemuck::{Pod, Zeroable};
 
+pub const LGT_JAVA_CLASS_SUPER_CLASS_IS_NAME: u8 = 0x02;
+
 #[repr(C)]
 #[derive(Clone, Copy, Pod, Zeroable)]
 pub struct LgtJavaClass {
@@ -17,7 +19,8 @@ pub struct LgtJavaClassDescriptor {
     pub ptr_name: u32,
     /// Compiler-generated dispatch table with the class pointer in word zero.
     pub ptr_vtable: u32,
-    pub ptr_super_class_name: u32,
+    /// Points to a class record, or to its name when `LGT_JAVA_CLASS_SUPER_CLASS_IS_NAME` is set in `flags`.
+    pub ptr_super_class: u32,
     pub unk4: u32,
     /// Total 32-bit instance field words, including words inherited from the superclass.
     pub instance_field_word_count: u16,
@@ -26,7 +29,7 @@ pub struct LgtJavaClassDescriptor {
     pub unk7: u32,
     /// Bitmap of object-reference instance field words, ordered by word index and most-significant bit first within each byte.
     pub ptr_instance_reference_bitmap: u32,
-    pub unk9: u8,
+    pub flags: u8,
     pub unk10: u8,
     /// Number of method entries following the class pointer in `ptr_vtable`.
     pub vtable_count: u16,
