@@ -43,11 +43,22 @@ pub struct LgtJavaClassDescriptor {
     pub fn_get_class: u32,
     pub ptr_methods: u32,
     pub ptr_fields: u32,
-    /// Runtime-owned backing storage for the `java/lang/Class` instance fields and class static fields.
+    /// Points to `LgtJavaClassFieldStorage`.
     pub ptr_class_fields: u32,
     pub unk14: u32,
-    /// Number of 32-bit static field words allocated after the class instance fields.
+    /// Number of 32-bit static field words following the field-storage prefix.
     pub static_field_word_count: u32,
+}
+
+/// Runtime-owned storage referenced by `LgtJavaClassDescriptor::ptr_class_fields`.
+///
+/// The first five words precede the class's static field words. Their individual
+/// meanings are not yet confirmed.
+#[repr(C)]
+#[derive(Clone, Copy, Pod, Zeroable)]
+pub struct LgtJavaClassFieldStorage {
+    pub unk_prefix: [u32; 5],
+    pub static_fields: [u32; 0],
 }
 
 /// Count-prefixed class-name pointers used by class interface lists.
