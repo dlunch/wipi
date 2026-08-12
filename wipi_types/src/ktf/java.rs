@@ -47,12 +47,14 @@ pub struct JavaClassDescriptor {
     pub unk1: u32,
     pub ptr_parent_class: TargetPtr,
     pub ptr_methods: JavaMethodArrayPtr,
+    /// Array of interface class pointers with `interface_count` entries.
     pub ptr_interfaces: u32,
     pub ptr_fields_or_element_type: u32, // for array class, this is element type
     pub method_count: u16,
     pub fields_size: u16,
     pub access_flag: u16,
-    pub unk6: u16,
+    /// Number of entries in `ptr_interfaces`.
+    pub interface_count: u16,
     pub unk7: u16,
     pub unk8: u16,
 }
