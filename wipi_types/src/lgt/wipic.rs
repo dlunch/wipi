@@ -1,3 +1,6 @@
+#[cfg(not(target_os = "none"))]
+use bytemuck::{Pod, Zeroable};
+
 #[repr(u32)]
 pub enum ImportModule {
     WIPIC = 0x1fb,
@@ -35,4 +38,53 @@ pub enum WIPICMethod {
     ClipSetVolume = 0x4b9,
     Play = 0x4ba,
     Stop = 0x4bd,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
+pub struct LgtFramebuffer {
+    pub owned_image: u32,
+    pub ptr_graphics: u32,
+    pub ptr_image: u32,
+    pub screen_kind: u32,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
+pub struct LgtGraphicsView {
+    pub ptr_backing: u32,
+    pub x: i32,
+    pub y: i32,
+    pub width: u32,
+    pub height: u32,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
+pub struct LgtImage {
+    pub ptr_image: u32,
+    pub ptr_framebuffer: u32,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+#[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
+pub struct LgtGraphicsContext {
+    pub clip_x1: i32,
+    pub clip_y1: i32,
+    pub clip_x2: i32,
+    pub clip_y2: i32,
+    pub foreground: u32,
+    pub background: u32,
+    pub alpha: u32,
+    pub pixel_op: u32,
+    pub pixel_param: u32,
+    pub font: u32,
+    pub style: u32,
+    pub xor_enabled: u32,
+    pub offset_x: i32,
+    pub offset_y: i32,
 }
