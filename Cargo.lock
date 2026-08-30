@@ -771,7 +771,7 @@ name = "examples"
 version = "0.0.1"
 dependencies = [
  "wipi",
- "wipi_build",
+ "wipi-build",
 ]
 
 [[package]]
@@ -3195,14 +3195,14 @@ dependencies = [
 name = "wipi"
 version = "0.0.1"
 dependencies = [
- "wipi_boot",
- "wipi_macros",
- "wipi_types",
- "wipic_sys",
+ "wipi-boot",
+ "wipi-macros",
+ "wipi-types",
+ "wipic-sys",
 ]
 
 [[package]]
-name = "wipi_archiver"
+name = "wipi-archiver"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -3212,20 +3212,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "wipi_boot"
+name = "wipi-boot"
 version = "0.0.1"
 dependencies = [
  "cfg-if",
- "wipi_types",
- "wipic_simulation",
+ "wipi-types",
+ "wipic-simulation",
 ]
 
 [[package]]
-name = "wipi_build"
+name = "wipi-build"
 version = "0.0.1"
 
 [[package]]
-name = "wipi_macros"
+name = "wipi-macros"
 version = "0.0.1"
 dependencies = [
  "proc-macro2",
@@ -3234,7 +3234,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "wipi_types"
+name = "wipi-types"
 version = "0.0.1"
 dependencies = [
  "bytemuck",
@@ -3242,7 +3242,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "wipic_simulation"
+name = "wipic-simulation"
 version = "0.0.1"
 dependencies = [
  "ab_glyph",
@@ -3255,17 +3255,17 @@ dependencies = [
  "smaf_player",
  "softbuffer",
  "winit",
- "wipi_types",
+ "wipi-types",
 ]
 
 [[package]]
-name = "wipic_sys"
+name = "wipic-sys"
 version = "0.0.1"
 dependencies = [
  "cfg-if",
- "wipi_boot",
- "wipi_types",
- "wipic_simulation",
+ "wipi-boot",
+ "wipi-types",
+ "wipic-simulation",
 ]
 
 [[package]]

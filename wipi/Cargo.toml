@@ -1,16 +1,18 @@
 [package]
 name = "wipi"
+description = "Rust library for developing WIPI applications"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+repository.workspace = true
 
 [features]
-ktf = ["wipi_types/ktf", "wipi_boot/ktf", "wipic_sys/ktf"]
-lgt = ["wipi_types/lgt", "wipi_boot/lgt", "wipic_sys/lgt"]
-simulation = ["wipi_types/simulation", "wipi_boot/simulation", "wipic_sys/simulation"]
+ktf = ["wipi-types/ktf", "wipi-boot/ktf", "wipic-sys/ktf"]
+lgt = ["wipi-types/lgt", "wipi-boot/lgt", "wipic-sys/lgt"]
+simulation = ["wipi-types/simulation", "wipi-boot/simulation", "wipic-sys/simulation"]
 
 [dependencies]
-wipi_boot = { workspace = true, optional = true }
-wipi_macros = { workspace = true }
-wipi_types = { workspace = true, optional = true }
-wipic_sys = { workspace = true }
+wipi-boot = { workspace = true, optional = true }
+wipi-macros = { workspace = true }
+wipi-types = { workspace = true, optional = true }
+wipic-sys = { workspace = true }

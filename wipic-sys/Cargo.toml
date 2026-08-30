@@ -1,0 +1,19 @@
+[package]
+name = "wipic-sys"
+description = "Low-level WIPI platform bindings"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+ktf = ["wipi-types/ktf", "wipi-boot/ktf"]
+lgt = ["wipi-types/lgt", "wipi-boot/lgt"]
+simulation = ["wipi-types/simulation", "wipi-boot/simulation", "wipic-simulation"]
+
+[dependencies]
+cfg-if = { workspace = true }
+
+wipi-boot = { workspace = true, optional = true }
+wipi-types = { workspace = true, optional = true }
+wipic-simulation = { workspace = true, optional = true }

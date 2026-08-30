@@ -1,8 +1,10 @@
 [package]
-name = "wipi_archiver"
+name = "wipi-archiver"
+description = "Archive packaging tool for WIPI applications"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+repository.workspace = true
 
 [target.'cfg(not(target_os = "none"))'.dependencies]
 anyhow = { version = "^1.0" }

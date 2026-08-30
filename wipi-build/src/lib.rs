@@ -4,7 +4,7 @@ pub fn add_wipi_build_args() {
     // add link arg for ktf.ld if the ktf feature is enabled
     #[cfg(feature = "ktf")]
     {
-        let ktf_ld = include_bytes!("../../wipi_boot/src/ktf/ktf.ld");
+        let ktf_ld = include_bytes!("../../wipi-boot/src/ktf/ktf.ld");
         std::fs::write(std::env::var("OUT_DIR").unwrap() + "/ktf.ld", ktf_ld).unwrap();
         println!(
             "cargo:rustc-link-arg={}",

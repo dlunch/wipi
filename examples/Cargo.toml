@@ -1,20 +1,22 @@
 [package]
 name = "examples"
+publish = false
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+repository.workspace = true
 
 [features]
 default = ["simulation"]
-ktf = ["wipi/ktf", "wipi_build/ktf"]
-lgt = ["wipi/lgt", "wipi_build/lgt"]
+ktf = ["wipi/ktf", "wipi-build/ktf"]
+lgt = ["wipi/lgt", "wipi-build/lgt"]
 simulation = ["wipi/simulation"]
 
 [dependencies]
 wipi = { workspace = true }
 
 [build-dependencies]
-wipi_build = { workspace = true }
+wipi-build = { workspace = true }
 
 [[bin]]
 name = "helloworld"

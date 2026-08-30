@@ -1,8 +1,10 @@
 [package]
-name = "wipi_types"
+name = "wipi-types"
+description = "Shared WIPI platform and interface types"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+repository.workspace = true
 
 [features]
 ktf = []

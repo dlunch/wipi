@@ -1,25 +1,25 @@
 [workspace]
 resolver = "3"
 
-members = ["examples", "wipi", "wipi_archiver", "wipi_boot", "wipi_build", "wipi_macros", "wipi_types", "wipic_simulation", "wipic_sys"]
-exclude = ["host_crates"]
+members = ["examples", "wipi", "wipi-archiver", "wipi-boot", "wipi-build", "wipi-macros", "wipi-types", "wipic-simulation", "wipic-sys"]
 
 [workspace.package]
 version = "0.0.1"
 edition = "2024"
 license = "MIT"
+repository = "https://github.com/dlunch/wipi"
 
 [workspace.dependencies]
 cfg-if = { version = "^1.0", default-features = false }
 
 wipi = { path = "wipi" }
-wipi_boot = { path = "wipi_boot" }
-wipi_build = { path = "wipi_build" }
-wipi_macros = { path = "wipi_macros" }
-wipi_types = { path = "wipi_types" }
-wipic_sys = { path = "wipic_sys" }
+wipi-boot = { path = "wipi-boot" }
+wipi-build = { path = "wipi-build" }
+wipi-macros = { path = "wipi-macros" }
+wipi-types = { path = "wipi-types" }
+wipic-sys = { path = "wipic-sys" }
 
-wipic_simulation = { path = "wipic_simulation" }
+wipic-simulation = { path = "wipic-simulation" }
 
 [profile.dev]
 panic = "abort"

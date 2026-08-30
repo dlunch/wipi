@@ -1,8 +1,10 @@
 [package]
-name = "wipi_build"
+name = "wipi-build"
+description = "Build script utilities for WIPI applications"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+repository.workspace = true
 
 [features]
 ktf = []

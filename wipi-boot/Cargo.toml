@@ -1,0 +1,18 @@
+[package]
+name = "wipi-boot"
+description = "Platform initialization support for WIPI applications"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+ktf = ["wipi-types/ktf"]
+lgt = ["wipi-types/lgt"]
+simulation = ["wipi-types", "wipic-simulation"]
+
+[dependencies]
+cfg-if = { workspace = true }
+
+wipi-types = { workspace = true, optional = true }
+wipic-simulation = { workspace = true, optional = true }
