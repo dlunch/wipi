@@ -3235,7 +3235,7 @@ dependencies = [
 
 [[package]]
 name = "wipi-types"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "bytemuck",
  "cfg-if",

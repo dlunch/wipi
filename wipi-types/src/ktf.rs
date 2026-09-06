@@ -83,7 +83,8 @@ pub struct InitParam4 {
     pub fn_java_check_type: u32,
     pub fn_java_new: JavaClassNewPtr,
     pub fn_java_array_new: u32,
-    pub unk6: u32,
+    /// Receives each root reference from [`WipiExe::fn_visit_gc_roots`].
+    pub fn_visit_gc_root: u32,
     pub fn_java_class_load: JavaClassLoadPtr,
     pub unk7: u32,
     pub unk8: u32,
@@ -100,7 +101,8 @@ pub struct ExeInterfaceFunctions {
     pub fn_get_default_dll: u32,
     pub fn_get_class: ExeInterfaceGetClassPtr,
     pub fn_unk2: u32,
-    pub fn_unk3: u32,
+    /// Tests whether an address is within the native Java class metadata region.
+    pub fn_is_native_class_address: u32,
 }
 
 unsafe impl Sync for ExeInterfaceFunctions {}
@@ -133,7 +135,8 @@ pub struct WipiExe {
     pub fn_init: WipiExeInitPtr,
     pub unk3: u32,
     pub unk4: u32,
-    pub fn_unk3: u32,
+    /// Visits static object references and interned strings through [`InitParam4::fn_visit_gc_root`].
+    pub fn_visit_gc_roots: u32,
     pub unk5: u32,
 }
 

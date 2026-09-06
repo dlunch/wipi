@@ -18,7 +18,7 @@ static EXE_INTERFACE_FUNCTIONS: ExeInterfaceFunctions = ExeInterfaceFunctions {
     fn_get_default_dll: 0,
     fn_get_class: get_class,
     fn_unk2: 0,
-    fn_unk3: 0,
+    fn_is_native_class_address: 0,
 };
 
 static EXE_INTERFACE: ExeInterface = ExeInterface {
@@ -41,7 +41,7 @@ static WIPI_EXE: WipiExe = WipiExe {
     fn_init: wipi_start,
     unk3: 0,
     unk4: 0,
-    fn_unk3: 0,
+    fn_visit_gc_roots: 0,
     unk5: 0,
 };
 
