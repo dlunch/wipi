@@ -84,7 +84,7 @@ pub struct WIPICInterface {
     pub interface_3: TargetPtr,
     pub interface_4: TargetPtr,
     pub interface_5: TargetPtr,
-    pub database_interface: TargetPtr,
+    pub fs_interface: TargetPtr,
     pub interface_7: TargetPtr,
     pub uic_interface: TargetPtr,
     pub media_interface: TargetPtr,
@@ -166,24 +166,24 @@ pub struct WIPICGraphicsInterface {
 #[repr(C)]
 #[derive(Clone, Copy)]
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
-pub struct WIPICDatabaseInterface {
-    pub open_database: TargetPtr,
-    pub read_record_single: TargetPtr,
-    pub write_record_single: TargetPtr,
-    pub close_database: TargetPtr,
-    pub select_record: TargetPtr,
-    pub update_record: TargetPtr,
-    pub delete_record: TargetPtr,
-    pub list_record: TargetPtr,
-    pub sort_records: TargetPtr,
-    pub get_access_mode: TargetPtr,
-    pub get_number_of_records: TargetPtr,
-    pub get_record_size: TargetPtr,
-    pub list_databases: TargetPtr,
-    pub unk13: TargetPtr,
-    pub unk14: TargetPtr,
-    pub unk15: TargetPtr,
-    pub unk16: TargetPtr,
+pub struct WIPICFsInterface {
+    pub open: TargetPtr,
+    pub read: TargetPtr,
+    pub write: TargetPtr,
+    pub close: TargetPtr,
+    pub seek: TargetPtr,
+    pub file_attribute: TargetPtr,
+    pub remove: TargetPtr,
+    pub rename: TargetPtr,
+    pub make_directory: TargetPtr,
+    pub remove_directory: TargetPtr,
+    pub list: TargetPtr,
+    pub total_space: TargetPtr,
+    pub available: TargetPtr,
+    pub set_mode: TargetPtr,
+    pub get_counts: TargetPtr,
+    pub tell: TargetPtr,
+    pub exists: TargetPtr,
 }
 
 #[repr(C)]

@@ -3,9 +3,7 @@ use core::ptr;
 use wipi_types::ktf::{
     InitParam0, InitParam1, InitParam2, InitParam3, InitParam4,
     java::WIPIJBInterface,
-    wipic::{
-        WIPICDatabaseInterface, WIPICGraphicsInterface, WIPICKnlInterface, WIPICMediaInterface,
-    },
+    wipic::{WIPICFsInterface, WIPICGraphicsInterface, WIPICKnlInterface, WIPICMediaInterface},
 };
 
 pub(super) static mut INIT_PARAM_0: *const InitParam0 = ptr::null();
@@ -18,5 +16,5 @@ pub(super) static mut WIPI_JBINTERFACE: *const WIPIJBInterface = ptr::null();
 // for wipic
 pub static mut WIPIC_KNLINTERFACE: *const WIPICKnlInterface = ptr::null();
 pub static mut WIPIC_GRAPHICS_INTERFACE: *const WIPICGraphicsInterface = ptr::null();
-pub static mut WIPIC_DATABASE_INTERFACE: *const WIPICDatabaseInterface = ptr::null();
+pub static mut WIPIC_FS_INTERFACE: *const WIPICFsInterface = ptr::null();
 pub static mut WIPIC_MEDIA_INTERFACE: *const WIPICMediaInterface = ptr::null();
