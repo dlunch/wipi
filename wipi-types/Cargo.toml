@@ -1,7 +1,7 @@
 [package]
 name = "wipi-types"
 description = "Shared WIPI platform and interface types"
-version = "0.0.2"
+version = "0.0.3"
 edition.workspace = true
 license.workspace = true
 repository.workspace = true

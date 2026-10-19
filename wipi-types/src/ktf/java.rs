@@ -124,7 +124,7 @@ pub struct JavaExceptionHandler {
     pub ptr_this: u32,
     pub ptr_old_handler: u32,
     pub current_pc: u32,
-    pub unk3: u32,
+    pub ptr_exception_class_instance: u32,
     pub ptr_functions: u32, // function table to restore context
     pub context: [u32; 11], // r4-lr
 }
