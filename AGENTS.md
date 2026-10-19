@@ -11,7 +11,7 @@ Rust no_std library for developing WIPI (Korean mobile platform) apps. Targets A
 ## STRUCTURE
 
 ```
-wipi/               # Main public API crate (App trait, framebuffer, timer, database, etc)
+wipi/               # Main public API crate (App trait, framebuffer, timer, filesystem, etc)
 wipi-types/         # Shared C-compatible type definitions (WIPICWord, TargetPtr, interface structs)
 wipi-macros/        # #[wipi_main] proc macro — transforms user main() into clet entry point
 wipi-boot/          # Platform-specific initialization (global interface pointers, clet registration)
@@ -59,11 +59,11 @@ let f: extern "C" fn(...) = unsafe { transmute(get_external_method(ImportModule:
 
 | Task | Location | Notes |
 |------|----------|-------|
-| Public API (user-facing) | `wipi/src/` | App trait, framebuffer, timer, database, etc |
+| Public API (user-facing) | `wipi/src/` | App trait, framebuffer, timer, filesystem, etc |
 | C type definitions | `wipi-types/src/wipic.rs` | WIPICWord, TargetPtr, interface structs |
 | KTF interface table | `wipi-types/src/ktf/wipic.rs` | WIPICKnlInterface, WIPICGraphicsInterface |
 | LGT method IDs | `wipi-types/src/lgt/wipic.rs` | WIPICMethod enum (hex IDs from wie project) |
-| FFI bindings | `wipic-sys/src/{ktf,lgt,simulation}/` | kernel.rs, graphics.rs, database.rs per platform |
+| FFI bindings | `wipic-sys/src/{ktf,lgt,simulation}/` | kernel.rs, graphics.rs, fs.rs per platform |
 | Boot/init | `wipi-boot/src/{ktf,lgt}/start.rs` | Global pointer setup, clet registration |
 | Lifecycle callbacks | `wipi/src/lifecycle.rs` | startClet, paintClet, handleCletEvent exports |
 | Entry point macro | `wipi-macros/src/lib.rs` | Transforms `#[wipi_main] fn main()` |
@@ -78,7 +78,7 @@ let f: extern "C" fn(...) = unsafe { transmute(get_external_method(ImportModule:
 - **Panic = abort** in all profiles
 - **Always run `cargo fmt --all` before committing**
 - Platform features are **mutually exclusive** — never enable ktf+lgt simultaneously
-- Safe wrappers in `wipi/` follow: struct + methods + `Drop` for cleanup (see database.rs)
+- Safe wrappers in `wipi/` follow: struct + methods + `Drop` for cleanup (see fs.rs)
 - `WIPICIndirectPtr` must be dereferenced via `deref_indirect_ptr()` before use — KTF adds 8-byte offset, LGT/simulation direct cast
 - Lifecycle callbacks run on **main thread only** — `RefCell` is safe for `APP` state
 - LGT method IDs sourced from [dlunch/wie](https://github.com/dlunch/wie) project's LGT method table

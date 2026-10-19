@@ -6,9 +6,9 @@ mod allocator;
 pub mod app;
 pub mod audio;
 pub mod console;
-pub mod database;
 pub mod event;
 pub mod framebuffer;
+pub mod fs;
 pub mod image;
 #[cfg(not(test))]
 mod lifecycle;
