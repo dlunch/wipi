@@ -10,7 +10,7 @@ pub enum ImportModule {
 pub enum WIPICMethod {
     CletRegister = 0x03,
     Printk = 0x64,
-    Exit = 0x6b,
+    Exit = 0x68,
     Alloc = 0x75,
     Free = 0x77,
     DefTimer = 0x7a,
