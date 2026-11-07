@@ -82,7 +82,7 @@ pub struct WIPICInterface {
     pub misc_interface: TargetPtr,
     pub graphics_interface: TargetPtr,
     pub interface_3: TargetPtr,
-    pub interface_4: TargetPtr,
+    pub database_interface: TargetPtr,
     pub interface_5: TargetPtr,
     pub fs_interface: TargetPtr,
     pub interface_7: TargetPtr,
