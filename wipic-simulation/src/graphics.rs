@@ -342,6 +342,11 @@ pub unsafe fn draw_image(
             let dst_offset = dst_y * fb.bpl + dst_x * dst_bpp;
 
             unsafe {
+                // Transparent pixels of an RGBA image leave the destination untouched.
+                if src_bpp == 4 && *src_buf.add(src_offset + 3) == 0 {
+                    continue;
+                }
+
                 let bytes_to_copy = std::cmp::min(src_bpp, dst_bpp) as usize;
                 for i in 0..bytes_to_copy {
                     *dst_buf.add(dst_offset + i) = *src_buf.add(src_offset + i);
