@@ -1,7 +1,36 @@
 use core::mem::transmute;
 
 use wipi_boot::ktf::WIPIC_GRAPHICS_INTERFACE;
-use wipi_types::wipic::{TargetPtr, WIPICError, WIPICGraphicsContext, WIPICIndirectPtr, WIPICWord};
+use wipi_types::wipic::{
+    TargetPtr, WIPICError, WIPICFramebuffer, WIPICGraphicsContext, WIPICImage, WIPICIndirectPtr,
+    WIPICWord,
+};
+
+use crate::{FramebufferInfo, deref_indirect_ptr};
+
+pub type GraphicsContext = WIPICGraphicsContext;
+
+pub fn set_foreground(context: &mut GraphicsContext, pixel: u32) {
+    context.fgpxl = pixel as _;
+}
+
+pub fn framebuffer_info(framebuffer: WIPICIndirectPtr) -> FramebufferInfo {
+    let framebuffer = unsafe { &*(deref_indirect_ptr(framebuffer) as *const WIPICFramebuffer) };
+
+    FramebufferInfo {
+        width: framebuffer.width as _,
+        height: framebuffer.height as _,
+        bpl: framebuffer.bpl as _,
+        bpp: framebuffer.bpp as _,
+        pixels: deref_indirect_ptr(framebuffer.buf),
+    }
+}
+
+pub fn image_size(image: WIPICIndirectPtr) -> (u32, u32) {
+    let image = unsafe { &*(deref_indirect_ptr(image) as *const WIPICImage) };
+
+    (image.img.width as _, image.img.height as _)
+}
 
 pub fn get_screen_framebuffer() -> WIPICIndirectPtr {
     let get_screen_framebuffer: extern "C" fn(WIPICWord) -> WIPICIndirectPtr =

@@ -70,7 +70,7 @@ pub struct LgtImage {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy)]
+#[derive(Default, Clone, Copy)]
 #[cfg_attr(not(target_os = "none"), derive(Pod, Zeroable))]
 pub struct LgtGraphicsContext {
     pub clip_x1: i32,

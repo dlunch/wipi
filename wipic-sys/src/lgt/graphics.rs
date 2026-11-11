@@ -2,9 +2,46 @@ use core::mem::transmute;
 
 use wipi_boot::lgt::get_external_method;
 use wipi_types::{
-    lgt::wipic::{ImportModule, WIPICMethod},
-    wipic::{TargetPtr, WIPICError, WIPICGraphicsContext, WIPICIndirectPtr},
+    lgt::wipic::{
+        ImportModule, LgtFramebuffer, LgtGraphicsContext, LgtGraphicsView, LgtImage, WIPICMethod,
+    },
+    wipic::{TargetPtr, WIPICError, WIPICFramebuffer, WIPICImage, WIPICIndirectPtr},
 };
+
+use crate::FramebufferInfo;
+
+pub type GraphicsContext = LgtGraphicsContext;
+
+pub fn set_foreground(context: &mut GraphicsContext, pixel: u32) {
+    context.foreground = pixel;
+}
+
+pub fn framebuffer_info(framebuffer: WIPICIndirectPtr) -> FramebufferInfo {
+    // An LGT framebuffer handle points at a view into a backing pixel buffer.
+    unsafe {
+        let framebuffer = &*(framebuffer.0 as *const LgtFramebuffer);
+        let view = &*(framebuffer.ptr_graphics as *const LgtGraphicsView);
+        let backing = &*(view.ptr_backing as *const WIPICFramebuffer);
+        let offset = view.y as u32 * backing.bpl + view.x as u32 * (backing.bpp / 8);
+
+        FramebufferInfo {
+            width: view.width,
+            height: view.height,
+            bpl: backing.bpl,
+            bpp: backing.bpp,
+            pixels: (backing.buf.0 as *mut u8).add(offset as usize),
+        }
+    }
+}
+
+pub fn image_size(image: WIPICIndirectPtr) -> (u32, u32) {
+    unsafe {
+        let image = &*(image.0 as *const LgtImage);
+        let image = &*(image.ptr_image as *const WIPICImage);
+
+        (image.img.width, image.img.height)
+    }
+}
 
 pub fn get_screen_framebuffer() -> WIPICIndirectPtr {
     unsafe {
@@ -28,8 +65,8 @@ pub fn flush_lcd(i: i32, framebuffer: WIPICIndirectPtr, x: i32, y: i32, width: u
 
 /// # Safety
 /// The caller must ensure that the pointer passed to this function is valid.
-pub unsafe fn init_context(context: *mut WIPICGraphicsContext) {
-    let init_context: extern "C" fn(*mut WIPICGraphicsContext) -> () = unsafe {
+pub unsafe fn init_context(context: *mut GraphicsContext) {
+    let init_context: extern "C" fn(*mut GraphicsContext) -> () = unsafe {
         transmute(get_external_method(
             ImportModule::WIPIC,
             WIPICMethod::InitContext as _,
@@ -67,7 +104,7 @@ pub unsafe fn draw_image(
     image: WIPICIndirectPtr,
     sx: i32,
     sy: i32,
-    graphics_context: *const WIPICGraphicsContext,
+    graphics_context: *const GraphicsContext,
 ) {
     let draw_image: extern "C" fn(
         WIPICIndirectPtr,
@@ -78,7 +115,7 @@ pub unsafe fn draw_image(
         WIPICIndirectPtr,
         i32,
         i32,
-        *const WIPICGraphicsContext,
+        *const GraphicsContext,
     ) -> () = unsafe {
         transmute(get_external_method(
             ImportModule::WIPIC,
@@ -96,16 +133,9 @@ pub unsafe fn draw_rect(
     y: i32,
     width: i32,
     height: i32,
-    graphics_context: *const WIPICGraphicsContext,
+    graphics_context: *const GraphicsContext,
 ) {
-    let draw_rect: extern "C" fn(
-        WIPICIndirectPtr,
-        i32,
-        i32,
-        i32,
-        i32,
-        *const WIPICGraphicsContext,
-    ) = unsafe {
+    let draw_rect: extern "C" fn(WIPICIndirectPtr, i32, i32, i32, i32, *const GraphicsContext) = unsafe {
         transmute(get_external_method(
             ImportModule::WIPIC,
             WIPICMethod::DrawRect as _,
@@ -122,16 +152,9 @@ pub unsafe fn fill_rect(
     y: i32,
     width: i32,
     height: i32,
-    graphics_context: *const WIPICGraphicsContext,
+    graphics_context: *const GraphicsContext,
 ) {
-    let fill_rect: extern "C" fn(
-        WIPICIndirectPtr,
-        i32,
-        i32,
-        i32,
-        i32,
-        *const WIPICGraphicsContext,
-    ) = unsafe {
+    let fill_rect: extern "C" fn(WIPICIndirectPtr, i32, i32, i32, i32, *const GraphicsContext) = unsafe {
         transmute(get_external_method(
             ImportModule::WIPIC,
             WIPICMethod::FillRect as _,
@@ -148,7 +171,7 @@ pub unsafe fn draw_string(
     y: i32,
     string: *const u8,
     length: i32,
-    graphics_context: *const WIPICGraphicsContext,
+    graphics_context: *const GraphicsContext,
 ) {
     let draw_string: extern "C" fn(
         WIPICIndirectPtr,
@@ -156,7 +179,7 @@ pub unsafe fn draw_string(
         i32,
         *const u8,
         i32,
-        *const WIPICGraphicsContext,
+        *const GraphicsContext,
     ) = unsafe {
         transmute(get_external_method(
             ImportModule::WIPIC,

@@ -1,5 +1,8 @@
-use wipi_types::wipic::{WIPICFramebuffer, WIPICGraphicsContext, WIPICIndirectPtr};
-use wipic_sys::deref_indirect_ptr;
+use wipi_types::wipic::WIPICIndirectPtr;
+use wipic_sys::{
+    FramebufferInfo,
+    graphics::{self, GraphicsContext},
+};
 
 use crate::image::Image;
 
@@ -13,54 +16,41 @@ pub struct Color {
 
 pub struct Framebuffer {
     raw: WIPICIndirectPtr,
-    context: WIPICGraphicsContext,
+    info: FramebufferInfo,
+    context: GraphicsContext,
 }
 
 impl Framebuffer {
     pub fn screen_framebuffer() -> Self {
-        let mut context = WIPICGraphicsContext::default();
-        let raw = wipic_sys::graphics::get_screen_framebuffer();
+        let mut context = GraphicsContext::default();
+        let raw = graphics::get_screen_framebuffer();
 
-        unsafe { wipic_sys::graphics::init_context(&mut context as *mut _) };
+        unsafe { graphics::init_context(&mut context as *mut _) };
 
-        Framebuffer { raw, context }
+        Framebuffer {
+            raw,
+            info: graphics::framebuffer_info(raw),
+            context,
+        }
     }
 
     pub fn width(&self) -> u32 {
-        self.read_fb().width as _
+        self.info.width
     }
 
     pub fn height(&self) -> u32 {
-        self.read_fb().height as _
+        self.info.height
     }
 
     pub fn set_pixel(&mut self, x: u32, y: u32, color: Color) {
-        let fb = self.read_fb();
-        let buffer_ptr = Self::buffer_ptr(fb);
-
-        let bpl: u32 = fb.bpl as _;
-        let bpp: u32 = fb.bpp as _;
-
-        let offset = y * bpl + x * (bpp / 8);
+        let offset = y * self.info.bpl + x * (self.info.bpp / 8);
+        let pixel = self.color_to_pixel(color);
         unsafe {
-            let pixel_ptr = buffer_ptr.add(offset as _);
-            match fb.bpp {
-                32 => {
-                    *pixel_ptr.add(0) = color.b;
-                    *pixel_ptr.add(1) = color.g;
-                    *pixel_ptr.add(2) = color.r;
-                    *pixel_ptr.add(3) = color.a;
-                }
-                16 => {
-                    let r = (color.r as u16 >> 3) & 0x1F;
-                    let g = (color.g as u16 >> 2) & 0x3F;
-                    let b = (color.b as u16 >> 3) & 0x1F;
-                    let pixel_value = (r << 11) | (g << 5) | b;
-                    *(pixel_ptr as *mut u16) = pixel_value;
-                }
-                _ => {
-                    panic!("Unsupported bpp: {}", fb.bpp);
-                }
+            let pixel_ptr = self.info.pixels.add(offset as _);
+            match self.info.bpp {
+                32 => (pixel_ptr as *mut u32).write_unaligned(pixel),
+                16 => (pixel_ptr as *mut u16).write_unaligned(pixel as u16),
+                _ => panic!("Unsupported bpp: {}", self.info.bpp),
             }
         }
     }
@@ -77,7 +67,7 @@ impl Framebuffer {
         sy: i32,
     ) {
         unsafe {
-            wipic_sys::graphics::draw_image(
+            graphics::draw_image(
                 self.raw,
                 dx,
                 dy,
@@ -92,37 +82,23 @@ impl Framebuffer {
     }
 
     pub fn draw_rect(&mut self, x: i32, y: i32, width: i32, height: i32, color: Color) {
-        self.context.fgpxl = Self::color_to_pixel(color) as _;
+        self.set_foreground(color);
         unsafe {
-            wipic_sys::graphics::draw_rect(
-                self.raw,
-                x,
-                y,
-                width,
-                height,
-                &self.context as *const _,
-            );
+            graphics::draw_rect(self.raw, x, y, width, height, &self.context as *const _);
         }
     }
 
     pub fn fill_rect(&mut self, x: i32, y: i32, width: i32, height: i32, color: Color) {
-        self.context.fgpxl = Self::color_to_pixel(color) as _;
+        self.set_foreground(color);
         unsafe {
-            wipic_sys::graphics::fill_rect(
-                self.raw,
-                x,
-                y,
-                width,
-                height,
-                &self.context as *const _,
-            );
+            graphics::fill_rect(self.raw, x, y, width, height, &self.context as *const _);
         }
     }
 
     pub fn draw_text(&mut self, x: i32, y: i32, text: &str, color: Color) {
-        self.context.fgpxl = Self::color_to_pixel(color) as _;
+        self.set_foreground(color);
         unsafe {
-            wipic_sys::graphics::draw_string(
+            graphics::draw_string(
                 self.raw,
                 x,
                 y,
@@ -134,29 +110,29 @@ impl Framebuffer {
     }
 
     pub fn request_repaint(&self) {
-        let fb = self.read_fb();
-        wipic_sys::graphics::repaint(0, 0, 0, fb.width as i32, fb.height as i32);
+        graphics::repaint(0, 0, 0, self.info.width as i32, self.info.height as i32);
     }
 
-    fn color_to_pixel(color: Color) -> u32 {
-        ((color.a as u32) << 24)
-            | ((color.r as u32) << 16)
-            | ((color.g as u32) << 8)
-            | (color.b as u32)
+    fn set_foreground(&mut self, color: Color) {
+        let pixel = self.color_to_pixel(color);
+        graphics::set_foreground(&mut self.context, pixel);
     }
 
-    fn read_fb(&self) -> &WIPICFramebuffer {
-        unsafe { &*(deref_indirect_ptr(self.raw) as *const _) }
-    }
-
-    fn buffer_ptr(fb: &WIPICFramebuffer) -> *mut u8 {
-        deref_indirect_ptr(fb.buf)
+    /// Pixel value in the framebuffer's native format, as the platform draw calls expect.
+    fn color_to_pixel(&self, color: Color) -> u32 {
+        if self.info.bpp == 16 {
+            ((color.r as u32 >> 3) << 11) | ((color.g as u32 >> 2) << 5) | (color.b as u32 >> 3)
+        } else {
+            ((color.a as u32) << 24)
+                | ((color.r as u32) << 16)
+                | ((color.g as u32) << 8)
+                | (color.b as u32)
+        }
     }
 }
 
 impl Drop for Framebuffer {
     fn drop(&mut self) {
-        let fb = self.read_fb();
-        wipic_sys::graphics::flush_lcd(0, self.raw, 0, 0, fb.width as _, fb.height as _);
+        graphics::flush_lcd(0, self.raw, 0, 0, self.info.width, self.info.height);
     }
 }

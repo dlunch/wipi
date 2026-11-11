@@ -1,5 +1,4 @@
-use wipi_types::wipic::{WIPICError, WIPICImage, WIPICIndirectPtr};
-use wipic_sys::deref_indirect_ptr;
+use wipi_types::wipic::{WIPICError, WIPICIndirectPtr};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Error {
@@ -37,19 +36,15 @@ impl Image {
         Ok(Self { raw })
     }
 
-    fn read_image(&self) -> &WIPICImage {
-        unsafe { &*(deref_indirect_ptr(self.raw) as *const _) }
-    }
-
     pub fn raw(&self) -> WIPICIndirectPtr {
         self.raw
     }
 
     pub fn width(&self) -> u32 {
-        self.read_image().img.width as _
+        wipic_sys::graphics::image_size(self.raw).0
     }
 
     pub fn height(&self) -> u32 {
-        self.read_image().img.height as _
+        wipic_sys::graphics::image_size(self.raw).1
     }
 }
