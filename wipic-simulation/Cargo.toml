@@ -17,4 +17,4 @@ font-kit = "0.14"
 rodio = { version = "^0.21", features = ["playback"] }
 midir = { version = "^0.10" }
 smaf = { git = "https://github.com/dlunch/smaf.git" }
-smaf_player = { git = "https://github.com/dlunch/smaf.git" }
+smaf-player = { git = "https://github.com/dlunch/smaf.git" }
