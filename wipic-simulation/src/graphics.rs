@@ -438,7 +438,6 @@ fn draw_system_font_string(
     let origin_x = x + gctx.offset[0] as i32;
     let mut cursor_x = origin_x;
     let mut cursor_y = y + gctx.offset[1] as i32;
-    let ascent = scaled.ascent().ceil() as i32;
 
     for ch in text.chars() {
         match ch {
@@ -464,9 +463,9 @@ fn draw_system_font_string(
             continue;
         }
 
-        let baseline_y = cursor_y + ascent;
+        // WIPI passes the text baseline as y.
         draw_grayscale_glyph(
-            dst_buf, fb, font, glyph_id, scale, cursor_x, baseline_y, color, clip,
+            dst_buf, fb, font, glyph_id, scale, cursor_x, cursor_y, color, clip,
         );
 
         let mut advance = scaled.h_advance(glyph_id).ceil() as i32;
