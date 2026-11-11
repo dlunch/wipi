@@ -6,6 +6,8 @@ mod allocator;
 pub mod app;
 pub mod audio;
 pub mod console;
+#[cfg(any(feature = "ktf", feature = "lgt", test))]
+mod euc_kr;
 pub mod event;
 pub mod framebuffer;
 pub mod fs;

@@ -7,15 +7,17 @@ license.workspace = true
 repository.workspace = true
 
 [features]
-ktf = ["wipi-types/ktf", "wipi-boot/ktf", "wipic-sys/ktf", "dep:encoding_rs"]
-lgt = ["wipi-types/lgt", "wipi-boot/lgt", "wipic-sys/lgt", "dep:encoding_rs"]
+ktf = ["wipi-types/ktf", "wipi-boot/ktf", "wipic-sys/ktf"]
+lgt = ["wipi-types/lgt", "wipi-boot/lgt", "wipic-sys/lgt"]
 simulation = ["wipi-types/simulation", "wipi-boot/simulation", "wipic-sys/simulation"]
 
 [dependencies]
 cfg-if = { workspace = true }
-encoding_rs = { workspace = true, optional = true }
 
 wipi-boot = { workspace = true, optional = true }
 wipi-macros = { workspace = true }
 wipi-types = { workspace = true, optional = true }
 wipic-sys = { workspace = true }
+
+[dev-dependencies]
+encoding_rs = { workspace = true }
