@@ -97,6 +97,14 @@ impl Framebuffer {
 
     pub fn draw_text(&mut self, x: i32, y: i32, text: &str, color: Color) {
         self.set_foreground(color);
+        cfg_if::cfg_if! {
+            if #[cfg(feature = "simulation")] {
+                let text = text.as_bytes();
+            } else {
+                // Handsets take EUC-KR text.
+                let text = encoding_rs::EUC_KR.encode(text).0;
+            }
+        }
         unsafe {
             graphics::draw_string(
                 self.raw,

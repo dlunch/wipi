@@ -11,6 +11,7 @@ repository = "https://github.com/dlunch/wipi"
 
 [workspace.dependencies]
 cfg-if = { version = "^1.0", default-features = false }
+encoding_rs = { version = "^0.8", default-features = false, features = ["alloc"] }
 
 wipi = { path = "wipi" }
 wipi-boot = { path = "wipi-boot" }

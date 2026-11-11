@@ -3154,6 +3154,8 @@ dependencies = [
 name = "wipi"
 version = "0.0.1"
 dependencies = [
+ "cfg-if",
+ "encoding_rs",
  "wipi-boot",
  "wipi-macros",
  "wipi-types",

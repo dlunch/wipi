@@ -79,6 +79,7 @@ let f: extern "C" fn(...) = unsafe { transmute(get_external_method(ImportModule:
 - **Always run `cargo fmt --all` before committing**
 - Platform features are **mutually exclusive** — never enable ktf+lgt simultaneously
 - Safe wrappers in `wipi/` follow: struct + methods + `Drop` for cleanup (see fs.rs)
+- `Framebuffer::draw_text` takes UTF-8 and encodes it to EUC-KR on ktf/lgt; simulation renders the UTF-8 text directly
 - `WIPICIndirectPtr` must be dereferenced via `deref_indirect_ptr()` before use — KTF adds 8-byte offset, LGT/simulation direct cast
 - Lifecycle callbacks run on **main thread only** — `RefCell` is safe for `APP` state
 - LGT method IDs sourced from [dlunch/wie](https://github.com/dlunch/wie) project's LGT method table
